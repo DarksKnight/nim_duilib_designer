@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="form">
+      <UniqueIdentifier>{efbabc67-22b2-4ed3-8b41-7b131c271d2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="widget">
+      <UniqueIdentifier>{7e8165dd-0a04-4f86-b371-a98e123f0e7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="extern_ctrl">
+      <UniqueIdentifier>{52df240e-2be8-4b2a-b778-f28985e6a5ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="internal">
+      <UniqueIdentifier>{23715ee0-3c88-4dba-a3af-819713f5c539}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="main.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="form\EditorForm.h">
+      <Filter>form</Filter>
+    </ClInclude>
+    <ClInclude Include="widget\EditorArea.h">
+      <Filter>widget</Filter>
+    </ClInclude>
+    <ClInclude Include="extern_ctrl\ExternCtrlManager.h">
+      <Filter>extern_ctrl</Filter>
+    </ClInclude>
+    <ClInclude Include="widget\EditorControlsList.h">
+      <Filter>widget</Filter>
+    </ClInclude>
+    <ClInclude Include="widget\EditorDrawBox.h">
+      <Filter>widget</Filter>
+    </ClInclude>
+    <ClInclude Include="internal\Global.h">
+      <Filter>internal</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="form\EditorForm.cpp">
+      <Filter>form</Filter>
+    </ClCompile>
+    <ClCompile Include="widget\EditorArea.cpp">
+      <Filter>widget</Filter>
+    </ClCompile>
+    <ClCompile Include="extern_ctrl\ExternCtrlManager.cpp">
+      <Filter>extern_ctrl</Filter>
+    </ClCompile>
+    <ClCompile Include="widget\EditorControlsList.cpp">
+      <Filter>widget</Filter>
+    </ClCompile>
+    <ClCompile Include="widget\EditorDrawBox.cpp">
+      <Filter>widget</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="editor.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="small.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="editor.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\bin\resources.zip" />
+  </ItemGroup>
+</Project>
