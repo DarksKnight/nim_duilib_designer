@@ -13,13 +13,17 @@ public:
 	virtual void InitWindow() override;
 	virtual LRESULT OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	static const std::wstring kClassName;
+protected:
+	LRESULT OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled) override;
 private:
 	void OnSelect(DrawControl control);
 	void OnButtonUp();
 private:
 	EditorControlsList* _controls_list;
 	EditorArea* _editor_area;
+	ui::Box* _box_container;
 	ui::Box* _box_property;
+	ui::Box* _box_drag_pre;
 private:
 	std::map<int, DrawControl> _draw_controls;
 	DrawControl _select_control;

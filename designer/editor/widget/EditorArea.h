@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#define PADDING 8
+#define PADDING 10
 
 class EditorArea : public ui::Box
 {
