@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "../widget/EditorControlsList.h"
 #include "../widget/EditorArea.h"
+#include "../widget/EditorToolbar.h"
 
 class EditorForm : public ui::WindowImplBase
 {
@@ -19,6 +20,7 @@ private:
 	void OnSelect(DrawControl control);
 	void OnButtonUp();
 private:
+	EditorToolbar* _toolbar;
 	EditorControlsList* _controls_list;
 	EditorArea* _editor_area;
 	ui::Box* _box_container;

@@ -19,4 +19,6 @@
 // duilib
 #include "duilib/UIlib.h"
 
+#include "ui_components/menu/ui_menu.h"
+
 #include "internal/Global.h"

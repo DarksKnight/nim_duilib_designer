@@ -335,6 +335,7 @@
     <ClInclude Include="widget\EditorArea.h" />
     <ClInclude Include="widget\EditorControlsList.h" />
     <ClInclude Include="widget\EditorProperty.h" />
+    <ClInclude Include="widget\EditorToolbar.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="extern_ctrl\ExternCtrlManager.cpp" />
@@ -348,6 +349,7 @@
     <ClCompile Include="widget\EditorArea.cpp" />
     <ClCompile Include="widget\EditorControlsList.cpp" />
     <ClCompile Include="widget\EditorProperty.cpp" />
+    <ClCompile Include="widget\EditorToolbar.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="editor.rc" />
@@ -365,6 +367,9 @@
     </ProjectReference>
     <ProjectReference Include="..\..\duilib\duilib.vcxproj">
       <Project>{e106acd7-4e53-4aee-942b-d0dd426db34e}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ui_components\ui_components.vcxproj">
+      <Project>{0149ba6e-3c0a-426d-aa0a-0b9ec7742f19}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

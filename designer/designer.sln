@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "designer", "designer", "{B2087994-3DF6-4A57-B8C6-6F744520D7FA}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "editor", "editor\editor.vcxproj", "{F1A9371F-9A34-45A0-98EB-83FF371F067F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0149BA6E-3C0A-426D-AA0A-0B9EC7742F19} = {0149BA6E-3C0A-426D-AA0A-0B9EC7742F19}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "third_party", "third_party", "{1DA0A8E2-5832-42FC-83F7-2CDCAD379C90}"
 EndProject

@@ -30,6 +30,8 @@ std::wstring EditorForm::GetWindowClassName() const
 void EditorForm::InitWindow()
 {
 	_draw_controls[0] = DrawControl(ControlType::Box, L"Box");
+	_toolbar = (EditorToolbar*)FindControl(L"et");
+	_toolbar->InitCtrls();
 	_box_container = (ui::Box*)FindControl(L"box_container");
 	_controls_list = (EditorControlsList*)FindControl(L"ecl");
 	_editor_area = (EditorArea*)FindControl(L"ea");

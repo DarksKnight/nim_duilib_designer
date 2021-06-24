@@ -138,6 +138,7 @@
     <LinkIncremental>true</LinkIncremental>
     <IntDir>$(ProjectDir)..\tmp\$(PlatformName)\$(ProjectName)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\libs\x64\</OutDir>
+    <TargetName>$(ProjectName)_d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_142|x64'">
     <LinkIncremental>true</LinkIncremental>
