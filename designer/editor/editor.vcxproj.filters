@@ -51,11 +51,11 @@
     <ClInclude Include="widget\EditorControlsList.h">
       <Filter>widget</Filter>
     </ClInclude>
-    <ClInclude Include="widget\EditorDrawBox.h">
-      <Filter>widget</Filter>
-    </ClInclude>
     <ClInclude Include="internal\Global.h">
       <Filter>internal</Filter>
+    </ClInclude>
+    <ClInclude Include="widget\EditorProperty.h">
+      <Filter>widget</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -74,7 +74,7 @@
     <ClCompile Include="widget\EditorControlsList.cpp">
       <Filter>widget</Filter>
     </ClCompile>
-    <ClCompile Include="widget\EditorDrawBox.cpp">
+    <ClCompile Include="widget\EditorProperty.cpp">
       <Filter>widget</Filter>
     </ClCompile>
   </ItemGroup>

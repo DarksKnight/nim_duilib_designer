@@ -18,3 +18,5 @@
 
 // duilib
 #include "duilib/UIlib.h"
+
+#include "internal/Global.h"

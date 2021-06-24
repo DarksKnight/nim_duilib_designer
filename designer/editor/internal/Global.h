@@ -2,6 +2,12 @@
 #include "../stdafx.h"
 #include "base/memory/singleton.h"
 
+enum ControlType
+{
+	Box = 0,
+	HBox
+};
+
 struct DrawControl 
 {
 	int id;
