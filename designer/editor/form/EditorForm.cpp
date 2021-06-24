@@ -1,5 +1,6 @@
 ﻿#include "../stdafx.h"
 #include "EditorForm.h"
+#include "../internal/XmlHelper.h"
 
 const std::wstring EditorForm::kClassName = L"EditorForm";
 
@@ -32,6 +33,7 @@ void EditorForm::InitWindow()
 	_draw_controls[0] = DrawControl(ControlType::Box, L"Box");
 	_toolbar = (EditorToolbar*)FindControl(L"et");
 	_toolbar->InitCtrls();
+	_toolbar->SetSaveCallback(nbase::Bind(&EditorForm::OnSave, this));
 	_box_container = (ui::Box*)FindControl(L"box_container");
 	_controls_list = (EditorControlsList*)FindControl(L"ecl");
 	_editor_area = (EditorArea*)FindControl(L"ea");
@@ -81,4 +83,9 @@ void EditorForm::OnButtonUp()
 		return;
 	}
 	_editor_area->DropControl(_select_control);
+}
+
+void EditorForm::OnSave()
+{
+	XmlHelper::ConvertXml(_editor_area, L"E:\\work\\a.xml");
 }

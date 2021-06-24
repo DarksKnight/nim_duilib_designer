@@ -60,6 +60,9 @@
     <ClInclude Include="widget\EditorToolbar.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="internal\XmlHelper.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -81,6 +84,9 @@
       <Filter>widget</Filter>
     </ClCompile>
     <ClCompile Include="widget\EditorToolbar.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="internal\XmlHelper.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

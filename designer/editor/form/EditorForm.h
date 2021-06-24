@@ -19,6 +19,7 @@ protected:
 private:
 	void OnSelect(DrawControl control);
 	void OnButtonUp();
+	void OnSave();
 private:
 	EditorToolbar* _toolbar;
 	EditorControlsList* _controls_list;
