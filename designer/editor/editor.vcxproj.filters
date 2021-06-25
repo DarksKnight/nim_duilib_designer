@@ -63,7 +63,7 @@
     <ClInclude Include="internal\XmlHelper.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="widget\EditorCreateView.h">
+    <ClInclude Include="form\EditorCreateForm.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -92,7 +92,7 @@
     <ClCompile Include="internal\XmlHelper.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="widget\EditorCreateView.cpp">
+    <ClCompile Include="form\EditorCreateForm.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

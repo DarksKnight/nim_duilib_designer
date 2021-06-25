@@ -328,6 +328,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="extern_ctrl\ExternCtrlManager.h" />
+    <ClInclude Include="form\EditorCreateForm.h" />
     <ClInclude Include="form\EditorForm.h" />
     <ClInclude Include="internal\Global.h" />
     <ClInclude Include="internal\XmlHelper.h" />
@@ -337,12 +338,12 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="widget\EditorArea.h" />
     <ClInclude Include="widget\EditorControlsList.h" />
-    <ClInclude Include="widget\EditorCreateView.h" />
     <ClInclude Include="widget\EditorProperty.h" />
     <ClInclude Include="widget\EditorToolbar.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="extern_ctrl\ExternCtrlManager.cpp" />
+    <ClCompile Include="form\EditorCreateForm.cpp" />
     <ClCompile Include="form\EditorForm.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
@@ -353,7 +354,6 @@
     </ClCompile>
     <ClCompile Include="widget\EditorArea.cpp" />
     <ClCompile Include="widget\EditorControlsList.cpp" />
-    <ClCompile Include="widget\EditorCreateView.cpp" />
     <ClCompile Include="widget\EditorProperty.cpp" />
     <ClCompile Include="widget\EditorToolbar.cpp" />
   </ItemGroup>

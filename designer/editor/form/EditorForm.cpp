@@ -1,8 +1,9 @@
 ﻿#include "../stdafx.h"
 #include "EditorForm.h"
 #include "../internal/XmlHelper.h"
+#include "EditorCreateForm.h"
 
-const std::wstring EditorForm::kClassName = L"EditorForm";
+const LPCTSTR EditorForm::kClassName = L"EditorForm";
 
 EditorForm::EditorForm()
 {
@@ -33,21 +34,22 @@ void EditorForm::InitWindow()
 	_draw_controls[0] = DrawControl(ControlType::Box, L"Box");
 	_toolbar = (EditorToolbar*)FindControl(L"et");
 	_toolbar->InitCtrls();
-	_toolbar->SetSaveCallback(nbase::Bind(&EditorForm::OnSave, this));
+	_toolbar->SetSaveCallback(nbase::Bind(&EditorForm::OnSaveFile, this));
 	_toolbar->SetNewFileCallback(nbase::Bind(&EditorForm::OnNewFile, this));
+	_toolbar->SetOpenFileCallback(nbase::Bind(&EditorForm::OnOpenFile, this, std::placeholders::_1));
 	_box_container = (ui::Box*)FindControl(L"box_container");
 	_controls_list = (EditorControlsList*)FindControl(L"ecl");
 	_box_property = (ui::Box*)FindControl(L"box_property");
 	_box_drag_pre = (ui::Box*)FindControl(L"box_drag_pre");
 	_box_editor_area = (ui::Box*)FindControl(L"box_editor_area");
-	_editor_area = new EditorArea;
-	_box_editor_area->Add(_editor_area);
 	int width = GetPos().GetWidth();
 	_controls_list->SetFixedWidth(width / 6);
 	_box_property->SetFixedWidth(width / 5);
 	_controls_list->SetSelectCallback(nbase::Bind(&EditorForm::OnSelect, this ,std::placeholders::_1));
 	_controls_list->SetButtonUpCallback(nbase::Bind(&EditorForm::OnButtonUp, this));
 	_controls_list->LoadData(_draw_controls);
+
+	nbase::ThreadManager::PostTask(kThreadUI, nbase::Bind(&EditorForm::OpenCreateForm, this));
 }
 
 LRESULT EditorForm::OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
@@ -66,7 +68,7 @@ LRESULT EditorForm::OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& b
 LRESULT EditorForm::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	if (uMsg == WM_KEYDOWN && wParam == 'S' && ::GetKeyState(VK_CONTROL) < 0) {
-		OnSave();
+		OnSaveFile();
 	}
 	return __super::HandleMessage(uMsg, wParam, lParam);
 }
@@ -96,7 +98,7 @@ void EditorForm::OnButtonUp()
 	_editor_area->DropControl(_select_control);
 }
 
-void EditorForm::OnSave()
+void EditorForm::OnSaveFile()
 {
 	if (_saved) {
 		OnSelectPathCallback(TRUE, _last_save_path);
@@ -128,6 +130,15 @@ void EditorForm::OnNewFile()
 	_exec_new = false;
 }
 
+void EditorForm::OnOpenFile(const std::wstring& path)
+{
+	_saved = true;
+	_last_save_path = path;
+	_editor_area = new EditorArea;
+	_box_editor_area->Add(_editor_area);
+	XmlHelper::GetInstance()->ParseXml(_editor_area, path);
+}
+
 void EditorForm::OnSelectPathCallback(BOOL ret, std::wstring path)
 {
 	if (!ret) {
@@ -152,5 +163,10 @@ void EditorForm::OnMsgBoxCallback(nim_comp::MsgBoxRet ret)
 		OnNewFile();
 		return;
 	}
-	OnSave();
+	OnSaveFile();
+}
+
+void EditorForm::OpenCreateForm()
+{
+	//nim_comp::WindowsManager::SingletonShow<EditorCreateForm>(EditorCreateForm::kClassName);
 }

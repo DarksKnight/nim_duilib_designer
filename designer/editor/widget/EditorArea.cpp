@@ -10,6 +10,8 @@ EditorArea::EditorArea()
 	windowBox->SetName(L"sampleWindow");
 	windowBox->SetFixedWidth(_window_info.width);
 	windowBox->SetFixedHeight(_window_info.height);
+	windowBox->SetBorderSize(1);
+	windowBox->SetBorderColor(L"blue");
 	windowBox->SetBkColor(L"bk_wnd_darkcolor");
 	this->Add(windowBox);
 }

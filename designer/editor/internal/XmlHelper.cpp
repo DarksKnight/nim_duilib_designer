@@ -1,5 +1,7 @@
 ﻿#include "../stdafx.h"
 #include "XmlHelper.h"
+#include <iterator>
+#include <algorithm>
 
 XmlHelper::XmlHelper()
 {
@@ -35,6 +37,27 @@ bool XmlHelper::ConvertXml(EditorArea* area, const std::wstring& path, bool wind
 	}
 }
 
+bool XmlHelper::ParseXml(EditorArea* area, const std::wstring& path, bool window)
+{
+	tinyxml2::XMLDocument doc;
+	tinyxml2::XMLError result = doc.LoadFile(nbase::UTF16ToUTF8(path).c_str());
+	if (result != tinyxml2::XML_SUCCESS) {
+		return false;
+	}
+	tinyxml2::XMLElement* rootElement = doc.RootElement();
+	if (window) {
+		std::string sizeAttr = rootElement->Attribute("size");
+		std::vector<std::string> sizeVector = ConvertVector(nim_comp::StringHelper::Split(sizeAttr, ","));
+		int width = 0;
+		nbase::StringToInt(sizeVector[0], &width);
+		area->GetItemAt(0)->SetFixedWidth(width);
+		int height = 0;
+		nbase::StringToInt(sizeVector[1], &height);
+		area->GetItemAt(0)->SetFixedHeight(height);
+	}
+	ParseElement(rootElement, ((ui::Box*)area->GetItemAt(0)));
+}
+
 tinyxml2::XMLElement* XmlHelper::GetElement(tinyxml2::XMLDocument* doc, ui::Control* control)
 {
 	tinyxml2::XMLElement* element = NULL;
@@ -59,4 +82,69 @@ tinyxml2::XMLElement* XmlHelper::GetElement(tinyxml2::XMLDocument* doc, ui::Cont
 		element = doc->NewElement("aaaa");
 	}
 	return element;
+}
+
+void XmlHelper::ParseElement(tinyxml2::XMLElement* element, ui::Box* rootBox)
+{
+	if (!rootBox) {
+		return;
+	}
+	for (tinyxml2::XMLElement* currenteleElement = element->FirstChildElement(); currenteleElement; currenteleElement = currenteleElement->NextSiblingElement()) {
+		std::wstring value = nbase::UTF8ToUTF16(currenteleElement->Value());
+		std::string widthAttr = "stretch";
+		std::string heightAttr = "stretch";
+		std::string marginAttr = "";
+		if (currenteleElement->BoolAttribute("width")) {
+			widthAttr = currenteleElement->Attribute("width");
+		}
+		if (currenteleElement->BoolAttribute("height")) {
+			heightAttr = currenteleElement->Attribute("height");
+		}
+		if (currenteleElement->BoolAttribute("margin")) {
+			marginAttr = currenteleElement->Attribute("margin");
+		}
+		int width = 0;
+		int height = 0;
+		if (widthAttr == "auto") {
+			width = DUI_LENGTH_AUTO;
+		}
+		else if (widthAttr == "stretch") {
+			width = DUI_LENGTH_STRETCH;
+		}
+		else {
+			nbase::StringToInt(widthAttr, &width);
+		}
+		if (heightAttr == "auto") {
+			height = DUI_LENGTH_AUTO;
+		}
+		else if (heightAttr == "stretch") {
+			height = DUI_LENGTH_STRETCH;
+		}
+		else {
+			nbase::StringToInt(heightAttr, &height);
+		}
+
+		ui::Box* box = NULL;
+		if (value == L"Box") {
+			box = new ui::Box;
+			box->SetBorderSize(1);
+			box->SetBorderColor(L"blue");
+			box->SetFixedWidth(width);
+			box->SetFixedHeight(height);
+			if (!marginAttr.empty()) {
+				std::vector<std::string> marginVector = ConvertVector(nim_comp::StringHelper::Split(marginAttr, ","));
+				int left, top, right, bottom = 0;
+				nbase::StringToInt(marginVector[0], &left);
+				nbase::StringToInt(marginVector[1], &top);
+				nbase::StringToInt(marginVector[2], &right);
+				nbase::StringToInt(marginVector[3], &bottom);
+				ui::UiRect marginRect(left, top, right, bottom);
+				box->SetMargin(marginRect);
+			}
+			rootBox->Add(box);
+		}
+		if (!currenteleElement->NoChildren()) {
+			ParseElement(currenteleElement, box);
+		}
+	}
 }

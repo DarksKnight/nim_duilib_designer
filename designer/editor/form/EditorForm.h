@@ -13,17 +13,19 @@ public:
 	virtual std::wstring GetWindowClassName() const override;
 	virtual void InitWindow() override;
 	virtual LRESULT OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
-	static const std::wstring kClassName;
+	static const LPCTSTR kClassName;
 protected:
 	LRESULT OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled) override;
 	LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam) override;
 private:
 	void OnSelect(DrawControl control);
 	void OnButtonUp();
-	void OnSave();
+	void OnSaveFile();
 	void OnNewFile();
+	void OnOpenFile(const std::wstring& path);
 	void OnSelectPathCallback(BOOL ret, std::wstring path);
 	void OnMsgBoxCallback(nim_comp::MsgBoxRet ret);
+	void OpenCreateForm();
 private:
 	EditorToolbar* _toolbar;
 	EditorControlsList* _controls_list;

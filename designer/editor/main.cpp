@@ -6,11 +6,6 @@
 #include "form/EditorForm.h"
 #include "extern_ctrl/ExternCtrlManager.h"
 
-enum ThreadId
-{
-	kThreadUI
-};
-
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
                      _In_ LPWSTR    lpCmdLine,
@@ -54,7 +49,7 @@ void MainThread::Init()
 
 	// 创建一个默认带有阴影的居中窗口
 	EditorForm* window = new EditorForm();
-	window->Create(NULL, EditorForm::kClassName.c_str(), WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX, 0);
+	window->Create(NULL, EditorForm::kClassName, WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX, 0);
 	window->CenterWindow();
 	window->ShowWindow();
 }
