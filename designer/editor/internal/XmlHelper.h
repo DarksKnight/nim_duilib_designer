@@ -15,6 +15,8 @@ public:
 private:
 	tinyxml2::XMLElement* GetElement(tinyxml2::XMLDocument* doc, ui::Control* control);
 	void ParseElement(EditorArea* area, tinyxml2::XMLElement* element, ui::Box* rootBox);
+	void SetUniversalAttr(tinyxml2::XMLElement* element, ui::Control* control);
+	ControlData* SetUniversalProperty(tinyxml2::XMLElement* element);
 private:
 	bool CheckRectEmpty(ui::UiRect rect) {
 		return rect.left == 0 && rect.top == 0 && rect.right == 0 && rect.bottom == 0;

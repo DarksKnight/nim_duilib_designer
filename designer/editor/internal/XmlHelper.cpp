@@ -58,17 +58,14 @@ bool XmlHelper::ParseXml(EditorArea* area, const std::wstring& path, bool window
 tinyxml2::XMLElement* XmlHelper::GetElement(tinyxml2::XMLDocument* doc, ui::Control* control)
 {
 	tinyxml2::XMLElement* element = NULL;
+	if (!control) {
+		return element;
+	}
 	ui::Box* box = dynamic_cast<ui::Box*>(control);
 	if (box) {
 		element = doc->NewElement("Box");
-		if (!CheckWidthAndHeight(box->GetFixedWidth())) {
-			element->SetAttribute("width", box->GetFixedWidth());
-		}
-		if (!CheckWidthAndHeight(box->GetFixedHeight())) {
-			element->SetAttribute("height", box->GetFixedHeight());
-		}
-		if (!CheckRectEmpty(box->GetMargin())) {
-			element->SetAttribute("margin", nbase::StringPrintf("%d,%d,%d,%d", box->GetMargin().left, box->GetMargin().top, box->GetMargin().right, box->GetMargin().bottom).c_str());
+		if (box->GetName() != L"sampleWindow") {
+			SetUniversalAttr(element, control);
 		}
 		for (int i = 0; i < box->GetCount(); i++) {
 			tinyxml2::XMLElement* subEl = GetElement(doc, box->GetItemAt(i));
@@ -87,56 +84,73 @@ void XmlHelper::ParseElement(EditorArea* area, tinyxml2::XMLElement* element, ui
 		return;
 	}
 	for (tinyxml2::XMLElement* currenteleElement = element->FirstChildElement(); currenteleElement; currenteleElement = currenteleElement->NextSiblingElement()) {
-		std::wstring value = nbase::UTF8ToUTF16(currenteleElement->Value());
-		std::string widthAttr = "stretch";
-		std::string heightAttr = "stretch";
-		std::string marginAttr = "";
-		if (currenteleElement->BoolAttribute("width")) {
-			widthAttr = currenteleElement->Attribute("width");
-		}
-		if (currenteleElement->BoolAttribute("height")) {
-			heightAttr = currenteleElement->Attribute("height");
-		}
-		if (currenteleElement->BoolAttribute("margin")) {
-			marginAttr = currenteleElement->Attribute("margin");
-		}
-		int width = 0;
-		int height = 0;
-		if (widthAttr == "auto") {
-			width = DUI_LENGTH_AUTO;
-		}
-		else if (widthAttr == "stretch") {
-			width = DUI_LENGTH_STRETCH;
-		}
-		else {
-			nbase::StringToInt(widthAttr, &width);
-		}
-		if (heightAttr == "auto") {
-			height = DUI_LENGTH_AUTO;
-		}
-		else if (heightAttr == "stretch") {
-			height = DUI_LENGTH_STRETCH;
-		}
-		else {
-			nbase::StringToInt(heightAttr, &height);
-		}
-		ui::Box* containerBox = NULL;
-		if (value == L"Box") {
-			ControlData* data = new ControlData(L"Box", width, height, true, rootBox);
-			if (!marginAttr.empty()) {
-				std::vector<std::string> marginVector = ConvertVector(nim_comp::StringHelper::Split(marginAttr, ","));
-				int left, top, right, bottom = 0;
-				nbase::StringToInt(marginVector[0], &left);
-				nbase::StringToInt(marginVector[1], &top);
-				nbase::StringToInt(marginVector[2], &right);
-				nbase::StringToInt(marginVector[3], &bottom);
-				ui::UiRect marginRect(left, top, right, bottom);
-				data->margin = marginRect;
-			}
-			containerBox = area->DropControl(data);
-		}
+		ControlData* data = SetUniversalProperty(currenteleElement);
+		data->parentBox = rootBox;
+		ui::Box* containerBox = area->DropControl(data);
 		if (!currenteleElement->NoChildren()) {
 			ParseElement(area, currenteleElement, containerBox);
 		}
 	}
+}
+
+void XmlHelper::SetUniversalAttr(tinyxml2::XMLElement* element, ui::Control* control)
+{
+	if (!CheckWidthAndHeight(control->GetFixedWidth())) {
+		element->SetAttribute("width", control->GetFixedWidth());
+	}
+	if (!CheckWidthAndHeight(control->GetFixedHeight())) {
+		element->SetAttribute("height", control->GetFixedHeight());
+	}
+	if (!CheckRectEmpty(control->GetMargin())) {
+		element->SetAttribute("margin", nbase::StringPrintf("%d,%d,%d,%d", control->GetMargin().left, control->GetMargin().top, control->GetMargin().right, control->GetMargin().bottom).c_str());
+	}
+}
+
+ControlData* XmlHelper::SetUniversalProperty(tinyxml2::XMLElement* element)
+{
+	std::wstring value = nbase::UTF8ToUTF16(element->Value());
+	std::string widthAttr = "stretch";
+	std::string heightAttr = "stretch";
+	std::string marginAttr = "";
+	if (element->BoolAttribute("width")) {
+		widthAttr = element->Attribute("width");
+	}
+	if (element->BoolAttribute("height")) {
+		heightAttr = element->Attribute("height");
+	}
+	if (element->BoolAttribute("margin")) {
+		marginAttr = element->Attribute("margin");
+	}
+	int width = 0;
+	int height = 0;
+	if (widthAttr == "auto") {
+		width = DUI_LENGTH_AUTO;
+	}
+	else if (widthAttr == "stretch") {
+		width = DUI_LENGTH_STRETCH;
+	}
+	else {
+		nbase::StringToInt(widthAttr, &width);
+	}
+	if (heightAttr == "auto") {
+		height = DUI_LENGTH_AUTO;
+	}
+	else if (heightAttr == "stretch") {
+		height = DUI_LENGTH_STRETCH;
+	}
+	else {
+		nbase::StringToInt(heightAttr, &height);
+	}
+	ControlData* data = new ControlData(value, width, height, true);
+	if (!marginAttr.empty()) {
+		std::vector<std::string> marginVector = ConvertVector(nim_comp::StringHelper::Split(marginAttr, ","));
+		int left, top, right, bottom = 0;
+		nbase::StringToInt(marginVector[0], &left);
+		nbase::StringToInt(marginVector[1], &top);
+		nbase::StringToInt(marginVector[2], &right);
+		nbase::StringToInt(marginVector[3], &bottom);
+		ui::UiRect marginRect(left, top, right, bottom);
+		data->margin = marginRect;
+	}
+	return data;
 }
