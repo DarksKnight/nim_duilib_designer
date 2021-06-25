@@ -21,7 +21,9 @@ private:
 	void OnSelect(DrawControl control);
 	void OnButtonUp();
 	void OnSave();
+	void OnNewFile();
 	void OnSelectPathCallback(BOOL ret, std::wstring path);
+	void OnMsgBoxCallback(nim_comp::MsgBoxRet ret);
 private:
 	EditorToolbar* _toolbar;
 	EditorControlsList* _controls_list;
@@ -29,9 +31,11 @@ private:
 	ui::Box* _box_container;
 	ui::Box* _box_property;
 	ui::Box* _box_drag_pre;
+	ui::Box* _box_editor_area;
 private:
 	std::map<int, DrawControl> _draw_controls;
 	DrawControl _select_control;
 	bool _saved = false;
+	bool _exec_new = false;
 	std::wstring _last_save_path;
 };

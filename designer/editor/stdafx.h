@@ -19,7 +19,6 @@
 // duilib
 #include "duilib/UIlib.h"
 
-#include "ui_components/menu/ui_menu.h"
-#include "ui_components/modal_wnd/file_dialog_ex.h"
+#include "ui_components/ui_components.h"
 
 #include "internal/Global.h"

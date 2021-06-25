@@ -34,11 +34,14 @@ void EditorForm::InitWindow()
 	_toolbar = (EditorToolbar*)FindControl(L"et");
 	_toolbar->InitCtrls();
 	_toolbar->SetSaveCallback(nbase::Bind(&EditorForm::OnSave, this));
+	_toolbar->SetNewFileCallback(nbase::Bind(&EditorForm::OnNewFile, this));
 	_box_container = (ui::Box*)FindControl(L"box_container");
 	_controls_list = (EditorControlsList*)FindControl(L"ecl");
-	_editor_area = (EditorArea*)FindControl(L"ea");
 	_box_property = (ui::Box*)FindControl(L"box_property");
 	_box_drag_pre = (ui::Box*)FindControl(L"box_drag_pre");
+	_box_editor_area = (ui::Box*)FindControl(L"box_editor_area");
+	_editor_area = new EditorArea;
+	_box_editor_area->Add(_editor_area);
 	int width = GetPos().GetWidth();
 	_controls_list->SetFixedWidth(width / 6);
 	_box_property->SetFixedWidth(width / 5);
@@ -108,7 +111,21 @@ void EditorForm::OnSave()
 	fileDlg->SetParentWnd(GetHWND());
 	nim_comp::CFileDialogEx::FileDialogCallback2 callback2 = nbase::Bind(&EditorForm::OnSelectPathCallback, this, std::placeholders::_1, std::placeholders::_2);
 	fileDlg->AyncShowSaveFileDlg(callback2);
-	
+}
+
+void EditorForm::OnNewFile()
+{
+	_exec_new = true;
+	if (!_saved) {
+		nim_comp::MsgboxCallback cb = nbase::Bind(&EditorForm::OnMsgBoxCallback, this, std::placeholders::_1);
+		nim_comp::ShowMsgBox(GetHWND(), cb, L"STRID_UNSAVE_TIP", true, L"STRID_HINT", true, L"STRING_OK", true, L"STRING_CANCEL", true);
+		return;
+	}
+	_saved = false;
+	_box_editor_area->RemoveAll();
+	_editor_area = new EditorArea;
+	_box_editor_area->Add(_editor_area);
+	_exec_new = false;
 }
 
 void EditorForm::OnSelectPathCallback(BOOL ret, std::wstring path)
@@ -119,4 +136,17 @@ void EditorForm::OnSelectPathCallback(BOOL ret, std::wstring path)
 	_saved = true;
 	_last_save_path = path;
 	XmlHelper::GetInstance()->ConvertXml(_editor_area, path);
+	if (_exec_new) {
+		OnNewFile();
+	}
+}
+
+void EditorForm::OnMsgBoxCallback(nim_comp::MsgBoxRet ret)
+{
+	if (ret == nim_comp::MB_NO) {
+		_saved = true;
+		OnNewFile();
+		return;
+	}
+	OnSave();
 }

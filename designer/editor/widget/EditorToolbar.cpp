@@ -27,6 +27,8 @@ bool EditorToolbar::OnClickFile(ui::EventArgs* args)
 	toolFileMenu->Init(xml, _T("xml"), point);
 	nim_comp::CMenuElementUI* menuFileSave = (nim_comp::CMenuElementUI*)toolFileMenu->FindControl(L"menu_save");
 	menuFileSave->AttachSelect(nbase::Bind(&EditorToolbar::OnMenuFileSave, this, std::placeholders::_1));
+	nim_comp::CMenuElementUI* menuNewFile = (nim_comp::CMenuElementUI*)toolFileMenu->FindControl(L"menu_new_file");
+	menuNewFile->AttachSelect(nbase::Bind(&EditorToolbar::OnMenuNewFile, this, std::placeholders::_1));
 	return true;
 }
 
@@ -34,6 +36,14 @@ bool EditorToolbar::OnMenuFileSave(ui::EventArgs* args)
 {
 	if (_save_callback) {
 		_save_callback();
+	}
+	return true;
+}
+
+bool EditorToolbar::OnMenuNewFile(ui::EventArgs* args)
+{
+	if (_new_file_callback) {
+		_new_file_callback();
 	}
 	return true;
 }
