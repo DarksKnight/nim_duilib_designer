@@ -4,13 +4,13 @@
 class EditorControlsList : public ui::VBox
 {
 public:
-	typedef std::function<void(DrawControl control)> SelectCallback;
+	typedef std::function<void(ControlData* data)> SelectCallback;
 	typedef std::function<void()> ButtonUpCallback;
 public:
 	EditorControlsList();
 	~EditorControlsList();
 public:
-	void LoadData(std::map<int, DrawControl> controls);
+	void LoadData(std::vector<ControlData*> datas);
 public:
 	void SetSelectCallback(SelectCallback callback) {
 		_select_callback = callback;
@@ -24,5 +24,5 @@ private:
 private:
 	SelectCallback _select_callback;
 	ButtonUpCallback _button_up_callback;
-	std::map<int, DrawControl> _controls;
+	std::vector<ControlData*> _datas;
 };

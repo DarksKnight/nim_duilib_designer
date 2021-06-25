@@ -14,7 +14,7 @@ public:
 	EditorArea();
 	~EditorArea();
 public:
-	void DropControl(DrawControl control);
+	ui::Box* DropControl(ControlData* data);
 public:
 	WindowInfo GetWindowInfo() {
 		return _window_info;
@@ -25,6 +25,7 @@ private:
 	bool OnMouseEvent(ui::EventArgs* args);
 private:
 	ui::Box* FindParentBox(POINT pt);
+	void SetUniversalData(ui::Control* control, ControlData* data);
 private:
 	enum class Direction
 	{

@@ -10,16 +10,16 @@ EditorControlsList::~EditorControlsList()
 {
 }
 
-void EditorControlsList::LoadData(std::map<int, DrawControl> controls)
+void EditorControlsList::LoadData(std::vector<ControlData*> datas)
 {
-	_controls = controls;
-	for (auto it = controls.begin(); it != controls.end(); ++it) {
+	_datas = datas;
+	for (auto it = datas.begin(); it != datas.end(); ++it) {
 		ui::Box* boxContainer = new ui::Box;
 		boxContainer->AttachButtonDown(nbase::Bind(&EditorControlsList::OnButtonDown, this, std::placeholders::_1));
 		boxContainer->AttachButtonUp(nbase::Bind(&EditorControlsList::OnButtonUp, this, std::placeholders::_1));
-		boxContainer->SetDataID(nbase::IntToString16(it->second.id));
 		boxContainer->SetFixedHeight(30);
 		boxContainer->SetBkColor(L"blue");
+		boxContainer->SetDataID((*it)->name);
 		this->Add(boxContainer);
 		ui::Label* lbTitle = new ui::Label;
 		lbTitle->SetMouseEnabled(false);
@@ -28,18 +28,18 @@ void EditorControlsList::LoadData(std::map<int, DrawControl> controls)
 		lbTitle->SetHorAlignType(ui::kHorAlignCenter);
 		lbTitle->SetVerAlignType(ui::kVerAlignCenter);
 		boxContainer->Add(lbTitle);
-		lbTitle->SetText(it->second.name);
+		lbTitle->SetText((*it)->name);
 	}
 }
 
 bool EditorControlsList::OnButtonDown(ui::EventArgs* args)
 {
 	if (_select_callback) {
-		int id = -1;
-		nbase::StringToInt(args->pSender->GetDataID(), &id);
-		auto it = _controls.find(id);
-		if (it != _controls.end()) {
-			_select_callback(it->second);
+		for (auto it = _datas.begin(); it != _datas.end(); ++it) {
+			if ((*it)->name == args->pSender->GetDataID()) {
+				_select_callback(*it);
+				return true;
+			}
 		}
 	}
 	return true;

@@ -14,19 +14,16 @@ XmlHelper::~XmlHelper()
 
 bool XmlHelper::ConvertXml(EditorArea* area, const std::wstring& path, bool window)
 {
-	const std::string declaration = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 	tinyxml2::XMLDocument doc;
-	doc.Parse(declaration.c_str());
+	doc.Parse(_xml_header.c_str());
 	tinyxml2::XMLElement* rootWindow = doc.NewElement("Window");
 	doc.InsertEndChild(rootWindow);
 	if (window) {
 		rootWindow->SetAttribute("size", nbase::StringPrintf("%d,%d", area->GetWindowInfo().width, area->GetWindowInfo().height).c_str());
 	}
-	tinyxml2::XMLElement* rootBox = doc.NewElement("Box");
-	rootWindow->InsertEndChild(rootBox);
 	if (((ui::Box*)area->GetItemAt(0))->GetCount() > 0) {
-		tinyxml2::XMLElement* element = GetElement(&doc, ((ui::Box*)area->GetItemAt(0))->GetItemAt(0));
-		rootBox->InsertEndChild(element);
+		tinyxml2::XMLElement* element = GetElement(&doc, area->GetItemAt(0));
+		rootWindow->InsertEndChild(element);
 	}
 	tinyxml2::XMLError result = doc.SaveFile(nbase::UTF16ToUTF8(path).c_str());
 	if (result == tinyxml2::XML_SUCCESS) {
@@ -55,7 +52,7 @@ bool XmlHelper::ParseXml(EditorArea* area, const std::wstring& path, bool window
 		nbase::StringToInt(sizeVector[1], &height);
 		area->GetItemAt(0)->SetFixedHeight(height);
 	}
-	ParseElement(rootElement, ((ui::Box*)area->GetItemAt(0)));
+	ParseElement(area, rootElement, ((ui::Box*)area->GetItemAt(0)));
 }
 
 tinyxml2::XMLElement* XmlHelper::GetElement(tinyxml2::XMLDocument* doc, ui::Control* control)
@@ -84,7 +81,7 @@ tinyxml2::XMLElement* XmlHelper::GetElement(tinyxml2::XMLDocument* doc, ui::Cont
 	return element;
 }
 
-void XmlHelper::ParseElement(tinyxml2::XMLElement* element, ui::Box* rootBox)
+void XmlHelper::ParseElement(EditorArea* area, tinyxml2::XMLElement* element, ui::Box* rootBox)
 {
 	if (!rootBox) {
 		return;
@@ -123,14 +120,9 @@ void XmlHelper::ParseElement(tinyxml2::XMLElement* element, ui::Box* rootBox)
 		else {
 			nbase::StringToInt(heightAttr, &height);
 		}
-
-		ui::Box* box = NULL;
+		ui::Box* containerBox = NULL;
 		if (value == L"Box") {
-			box = new ui::Box;
-			box->SetBorderSize(1);
-			box->SetBorderColor(L"blue");
-			box->SetFixedWidth(width);
-			box->SetFixedHeight(height);
+			ControlData* data = new ControlData(L"Box", width, height, true, rootBox);
 			if (!marginAttr.empty()) {
 				std::vector<std::string> marginVector = ConvertVector(nim_comp::StringHelper::Split(marginAttr, ","));
 				int left, top, right, bottom = 0;
@@ -139,12 +131,12 @@ void XmlHelper::ParseElement(tinyxml2::XMLElement* element, ui::Box* rootBox)
 				nbase::StringToInt(marginVector[2], &right);
 				nbase::StringToInt(marginVector[3], &bottom);
 				ui::UiRect marginRect(left, top, right, bottom);
-				box->SetMargin(marginRect);
+				data->margin = marginRect;
 			}
-			rootBox->Add(box);
+			containerBox = area->DropControl(data);
 		}
 		if (!currenteleElement->NoChildren()) {
-			ParseElement(currenteleElement, box);
+			ParseElement(area, currenteleElement, containerBox);
 		}
 	}
 }

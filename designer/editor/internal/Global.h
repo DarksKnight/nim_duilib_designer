@@ -11,20 +11,23 @@ enum ControlType
 {
 	Box = 0,
 	HBox
-};
+}; 
 
-struct DrawControl 
+class ControlData : public ui::UserDataBase 
 {
-	int id;
-	std::wstring name;
-
-	DrawControl() {
-		this->id = -1;
-		this->name = L"";
-	}
-
-	DrawControl(int id, std::wstring name) {
-		this->id = id;
+public:
+	ControlData(const std::wstring& name, int width, int height, bool isLoad = false, ui::Box* parentBox = NULL) {
 		this->name = name;
+		this->width = width;
+		this->height = height;
+		this->isLoad = isLoad;
+		this->parentBox = parentBox;
 	}
+public:
+	std::wstring name = L"";
+	int width = 0;
+	int height = 0;
+	ui::UiRect margin;
+	bool isLoad = false;
+	ui::Box* parentBox;
 };

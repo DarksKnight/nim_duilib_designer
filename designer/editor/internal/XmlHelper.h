@@ -14,7 +14,7 @@ public:
 	bool ParseXml(EditorArea* area, const std::wstring & path, bool window = true);
 private:
 	tinyxml2::XMLElement* GetElement(tinyxml2::XMLDocument* doc, ui::Control* control);
-	void ParseElement(tinyxml2::XMLElement* element, ui::Box* rootBox);
+	void ParseElement(EditorArea* area, tinyxml2::XMLElement* element, ui::Box* rootBox);
 private:
 	bool CheckRectEmpty(ui::UiRect rect) {
 		return rect.left == 0 && rect.top == 0 && rect.right == 0 && rect.bottom == 0;
@@ -29,5 +29,7 @@ private:
 		}
 		return vector;
 	}
+private:
+	const std::string _xml_header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 };
 

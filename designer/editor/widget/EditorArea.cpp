@@ -21,35 +21,28 @@ EditorArea::~EditorArea()
 {
 }
 
-void EditorArea::DropControl(DrawControl control)
+ui::Box* EditorArea::DropControl(ControlData* data)
 {
-	POINT pt = { 0 };
-	::GetCursorPos(&pt);
-	::ScreenToClient(GetWindow()->GetHWND(), &pt);
-	ui::Box* container = FindParentBox(pt);
-	ui::UiRect rect = container->GetPos();
-	int left = pt.x - rect.left;
-	int top = pt.y - rect.top;
-	switch (control.id)
-	{
-	case ControlType::Box:
-	{
+	ui::Box* container = NULL;
+	if (!data->isLoad) {
+		POINT pt = { 0 };
+		::GetCursorPos(&pt);
+		::ScreenToClient(GetWindow()->GetHWND(), &pt);
+		container = FindParentBox(pt);
+		ui::UiRect rect = container->GetPos();
+		data->margin.left = pt.x - rect.left;
+		data->margin.top = pt.y - rect.top;
+	}
+	else {
+		container = data->parentBox;
+	}
+	if (data->name == L"Box") {
 		ui::Box* boxContainer = new ui::Box;
-		boxContainer->AttachButtonDown(nbase::Bind(&EditorArea::OnButtonDown, this, std::placeholders::_1));
-		boxContainer->AttachButtonUp(nbase::Bind(&EditorArea::OnButtonUp, this, std::placeholders::_1));
-		boxContainer->AttachAllEvents(nbase::Bind(&EditorArea::OnMouseEvent, this, std::placeholders::_1));
-		boxContainer->SetName(L"box2");
-		boxContainer->SetFixedWidth(160);
-		boxContainer->SetFixedHeight(80);
-		boxContainer->SetBorderSize(1);
-		boxContainer->SetBorderColor(L"blue");
+		SetUniversalData(boxContainer, data);
 		container->Add(boxContainer);
-		boxContainer->SetMargin(ui::UiRect(left, top, 0, 0));
-		break;
+		return boxContainer;
 	}
-	default:
-		break;
-	}
+	return NULL;
 }
 
 bool EditorArea::OnButtonDown(ui::EventArgs* args)
@@ -169,4 +162,17 @@ ui::Box* EditorArea::FindParentBox(POINT pt)
 		return this;
 	}
 	return (ui::Box*)control;
+}
+
+void EditorArea::SetUniversalData(ui::Control* control, ControlData* data)
+{
+	control->AttachButtonDown(nbase::Bind(&EditorArea::OnButtonDown, this, std::placeholders::_1));
+	control->AttachButtonUp(nbase::Bind(&EditorArea::OnButtonUp, this, std::placeholders::_1));
+	control->AttachAllEvents(nbase::Bind(&EditorArea::OnMouseEvent, this, std::placeholders::_1));
+	control->SetFixedWidth(data->width);
+	control->SetFixedHeight(data->height);
+	control->SetUserDataBase(data);
+	control->SetBorderSize(1);
+	control->SetBorderColor(L"blue");
+	control->SetMargin(data->margin);
 }

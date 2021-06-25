@@ -31,7 +31,7 @@ std::wstring EditorForm::GetWindowClassName() const
 
 void EditorForm::InitWindow()
 {
-	_draw_controls[0] = DrawControl(ControlType::Box, L"Box");
+	_control_datas.push_back(new ControlData(L"Box", 160, 80));
 	_toolbar = (EditorToolbar*)FindControl(L"et");
 	_toolbar->InitCtrls();
 	_toolbar->SetSaveCallback(nbase::Bind(&EditorForm::OnSaveFile, this));
@@ -47,7 +47,7 @@ void EditorForm::InitWindow()
 	_box_property->SetFixedWidth(width / 5);
 	_controls_list->SetSelectCallback(nbase::Bind(&EditorForm::OnSelect, this ,std::placeholders::_1));
 	_controls_list->SetButtonUpCallback(nbase::Bind(&EditorForm::OnButtonUp, this));
-	_controls_list->LoadData(_draw_controls);
+	_controls_list->LoadData(_control_datas);
 
 	nbase::ThreadManager::PostTask(kThreadUI, nbase::Bind(&EditorForm::OpenCreateForm, this));
 }
@@ -73,12 +73,12 @@ LRESULT EditorForm::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return __super::HandleMessage(uMsg, wParam, lParam);
 }
 
-void EditorForm::OnSelect(DrawControl control)
+void EditorForm::OnSelect(ControlData* data)
 {
-	_select_control = control;
+	_select_data = data;
 	ui::Box* preBox = new ui::Box;
-	preBox->SetFixedWidth(100);
-	preBox->SetFixedHeight(60);
+	preBox->SetFixedWidth(_pre_box_width);
+	preBox->SetFixedHeight(_pre_box_height);
 	preBox->SetBkColor(L"bk_wnd_darkcolor");
 	_box_drag_pre->Add(preBox);
 	_box_drag_pre->SetVisible(true);
@@ -95,7 +95,7 @@ void EditorForm::OnButtonUp()
 	if (!rect.IsPointIn(pt)) {
 		return;
 	}
-	_editor_area->DropControl(_select_control);
+	_editor_area->DropControl(_select_data);
 }
 
 void EditorForm::OnSaveFile()
