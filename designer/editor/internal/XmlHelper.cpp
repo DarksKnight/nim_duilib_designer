@@ -10,14 +10,16 @@ XmlHelper::~XmlHelper()
 {
 }
 
-bool XmlHelper::ConvertXml(EditorArea* area, const std::wstring& path)
+bool XmlHelper::ConvertXml(EditorArea* area, const std::wstring& path, bool window)
 {
 	const std::string declaration = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 	tinyxml2::XMLDocument doc;
 	doc.Parse(declaration.c_str());
 	tinyxml2::XMLElement* rootWindow = doc.NewElement("Window");
 	doc.InsertEndChild(rootWindow);
-	rootWindow->SetAttribute("size", nbase::StringPrintf("%d,%d", area->GetWindowInfo().width, area->GetWindowInfo().height).c_str());
+	if (window) {
+		rootWindow->SetAttribute("size", nbase::StringPrintf("%d,%d", area->GetWindowInfo().width, area->GetWindowInfo().height).c_str());
+	}
 	tinyxml2::XMLElement* rootBox = doc.NewElement("Box");
 	rootWindow->InsertEndChild(rootBox);
 	if (((ui::Box*)area->GetItemAt(0))->GetCount() > 0) {

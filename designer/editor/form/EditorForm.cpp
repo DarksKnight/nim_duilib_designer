@@ -135,9 +135,13 @@ void EditorForm::OnSelectPathCallback(BOOL ret, std::wstring path)
 	}
 	_saved = true;
 	_last_save_path = path;
-	XmlHelper::GetInstance()->ConvertXml(_editor_area, path);
-	if (_exec_new) {
-		OnNewFile();
+	if (XmlHelper::GetInstance()->ConvertXml(_editor_area, path)) {
+		if (_exec_new) {
+			OnNewFile();
+		}
+	}
+	else {
+		nim_comp::ShowMsgBox(GetHWND(), nim_comp::MsgboxCallback(), L"STRID_SAVE_FAIL", true, L"STRID_HINT");
 	}
 }
 

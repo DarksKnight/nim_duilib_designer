@@ -10,7 +10,7 @@ public:
 	~XmlHelper();
 	SINGLETON_DEFINE(XmlHelper);
 public:
-	bool ConvertXml(EditorArea* area, const std::wstring & path);
+	bool ConvertXml(EditorArea* area, const std::wstring & path, bool window = true);
 private:
 	tinyxml2::XMLElement* GetElement(tinyxml2::XMLDocument* doc, ui::Control* control);
 private:
