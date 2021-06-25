@@ -3,6 +3,15 @@
 
 EditorArea::EditorArea()
 {
+	ui::Box* windowBox = new ui::Box;
+	windowBox->AttachButtonDown(nbase::Bind(&EditorArea::OnButtonDown, this, std::placeholders::_1));
+	windowBox->AttachButtonUp(nbase::Bind(&EditorArea::OnButtonUp, this, std::placeholders::_1));
+	windowBox->AttachAllEvents(nbase::Bind(&EditorArea::OnMouseEvent, this, std::placeholders::_1));
+	windowBox->SetName(L"sampleWindow");
+	windowBox->SetFixedWidth(_window_info.width);
+	windowBox->SetFixedHeight(_window_info.height);
+	windowBox->SetBkColor(L"bk_wnd_darkcolor");
+	this->Add(windowBox);
 }
 
 
@@ -132,7 +141,13 @@ bool EditorArea::OnMouseEvent(ui::EventArgs* args)
 		rect.top += top;
 		break;
 	}
-	args->pSender->SetMargin(rect);
+	if (args->pSender->GetName() != L"sampleWindow") {
+		args->pSender->SetMargin(rect);
+	}
+	else {
+		_window_info.width = args->pSender->GetFixedWidth();
+		_window_info.height = args->pSender->GetFixedHeight();
+	}
 	_last_point = args->ptMouse;
 	return true;
 }

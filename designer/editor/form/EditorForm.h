@@ -16,10 +16,12 @@ public:
 	static const std::wstring kClassName;
 protected:
 	LRESULT OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled) override;
+	LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam) override;
 private:
 	void OnSelect(DrawControl control);
 	void OnButtonUp();
 	void OnSave();
+	void OnSelectPathCallback(BOOL ret, std::wstring path);
 private:
 	EditorToolbar* _toolbar;
 	EditorControlsList* _controls_list;
@@ -30,4 +32,6 @@ private:
 private:
 	std::map<int, DrawControl> _draw_controls;
 	DrawControl _select_control;
+	bool _saved = false;
+	std::wstring _last_save_path;
 };

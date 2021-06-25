@@ -5,10 +5,20 @@
 class EditorArea : public ui::Box
 {
 public:
+	struct WindowInfo
+	{
+		int width = 500;
+		int height = 500;
+	};
+public:
 	EditorArea();
 	~EditorArea();
 public:
 	void DropControl(DrawControl control);
+public:
+	WindowInfo GetWindowInfo() {
+		return _window_info;
+	}
 private:
 	bool OnButtonDown(ui::EventArgs* args);
 	bool OnButtonUp(ui::EventArgs* args);
@@ -27,5 +37,6 @@ private:
 private:
 	POINT _last_point;
 	Direction _current_direction = Direction::NONE;
+	WindowInfo _window_info;
 };
 

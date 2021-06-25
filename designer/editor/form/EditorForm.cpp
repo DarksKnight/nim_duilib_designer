@@ -60,6 +60,14 @@ LRESULT EditorForm::OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& b
 	return __super::OnMouseMove(uMsg, wParam, lParam, bHandled);
 }
 
+LRESULT EditorForm::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	if (uMsg == WM_KEYDOWN && wParam == 'S' && ::GetKeyState(VK_CONTROL) < 0) {
+		OnSave();
+	}
+	return __super::HandleMessage(uMsg, wParam, lParam);
+}
+
 void EditorForm::OnSelect(DrawControl control)
 {
 	_select_control = control;
@@ -87,5 +95,28 @@ void EditorForm::OnButtonUp()
 
 void EditorForm::OnSave()
 {
-	XmlHelper::ConvertXml(_editor_area, L"E:\\work\\a.xml");
+	if (_saved) {
+		OnSelectPathCallback(TRUE, _last_save_path);
+		return;
+	}
+	nim_comp::CFileDialogEx* fileDlg = new nim_comp::CFileDialogEx;
+	std::map<LPCTSTR, LPCTSTR> filters;
+	filters[L"File Format(*.xml)"] = L"*.xml";
+	fileDlg->SetFilter(filters);
+	fileDlg->SetFileName(L"newFile");
+	fileDlg->SetDefExt(L".xml");
+	fileDlg->SetParentWnd(GetHWND());
+	nim_comp::CFileDialogEx::FileDialogCallback2 callback2 = nbase::Bind(&EditorForm::OnSelectPathCallback, this, std::placeholders::_1, std::placeholders::_2);
+	fileDlg->AyncShowSaveFileDlg(callback2);
+	
+}
+
+void EditorForm::OnSelectPathCallback(BOOL ret, std::wstring path)
+{
+	if (!ret) {
+		return;
+	}
+	_saved = true;
+	_last_save_path = path;
+	XmlHelper::GetInstance()->ConvertXml(_editor_area, path);
 }

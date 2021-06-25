@@ -337,6 +337,7 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="widget\EditorArea.h" />
     <ClInclude Include="widget\EditorControlsList.h" />
+    <ClInclude Include="widget\EditorCreateView.h" />
     <ClInclude Include="widget\EditorProperty.h" />
     <ClInclude Include="widget\EditorToolbar.h" />
   </ItemGroup>
@@ -352,6 +353,7 @@
     </ClCompile>
     <ClCompile Include="widget\EditorArea.cpp" />
     <ClCompile Include="widget\EditorControlsList.cpp" />
+    <ClCompile Include="widget\EditorCreateView.cpp" />
     <ClCompile Include="widget\EditorProperty.cpp" />
     <ClCompile Include="widget\EditorToolbar.cpp" />
   </ItemGroup>

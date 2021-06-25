@@ -5,6 +5,7 @@
 #include "../widget/EditorControlsList.h"
 #include "../widget/EditorProperty.h"
 #include "../widget/EditorToolbar.h"
+#include "../widget/EditorCreateView.h"
 
 ui::Control* ExternCtrlManager::CreateExternCtrl(const std::wstring& name)
 {
@@ -17,5 +18,7 @@ ui::Control* ExternCtrlManager::CreateExternCtrl(const std::wstring& name)
 		ret = new EditorProperty;
 	else if (name.compare(L"EditorToolbar") == 0)
 		ret = new EditorToolbar;
+	else if (name.compare(L"EditorCreateView") == 0)
+		ret = new EditorCreateView;
 	return ret;
 }
