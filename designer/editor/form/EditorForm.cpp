@@ -157,6 +157,7 @@ void EditorForm::DoNewFile(EditorCreateForm::CreateType type)
 
 void EditorForm::OnOpenFile(const std::wstring& path)
 {
+	_box_editor_area->RemoveAll();
 	_saved = true;
 	_last_save_path = path;
 	_editor_area = new EditorArea;

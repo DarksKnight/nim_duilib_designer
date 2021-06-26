@@ -35,25 +35,15 @@ bool XmlHelper::ConvertXml(EditorArea* area, const std::wstring& path, bool wind
 	}
 }
 
-bool XmlHelper::ParseXml(EditorArea* area, const std::wstring& path, bool window)
+bool XmlHelper::ParseXml(EditorArea* area, const std::wstring& path)
 {
 	tinyxml2::XMLDocument doc;
 	tinyxml2::XMLError result = doc.LoadFile(nbase::UTF16ToUTF8(path).c_str());
 	if (result != tinyxml2::XML_SUCCESS) {
 		return false;
 	}
-	tinyxml2::XMLElement* rootElement = doc.RootElement();
-	if (window) {
-		std::string sizeAttr = rootElement->Attribute("size");
-		std::vector<std::string> sizeVector = ConvertVector(nim_comp::StringHelper::Split(sizeAttr, ","));
-		int width = 0;
-		nbase::StringToInt(sizeVector[0], &width);
-		area->GetItemAt(0)->SetFixedWidth(width);
-		int height = 0;
-		nbase::StringToInt(sizeVector[1], &height);
-		area->GetItemAt(0)->SetFixedHeight(height);
-	}
-	ParseElement(rootElement, ((ui::Box*)area->GetItemAt(0)));
+	area->RemoveAll();
+	ParseElement(doc.RootElement(), area);
 }
 
 tinyxml2::XMLElement* XmlHelper::GetElement(tinyxml2::XMLDocument* doc, ui::Control* control)
@@ -86,12 +76,29 @@ void XmlHelper::ParseElement(tinyxml2::XMLElement* element, ui::Box* rootBox)
 	}
 	for (tinyxml2::XMLElement* currentElement = element->FirstChildElement(); currentElement; currentElement = currentElement->NextSiblingElement()) {
 		AreaControl* areaControl = NULL;
-		std::wstring value = nbase::UTF8ToUTF16(currentElement->Value());
-		if (value == L"Box") {
-			areaControl = new AreaBox;
-			rootBox->Add((AreaBox*)areaControl);
+		if (_first_node) {
+			_first_node = false;
+			areaControl = new AreaWindow;
+			rootBox->Add((AreaWindow*)areaControl);
+			areaControl->ParseElement(currentElement);
+			AreaWindow* areaWindow = (AreaWindow*)areaControl;
+			std::string sizeAttr = element->Attribute("size");
+			std::vector<std::string> sizeVector = ConvertVector(nim_comp::StringHelper::Split(sizeAttr, ","));
+			int width = 0;
+			nbase::StringToInt(sizeVector[0], &width);
+			areaWindow->SetFixedWidth(width);
+			int height = 0;
+			nbase::StringToInt(sizeVector[1], &height);
+			areaWindow->SetFixedHeight(height);
 		}
-		areaControl->ParseElement(currentElement);
+		else {
+			std::wstring value = nbase::UTF8ToUTF16(currentElement->Value());
+			if (value == L"Box") {
+				areaControl = new AreaBox;
+				rootBox->Add((AreaBox*)areaControl);
+			}
+			areaControl->ParseElement(currentElement);
+		}
 		ui::Box* containerBox = dynamic_cast<ui::Box*>(areaControl);
 		if (!currentElement->NoChildren() && containerBox) {
 			ParseElement(currentElement, containerBox);
