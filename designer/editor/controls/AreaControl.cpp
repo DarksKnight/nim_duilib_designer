@@ -114,6 +114,13 @@ bool AreaControl::OnButtonUp(ui::EventArgs* args)
 bool AreaControl::OnMouseEvent(ui::EventArgs* args)
 {
 	if (args->Type != ui::kEventMouseMove) {
+		if (args->Type == ui::kEventMouseRightButtonDown) {
+			if (_button_down_callback) {
+				_button_down_callback();
+			}
+			args->pSender->SetBorderColor(L"red");
+			OnItemMenu(args);
+		}
 		return true;
 	}
 	ui::UiRect controlRect = args->pSender->GetPos();
@@ -179,5 +186,27 @@ bool AreaControl::OnMouseEvent(ui::EventArgs* args)
 		args->pSender->SetMargin(rect);
 	}
 	_last_point = args->ptMouse;
+	return true;
+}
+
+bool AreaControl::OnItemMenu(ui::EventArgs* args)
+{
+	if (!_show_menu) {
+		return true;
+	}
+	POINT point;
+	::GetCursorPos(&point);
+	nim_comp::CMenuWnd* menu = new nim_comp::CMenuWnd(_control->GetWindow()->GetHWND());
+	ui::STRINGorID xml(L"../layout/menu_editor_control.xml");
+	menu->Init(xml, _T("xml"), point);
+	_menu_delete = (nim_comp::CMenuElementUI*)menu->FindControl(L"menu_editor_control_delete");
+	_menu_delete->AttachSelect(nbase::Bind(&AreaControl::OnItemMenuDelete, this, std::placeholders::_1));
+	OnItemMenu();
+	return true;
+}
+
+bool AreaControl::OnItemMenuDelete(ui::EventArgs* args)
+{
+	_control->GetParent()->Remove(_control);
 	return true;
 }

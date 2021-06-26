@@ -7,6 +7,7 @@ AreaWindow::AreaWindow()
 	SetFixedHeight(500);
 	SetBkColor(L"bk_wnd_darkcolor");
 	SetMove(false);
+	SetShowMenu(false);
 }
 
 

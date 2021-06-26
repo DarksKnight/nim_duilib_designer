@@ -17,15 +17,23 @@ public:
 	void SetMove(bool value) {
 		_can_move = value;
 	}
+	void SetShowMenu(bool value) {
+		_show_menu = value;
+	}
 protected:
 	virtual std::wstring GetControlName() = 0;
 protected:
 	virtual void OnParseElement(tinyxml2::XMLElement* element) {}
 	virtual void OnGetElement(tinyxml2::XMLDocument* doc, tinyxml2::XMLElement* element) {}
+	virtual void OnItemMenu() {}
+protected:
+	nim_comp::CMenuElementUI* _menu_delete;
 private:
 	bool OnButtonDown(ui::EventArgs* args);
 	bool OnButtonUp(ui::EventArgs* args);
 	bool OnMouseEvent(ui::EventArgs* args);
+	bool OnItemMenu(ui::EventArgs* args);
+	bool OnItemMenuDelete(ui::EventArgs* args);
 private:
 	bool CheckRectEmpty(ui::UiRect rect) {
 		return rect.left == 0 && rect.top == 0 && rect.right == 0 && rect.bottom == 0;
@@ -56,4 +64,5 @@ private:
 	StdClosure _button_down_callback;
 	bool _can_move = true;
 	ui::Control* _control = NULL;
+	bool _show_menu = true;
 };
