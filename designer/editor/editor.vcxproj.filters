@@ -66,6 +66,15 @@
     <ClInclude Include="form\EditorCreateForm.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="controls\AreaBox.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="controls\AreaControl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="controls\AreaWindow.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -93,6 +102,15 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="form\EditorCreateForm.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="controls\AreaBox.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="controls\AreaControl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="controls\AreaWindow.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

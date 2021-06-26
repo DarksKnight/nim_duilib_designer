@@ -1,7 +1,8 @@
 ﻿#include "../stdafx.h"
 #include "XmlHelper.h"
-#include <iterator>
-#include <algorithm>
+#include "../controls/AreaControl.h"
+#include "../controls/AreaBox.h"
+#include "../controls/AreaWindow.h"
 
 XmlHelper::XmlHelper()
 {
@@ -19,9 +20,9 @@ bool XmlHelper::ConvertXml(EditorArea* area, const std::wstring& path, bool wind
 	tinyxml2::XMLElement* rootWindow = doc.NewElement("Window");
 	doc.InsertEndChild(rootWindow);
 	if (window) {
-		rootWindow->SetAttribute("size", nbase::StringPrintf("%d,%d", area->GetWindowInfo().width, area->GetWindowInfo().height).c_str());
+		rootWindow->SetAttribute("size", nbase::StringPrintf("%d,%d", area->GetItemAt(0)->GetFixedWidth(), area->GetItemAt(0)->GetFixedHeight()).c_str());
 	}
-	if (((ui::Box*)area->GetItemAt(0))->GetCount() > 0) {
+	if (((AreaBox*)area->GetItemAt(0))->GetCount() > 0) {
 		tinyxml2::XMLElement* element = GetElement(&doc, area->GetItemAt(0));
 		rootWindow->InsertEndChild(element);
 	}
@@ -52,7 +53,7 @@ bool XmlHelper::ParseXml(EditorArea* area, const std::wstring& path, bool window
 		nbase::StringToInt(sizeVector[1], &height);
 		area->GetItemAt(0)->SetFixedHeight(height);
 	}
-	ParseElement(area, rootElement, ((ui::Box*)area->GetItemAt(0)));
+	ParseElement(rootElement, ((ui::Box*)area->GetItemAt(0)));
 }
 
 tinyxml2::XMLElement* XmlHelper::GetElement(tinyxml2::XMLDocument* doc, ui::Control* control)
@@ -61,111 +62,39 @@ tinyxml2::XMLElement* XmlHelper::GetElement(tinyxml2::XMLDocument* doc, ui::Cont
 	if (!control) {
 		return element;
 	}
-	ui::Box* box = dynamic_cast<ui::Box*>(control);
-	if (box) {
-		ui::HBox* hBox = dynamic_cast<ui::HBox*>(control);
-		ui::VBox* vBox = dynamic_cast<ui::VBox*>(control);
-		if (hBox) {
-			element = doc->NewElement("HBox");
-		}
-		else if (vBox) {
-			element = doc->NewElement("VBox");
+	AreaBox* areaBox = dynamic_cast<AreaBox*>(control);
+	if (areaBox) {
+		AreaWindow* areaWindow = dynamic_cast<AreaWindow*>(control);
+		if (areaWindow) {
+			element = areaWindow->GetElement(doc);
 		}
 		else {
-			element = doc->NewElement("Box");
+			element = areaBox->GetElement(doc);
 		}
-		if (box->GetName() != L"sampleWindow") {
-			SetUniversalAttr(element, control);
-		}
-		for (int i = 0; i < box->GetCount(); i++) {
-			tinyxml2::XMLElement* subEl = GetElement(doc, box->GetItemAt(i));
+		for (int i = 0; i < areaBox->GetCount(); i++) {
+			tinyxml2::XMLElement* subEl = GetElement(doc, areaBox->GetItemAt(i));
 			element->InsertEndChild(subEl);
 		}
-	}
-	else {
-		ui::Label* label = dynamic_cast<ui::Label*>(control);
-		if (label) {
-			element = doc->NewElement("Label");
-		}
-		SetUniversalAttr(element, control);
 	}
 	return element;
 }
 
-void XmlHelper::ParseElement(EditorArea* area, tinyxml2::XMLElement* element, ui::Box* rootBox)
+void XmlHelper::ParseElement(tinyxml2::XMLElement* element, ui::Box* rootBox)
 {
 	if (!rootBox) {
 		return;
 	}
-	for (tinyxml2::XMLElement* currenteleElement = element->FirstChildElement(); currenteleElement; currenteleElement = currenteleElement->NextSiblingElement()) {
-		ControlData* data = SetUniversalProperty(currenteleElement);
-		data->parentBox = rootBox;
-		ui::Control* control = area->DropControl(data);
-		ui::Box* containerBox = dynamic_cast<ui::Box*>(control);
-		if (!currenteleElement->NoChildren() && containerBox) {
-			ParseElement(area, currenteleElement, containerBox);
+	for (tinyxml2::XMLElement* currentElement = element->FirstChildElement(); currentElement; currentElement = currentElement->NextSiblingElement()) {
+		AreaControl* areaControl = NULL;
+		std::wstring value = nbase::UTF8ToUTF16(currentElement->Value());
+		if (value == L"Box") {
+			areaControl = new AreaBox;
+			rootBox->Add((AreaBox*)areaControl);
+		}
+		areaControl->ParseElement(currentElement);
+		ui::Box* containerBox = dynamic_cast<ui::Box*>(areaControl);
+		if (!currentElement->NoChildren() && containerBox) {
+			ParseElement(currentElement, containerBox);
 		}
 	}
-}
-
-void XmlHelper::SetUniversalAttr(tinyxml2::XMLElement* element, ui::Control* control)
-{
-	if (!CheckWidthAndHeight(control->GetFixedWidth())) {
-		element->SetAttribute("width", control->GetFixedWidth());
-	}
-	if (!CheckWidthAndHeight(control->GetFixedHeight())) {
-		element->SetAttribute("height", control->GetFixedHeight());
-	}
-	if (!CheckRectEmpty(control->GetMargin())) {
-		element->SetAttribute("margin", nbase::StringPrintf("%d,%d,%d,%d", control->GetMargin().left, control->GetMargin().top, control->GetMargin().right, control->GetMargin().bottom).c_str());
-	}
-}
-
-ControlData* XmlHelper::SetUniversalProperty(tinyxml2::XMLElement* element)
-{
-	std::wstring value = nbase::UTF8ToUTF16(element->Value());
-	std::string widthAttr = "stretch";
-	std::string heightAttr = "stretch";
-	std::string marginAttr = "";
-	if (element->BoolAttribute("width")) {
-		widthAttr = element->Attribute("width");
-	}
-	if (element->BoolAttribute("height")) {
-		heightAttr = element->Attribute("height");
-	}
-	if (element->BoolAttribute("margin")) {
-		marginAttr = element->Attribute("margin");
-	}
-	int width = 0;
-	int height = 0;
-	if (widthAttr == "auto") {
-		width = DUI_LENGTH_AUTO;
-	}
-	else if (widthAttr == "stretch") {
-		width = DUI_LENGTH_STRETCH;
-	}
-	else {
-		nbase::StringToInt(widthAttr, &width);
-	}
-	if (heightAttr == "auto") {
-		height = DUI_LENGTH_AUTO;
-	}
-	else if (heightAttr == "stretch") {
-		height = DUI_LENGTH_STRETCH;
-	}
-	else {
-		nbase::StringToInt(heightAttr, &height);
-	}
-	ControlData* data = new ControlData(value, width, height, true);
-	if (!marginAttr.empty()) {
-		std::vector<std::string> marginVector = ConvertVector(nim_comp::StringHelper::Split(marginAttr, ","));
-		int left, top, right, bottom = 0;
-		nbase::StringToInt(marginVector[0], &left);
-		nbase::StringToInt(marginVector[1], &top);
-		nbase::StringToInt(marginVector[2], &right);
-		nbase::StringToInt(marginVector[3], &bottom);
-		ui::UiRect marginRect(left, top, right, bottom);
-		data->margin = marginRect;
-	}
-	return data;
 }

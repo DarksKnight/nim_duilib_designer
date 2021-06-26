@@ -22,3 +22,5 @@
 #include "ui_components/ui_components.h"
 
 #include "internal/Global.h"
+
+#include <third_party/tinyxml2/include/tinyxml2.h>

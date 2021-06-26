@@ -35,10 +35,6 @@ std::wstring EditorForm::GetWindowId() const
 
 void EditorForm::InitWindow()
 {
-	_control_datas.push_back(new ControlData(L"Box", 160, 80));
-	_control_datas.push_back(new ControlData(L"HBox", 160, 80));
-	_control_datas.push_back(new ControlData(L"VBox", 160, 80));
-	_control_datas.push_back(new ControlData(L"Label", 80, 30));
 	_toolbar = (EditorToolbar*)FindControl(L"et");
 	_toolbar->InitCtrls();
 	_toolbar->SetSaveCallback(nbase::Bind(&EditorForm::OnSaveFile, this));
@@ -54,8 +50,6 @@ void EditorForm::InitWindow()
 	_box_property->SetFixedWidth(width / 5);
 	_controls_list->SetSelectCallback(nbase::Bind(&EditorForm::OnSelect, this ,std::placeholders::_1));
 	_controls_list->SetButtonUpCallback(nbase::Bind(&EditorForm::OnButtonUp, this));
-	_controls_list->LoadData(_control_datas);
-
 	nbase::ThreadManager::PostTask(kThreadUI, nbase::Bind(&EditorForm::OpenCreateForm, this));
 }
 
@@ -80,15 +74,15 @@ LRESULT EditorForm::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return __super::HandleMessage(uMsg, wParam, lParam);
 }
 
-void EditorForm::OnSelect(ControlData* data)
+void EditorForm::OnSelect(const std::wstring& name)
 {
-	_select_data = data;
+	_select_name = name;
 	ui::Box* preBox = new ui::Box;
-	if (data->name == L"Box" || data->name == L"HBox" || data->name == L"VBox") {
+	if (_select_name == L"Box" || _select_name == L"HBox" || _select_name == L"VBox") {
 		_pre_box_width = 100;
 		_pre_box_height = 60;
 	}
-	else if (data->name == L"Label") {
+	else if (_select_name == L"Label") {
 		_pre_box_width = 50;
 		_pre_box_height = 20;
 	}
@@ -110,7 +104,7 @@ void EditorForm::OnButtonUp()
 	if (!rect.IsPointIn(pt)) {
 		return;
 	}
-	_editor_area->DropControl(_select_data);
+	_editor_area->DropControl(_select_name);
 }
 
 void EditorForm::OnSaveFile()

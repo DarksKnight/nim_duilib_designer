@@ -20,7 +20,7 @@ protected:
 	LRESULT OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled) override;
 	LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam) override;
 private:
-	void OnSelect(ControlData* data);
+	void OnSelect(const std::wstring & name);
 	void OnButtonUp();
 	void OnSaveFile();
 	void OnNewFile();
@@ -38,8 +38,7 @@ private:
 	ui::Box* _box_drag_pre;
 	ui::Box* _box_editor_area;
 private:
-	std::vector<ControlData*> _control_datas;
-	ControlData* _select_data;
+	std::wstring _select_name = L"";
 	bool _saved = false;
 	std::wstring _last_save_path;
 	int _pre_box_width = 100;
