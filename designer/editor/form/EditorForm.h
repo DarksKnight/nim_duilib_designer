@@ -27,9 +27,11 @@ private:
 	void OnNewFile();
 	void DoNewFile(EditorCreateForm::CreateType type);
 	void OnOpenFile(const std::wstring& path);
+	void DoOpenFile(const std::wstring& path);
 	void OnCreateFormClose();
 	void OnSelectPathCallback(BOOL ret, std::wstring path);
-	void OnMsgBoxCallback(nim_comp::MsgBoxRet ret, EditorCreateForm::CreateType type);
+	void OnNewFileMsgBoxCallback(nim_comp::MsgBoxRet ret, EditorCreateForm::CreateType type);
+	void OnOpenFileMsgBoxCallback(nim_comp::MsgBoxRet ret, const std::wstring & path);
 	void OpenCreateForm();
 	void UiChanged();
 private:

@@ -156,7 +156,7 @@ void EditorForm::OnNewFile()
 void EditorForm::DoNewFile(EditorCreateForm::CreateType type)
 {
 	if (!_saved && _box_editor_area->GetCount() > 0) {
-		nim_comp::MsgboxCallback cb = nbase::Bind(&EditorForm::OnMsgBoxCallback, this, std::placeholders::_1, type);
+		nim_comp::MsgboxCallback cb = nbase::Bind(&EditorForm::OnNewFileMsgBoxCallback, this, std::placeholders::_1, type);
 		nim_comp::ShowMsgBox(GetHWND(), cb, L"STRID_UNSAVE_TIP", true, L"STRID_HINT", true, L"STRING_OK", true, L"STRING_CANCEL", true);
 		return;
 	}
@@ -170,6 +170,16 @@ void EditorForm::DoNewFile(EditorCreateForm::CreateType type)
 }
 
 void EditorForm::OnOpenFile(const std::wstring& path)
+{
+	if (!_saved && _box_editor_area->GetCount() > 0) {
+		nim_comp::MsgboxCallback cb = nbase::Bind(&EditorForm::OnOpenFileMsgBoxCallback, this, std::placeholders::_1, path);
+		nim_comp::ShowMsgBox(GetHWND(), cb, L"STRID_UNSAVE_TIP", true, L"STRID_HINT", true, L"STRING_OK", true, L"STRING_CANCEL", true);
+		return;
+	}
+	DoOpenFile(path);
+}
+
+void EditorForm::DoOpenFile(const std::wstring& path)
 {
 	_box_editor_area->RemoveAll();
 	_saved = true;
@@ -204,7 +214,7 @@ void EditorForm::OnSelectPathCallback(BOOL ret, std::wstring path)
 	}
 }
 
-void EditorForm::OnMsgBoxCallback(nim_comp::MsgBoxRet ret, EditorCreateForm::CreateType type)
+void EditorForm::OnNewFileMsgBoxCallback(nim_comp::MsgBoxRet ret, EditorCreateForm::CreateType type)
 {
 	if (ret == nim_comp::MB_NO) {
 		_saved = true;
@@ -212,6 +222,15 @@ void EditorForm::OnMsgBoxCallback(nim_comp::MsgBoxRet ret, EditorCreateForm::Cre
 		return;
 	}
 	OnSaveFile();
+}
+
+void EditorForm::OnOpenFileMsgBoxCallback(nim_comp::MsgBoxRet ret, const std::wstring& path)
+{
+	if (ret == nim_comp::MB_YES) {
+		OnSaveFile();
+		return;
+	}
+	DoOpenFile(path);
 }
 
 void EditorForm::OpenCreateForm()
