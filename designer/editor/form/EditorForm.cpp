@@ -35,6 +35,7 @@ std::wstring EditorForm::GetWindowId() const
 
 void EditorForm::InitWindow()
 {
+	m_pRoot->AttachBubbledEvent(ui::kEventAll, nbase::Bind(&EditorForm::Notify, this, std::placeholders::_1));
 	_toolbar = (EditorToolbar*)FindControl(L"et");
 	_toolbar->InitCtrls();
 	_toolbar->SetSaveCallback(nbase::Bind(&EditorForm::OnSaveFile, this));
@@ -74,6 +75,14 @@ LRESULT EditorForm::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return __super::HandleMessage(uMsg, wParam, lParam);
 }
 
+bool EditorForm::Notify(ui::EventArgs* args)
+{
+	if (args->Type == ui::kEventNotify && args->wParam == CustomEventType::UI_CHANGED) {
+		_saved = false;
+	}
+	return true;
+}
+
 void EditorForm::OnSelect(const std::wstring& name)
 {
 	_select_name = name;
@@ -109,7 +118,7 @@ void EditorForm::OnButtonUp()
 
 void EditorForm::OnSaveFile()
 {
-	if (_saved) {
+	if (!_last_save_path.empty()) {
 		OnSelectPathCallback(TRUE, _last_save_path);
 		return;
 	}
@@ -127,8 +136,7 @@ void EditorForm::OnSaveFile()
 void EditorForm::OnNewFile()
 {
 	EditorCreateForm* form = (EditorCreateForm*)(nim_comp::WindowsManager::GetInstance()->GetWindow(EditorCreateForm::kClassName, EditorCreateForm::kClassName));
-	if (!form)
-	{
+	if (!form) {
 		form = new EditorCreateForm();
 		form->Create(GetHWND(), EditorCreateForm::kClassName, WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX, 0);
 		form->CenterWindow();
@@ -136,14 +144,14 @@ void EditorForm::OnNewFile()
 		form->SetOpenFileCallback(nbase::Bind(&EditorForm::OnOpenFile, this, std::placeholders::_1));
 		form->ShowWindow();
 	}
-	else
-	{
+	else {
 		form->ActiveWindow();
 	}
 }
 
 void EditorForm::DoNewFile(EditorCreateForm::CreateType type)
 {
+	_toolbar->SetEnabled(true);
 	if (!_saved && _box_editor_area->GetCount() > 0) {
 		nim_comp::MsgboxCallback cb = nbase::Bind(&EditorForm::OnMsgBoxCallback, this, std::placeholders::_1, type);
 		nim_comp::ShowMsgBox(GetHWND(), cb, L"STRID_UNSAVE_TIP", true, L"STRID_HINT", true, L"STRING_OK", true, L"STRING_CANCEL", true);
@@ -157,6 +165,7 @@ void EditorForm::DoNewFile(EditorCreateForm::CreateType type)
 
 void EditorForm::OnOpenFile(const std::wstring& path)
 {
+	_toolbar->SetEnabled(true);
 	_box_editor_area->RemoveAll();
 	_saved = true;
 	_last_save_path = path;

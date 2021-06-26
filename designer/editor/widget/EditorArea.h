@@ -16,7 +16,7 @@ public:
 		_select_item_callback = callback;
 	}
 private:
-	void OnItemButtonDown();
+	bool Notify(ui::EventArgs* args);
 private:
 	ui::Box* FindParentBox(POINT pt);
 	void Reset(ui::Control* control);

@@ -6,8 +6,8 @@
 
 EditorArea::EditorArea()
 {
+	AttachBubbledEvent(ui::kEventAll, nbase::Bind(&EditorArea::Notify, this, std::placeholders::_1));
 	AreaWindow* areaWindow = new AreaWindow;
-	areaWindow->SetButtonDownCallback(nbase::Bind(&EditorArea::OnItemButtonDown, this));
 	Add(areaWindow);
 }
 
@@ -28,18 +28,18 @@ void EditorArea::DropControl(const std::wstring& name)
 		areaControl = new AreaBox;
 		container->Add((AreaBox*)areaControl);
 	}
-	if (areaControl) {
-		areaControl->SetButtonDownCallback(nbase::Bind(&EditorArea::OnItemButtonDown, this));
-	}
 	ui::UiRect rect = container->GetPos();
 	ui::UiRect margin(pt.x - rect.left, pt.y - rect.top, 0, 0);
 	int lastIndex = container->GetCount() - 1;
 	container->GetItemAt(lastIndex)->SetMargin(margin);
 }
 
-void EditorArea::OnItemButtonDown()
+bool EditorArea::Notify(ui::EventArgs* args)
 {
-	Reset(GetItemAt(0));
+	if (args->Type == ui::kEventNotify && args->wParam == CustomEventType::CONTROL_BUTTON_DOWN) {
+		Reset(GetItemAt(0));
+	}
+	return true;
 }
 
 ui::Box* EditorArea::FindParentBox(POINT pt)

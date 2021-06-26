@@ -11,9 +11,6 @@ public:
 	void ParseElement(tinyxml2::XMLElement* element);
 	tinyxml2::XMLElement* GetElement(tinyxml2::XMLDocument* doc);
 public:
-	void SetButtonDownCallback(StdClosure callback) {
-		_button_down_callback = callback;
-	}
 	void SetMove(bool value) {
 		_can_move = value;
 	}
@@ -61,7 +58,6 @@ private:
 	bool _is_button_down = false;
 	Direction _current_direction = Direction::NONE;
 	POINT _last_point;
-	StdClosure _button_down_callback;
 	bool _can_move = true;
 	ui::Control* _control = NULL;
 	bool _show_menu = true;

@@ -12,3 +12,9 @@ enum ControlType
 	Box = 0,
 	HBox
 }; 
+
+enum CustomEventType
+{
+	UI_CHANGED = 0,
+	CONTROL_BUTTON_DOWN
+};

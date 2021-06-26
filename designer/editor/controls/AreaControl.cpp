@@ -82,9 +82,7 @@ tinyxml2::XMLElement* AreaControl::GetElement(tinyxml2::XMLDocument* doc)
 
 bool AreaControl::OnButtonDown(ui::EventArgs* args)
 {
-	if (_button_down_callback) {
-		_button_down_callback();
-	}
+	_control->GetWindow()->SendNotify(_control, ui::kEventNotify, CustomEventType::CONTROL_BUTTON_DOWN, 0);
 	args->pSender->SetBorderColor(L"red");
 	_is_button_down = true;
 	ui::UiRect controlRect = args->pSender->GetPos();
@@ -115,9 +113,7 @@ bool AreaControl::OnMouseEvent(ui::EventArgs* args)
 {
 	if (args->Type != ui::kEventMouseMove) {
 		if (args->Type == ui::kEventMouseRightButtonDown) {
-			if (_button_down_callback) {
-				_button_down_callback();
-			}
+			_control->GetWindow()->SendNotify(_control, ui::kEventNotify, CustomEventType::CONTROL_BUTTON_DOWN, 0);
 			args->pSender->SetBorderColor(L"red");
 			OnItemMenu(args);
 		}
@@ -140,6 +136,7 @@ bool AreaControl::OnMouseEvent(ui::EventArgs* args)
 	if (!_is_button_down) {
 		return true;
 	}
+	_control->GetWindow()->SendNotify(_control, ui::kEventNotify, CustomEventType::UI_CHANGED, 0);
 	ui::UiRect rect = args->pSender->GetMargin();
 	int left = args->ptMouse.x - _last_point.x;
 	int top = args->ptMouse.y - _last_point.y;
