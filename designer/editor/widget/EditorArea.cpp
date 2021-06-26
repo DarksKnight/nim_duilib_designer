@@ -21,7 +21,7 @@ EditorArea::~EditorArea()
 {
 }
 
-ui::Box* EditorArea::DropControl(ControlData* data)
+ui::Control* EditorArea::DropControl(ControlData* data)
 {
 	ui::Box* container = NULL;
 	if (!data->isLoad) {
@@ -42,12 +42,36 @@ ui::Box* EditorArea::DropControl(ControlData* data)
 		container->Add(boxContainer);
 		return boxContainer;
 	}
+	else if (data->name == L"HBox") {
+		ui::HBox* boxContainer = new ui::HBox;
+		SetUniversalData(boxContainer, data);
+		container->Add(boxContainer);
+		return boxContainer;
+	}
+	else if (data->name == L"VBox") {
+		ui::VBox* boxContainer = new ui::VBox;
+		SetUniversalData(boxContainer, data);
+		container->Add(boxContainer);
+		return boxContainer;
+	}
+	else if (data->name == L"Label") {
+		ui::Label* label = new ui::Label;
+		SetUniversalData(label, data);
+		label->SetText(L"label");
+		container->Add(label);
+		return label;
+	}
 	return NULL;
 }
 
 bool EditorArea::OnButtonDown(ui::EventArgs* args)
 {
+	if (_select_item_callback) {
+		_select_item_callback(args->pSender);
+	}
+	Reset(GetItemAt(0));
 	args->pSender->SetDataID(L"down");
+	args->pSender->SetBorderColor(L"red");
 	ui::UiRect controlRect = args->pSender->GetPos();
 	if (args->ptMouse.x - controlRect.left < PADDING) {
 		_current_direction = Direction::LEFT;
@@ -175,4 +199,22 @@ void EditorArea::SetUniversalData(ui::Control* control, ControlData* data)
 	control->SetBorderSize(1);
 	control->SetBorderColor(L"blue");
 	control->SetMargin(data->margin);
+}
+
+void EditorArea::Reset(ui::Control* control)
+{
+	control->SetBorderColor(L"blue");
+	ui::Box* box = dynamic_cast<ui::Box*>(control);
+	if (!box) {
+		return;
+	}
+	for (int i = 0; i < box->GetCount(); i++) {
+		ui::Control* subCtrl = box->GetItemAt(i);
+		ui::Box* subBox = dynamic_cast<ui::Box*>(subCtrl);
+		if (!subBox) {
+			subCtrl->SetBorderColor(L"blue");
+			continue;
+		}
+		Reset(subCtrl);
+	}
 }

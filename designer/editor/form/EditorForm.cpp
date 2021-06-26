@@ -36,6 +36,9 @@ std::wstring EditorForm::GetWindowId() const
 void EditorForm::InitWindow()
 {
 	_control_datas.push_back(new ControlData(L"Box", 160, 80));
+	_control_datas.push_back(new ControlData(L"HBox", 160, 80));
+	_control_datas.push_back(new ControlData(L"VBox", 160, 80));
+	_control_datas.push_back(new ControlData(L"Label", 80, 30));
 	_toolbar = (EditorToolbar*)FindControl(L"et");
 	_toolbar->InitCtrls();
 	_toolbar->SetSaveCallback(nbase::Bind(&EditorForm::OnSaveFile, this));
@@ -81,6 +84,14 @@ void EditorForm::OnSelect(ControlData* data)
 {
 	_select_data = data;
 	ui::Box* preBox = new ui::Box;
+	if (data->name == L"Box" || data->name == L"HBox" || data->name == L"VBox") {
+		_pre_box_width = 100;
+		_pre_box_height = 60;
+	}
+	else if (data->name == L"Label") {
+		_pre_box_width = 50;
+		_pre_box_height = 20;
+	}
 	preBox->SetFixedWidth(_pre_box_width);
 	preBox->SetFixedHeight(_pre_box_height);
 	preBox->SetBkColor(L"bk_wnd_darkcolor");

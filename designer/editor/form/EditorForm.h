@@ -42,6 +42,6 @@ private:
 	ControlData* _select_data;
 	bool _saved = false;
 	std::wstring _last_save_path;
-	const int _pre_box_width = 100;
-	const int _pre_box_height = 60;
+	int _pre_box_width = 100;
+	int _pre_box_height = 60;
 };

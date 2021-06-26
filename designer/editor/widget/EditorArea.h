@@ -10,14 +10,18 @@ public:
 		int width = 500;
 		int height = 500;
 	};
+	typedef std::function<void(ui::Control* control)> SelectItemCallback;
 public:
 	EditorArea();
 	~EditorArea();
 public:
-	ui::Box* DropControl(ControlData* data);
+	ui::Control* DropControl(ControlData* data);
 public:
 	WindowInfo GetWindowInfo() {
 		return _window_info;
+	}
+	void SetSelectItemCallback(SelectItemCallback callback) {
+		_select_item_callback = callback;
 	}
 private:
 	bool OnButtonDown(ui::EventArgs* args);
@@ -26,6 +30,7 @@ private:
 private:
 	ui::Box* FindParentBox(POINT pt);
 	void SetUniversalData(ui::Control* control, ControlData* data);
+	void Reset(ui::Control* control);
 private:
 	enum class Direction
 	{
@@ -39,5 +44,6 @@ private:
 	POINT _last_point;
 	Direction _current_direction = Direction::NONE;
 	WindowInfo _window_info;
+	SelectItemCallback _select_item_callback;
 };
 

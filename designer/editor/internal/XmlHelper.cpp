@@ -63,7 +63,17 @@ tinyxml2::XMLElement* XmlHelper::GetElement(tinyxml2::XMLDocument* doc, ui::Cont
 	}
 	ui::Box* box = dynamic_cast<ui::Box*>(control);
 	if (box) {
-		element = doc->NewElement("Box");
+		ui::HBox* hBox = dynamic_cast<ui::HBox*>(control);
+		ui::VBox* vBox = dynamic_cast<ui::VBox*>(control);
+		if (hBox) {
+			element = doc->NewElement("HBox");
+		}
+		else if (vBox) {
+			element = doc->NewElement("VBox");
+		}
+		else {
+			element = doc->NewElement("Box");
+		}
 		if (box->GetName() != L"sampleWindow") {
 			SetUniversalAttr(element, control);
 		}
@@ -73,7 +83,11 @@ tinyxml2::XMLElement* XmlHelper::GetElement(tinyxml2::XMLDocument* doc, ui::Cont
 		}
 	}
 	else {
-		element = doc->NewElement("aaaa");
+		ui::Label* label = dynamic_cast<ui::Label*>(control);
+		if (label) {
+			element = doc->NewElement("Label");
+		}
+		SetUniversalAttr(element, control);
 	}
 	return element;
 }
@@ -86,8 +100,9 @@ void XmlHelper::ParseElement(EditorArea* area, tinyxml2::XMLElement* element, ui
 	for (tinyxml2::XMLElement* currenteleElement = element->FirstChildElement(); currenteleElement; currenteleElement = currenteleElement->NextSiblingElement()) {
 		ControlData* data = SetUniversalProperty(currenteleElement);
 		data->parentBox = rootBox;
-		ui::Box* containerBox = area->DropControl(data);
-		if (!currenteleElement->NoChildren()) {
+		ui::Control* control = area->DropControl(data);
+		ui::Box* containerBox = dynamic_cast<ui::Box*>(control);
+		if (!currenteleElement->NoChildren() && containerBox) {
 			ParseElement(area, currenteleElement, containerBox);
 		}
 	}
