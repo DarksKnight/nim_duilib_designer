@@ -27,12 +27,82 @@ std::wstring EditorCreateForm::GetWindowClassName() const
 	return kClassName;
 }
 
+std::wstring EditorCreateForm::GetWindowId() const
+{
+	return kClassName;
+}
+
 void EditorCreateForm::InitWindow()
 {
+	_list_create_type = (ui::ListBox*)FindControl(L"list_create_type");
+	_list_create_type->AttachSelect(nbase::Bind(&EditorCreateForm::OnCreateTypeSelect, this, std::placeholders::_1));
+	_list_create_type->SelectItem(0);
+	_btn_new_file = (ui::Button*)FindControl(L"btn_new_file");
+	_btn_new_file->AttachClick(nbase::Bind(&EditorCreateForm::OnNewFileClick, this, std::placeholders::_1));
+	_btn_open_file = (ui::Button*)FindControl(L"btn_open_file");
+	_btn_open_file->AttachClick(nbase::Bind(&EditorCreateForm::OnOpenFileClick, this, std::placeholders::_1));
+	_btn_cancel = (ui::Button*)FindControl(L"btn_cancel");
+	_btn_cancel->AttachClick(nbase::Bind(&EditorCreateForm::OnCancelClick, this, std::placeholders::_1));
+
 }
 
 LRESULT EditorCreateForm::OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
-	PostQuitMessage(0L);
+	if (_operation_type == OperationType::NEW_FILE && _new_file_callback) {
+		_new_file_callback(_create_type);
+	}
+	else if (_operation_type == OperationType::OPEN_FILE && _open_file_callback) {
+		_open_file_callback(_path);
+	}
 	return __super::OnClose(uMsg, wParam, lParam, bHandled);
+}
+
+bool EditorCreateForm::OnCreateTypeSelect(ui::EventArgs* args)
+{
+	switch (args->wParam)
+	{
+	case 0:
+		_create_type = CreateType::WINDOW;
+		break;
+	case 1:
+		_create_type = CreateType::WIDGET;
+		break;
+	default:
+		break;
+	}
+	return true;
+}
+
+bool EditorCreateForm::OnNewFileClick(ui::EventArgs* args)
+{
+	_operation_type = OperationType::NEW_FILE;
+	Close();
+	return true;
+}
+
+bool EditorCreateForm::OnOpenFileClick(ui::EventArgs* args)
+{
+	nim_comp::CFileDialogEx* fileDlg = new nim_comp::CFileDialogEx;
+	std::map<LPCTSTR, LPCTSTR> filters;
+	filters[L"File Format(*.xml)"] = L"*.xml";
+	fileDlg->SetFilter(filters);
+	fileDlg->SetFileName(L"newFile");
+	fileDlg->SetDefExt(L".xml");
+	fileDlg->SetParentWnd(GetHWND());
+	nim_comp::CFileDialogEx::FileDialogCallback2 callback2 = nbase::Bind(&EditorCreateForm::OnSelectPathCallback, this, std::placeholders::_1, std::placeholders::_2);
+	fileDlg->AyncShowOpenFileDlg(callback2);
+	return true;
+}
+
+bool EditorCreateForm::OnCancelClick(ui::EventArgs* args)
+{
+	Close();
+	return true;
+}
+
+void EditorCreateForm::OnSelectPathCallback(BOOL ret, std::wstring path)
+{
+	_operation_type = OperationType::OPEN_FILE;
+	_path = path;
+	Close();
 }

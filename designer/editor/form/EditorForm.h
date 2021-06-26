@@ -2,8 +2,9 @@
 #include "../widget/EditorControlsList.h"
 #include "../widget/EditorArea.h"
 #include "../widget/EditorToolbar.h"
+#include "EditorCreateForm.h"
 
-class EditorForm : public ui::WindowImplBase
+class EditorForm : public nim_comp::WindowEx
 {
 public:
 	EditorForm();
@@ -11,6 +12,7 @@ public:
 	virtual std::wstring GetSkinFolder() override;
 	virtual std::wstring GetSkinFile() override;
 	virtual std::wstring GetWindowClassName() const override;
+	virtual std::wstring GetWindowId() const override;
 	virtual void InitWindow() override;
 	virtual LRESULT OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	static const LPCTSTR kClassName;
@@ -22,9 +24,10 @@ private:
 	void OnButtonUp();
 	void OnSaveFile();
 	void OnNewFile();
+	void DoNewFile(EditorCreateForm::CreateType type);
 	void OnOpenFile(const std::wstring& path);
 	void OnSelectPathCallback(BOOL ret, std::wstring path);
-	void OnMsgBoxCallback(nim_comp::MsgBoxRet ret);
+	void OnMsgBoxCallback(nim_comp::MsgBoxRet ret, EditorCreateForm::CreateType type);
 	void OpenCreateForm();
 private:
 	EditorToolbar* _toolbar;
@@ -38,7 +41,6 @@ private:
 	std::vector<ControlData*> _control_datas;
 	ControlData* _select_data;
 	bool _saved = false;
-	bool _exec_new = false;
 	std::wstring _last_save_path;
 	const int _pre_box_width = 100;
 	const int _pre_box_height = 60;

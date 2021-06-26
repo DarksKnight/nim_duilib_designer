@@ -1,7 +1,6 @@
 ﻿#include "../stdafx.h"
 #include "EditorForm.h"
 #include "../internal/XmlHelper.h"
-#include "EditorCreateForm.h"
 
 const LPCTSTR EditorForm::kClassName = L"EditorForm";
 
@@ -25,6 +24,11 @@ std::wstring EditorForm::GetSkinFile()
 }
 
 std::wstring EditorForm::GetWindowClassName() const
+{
+	return kClassName;
+}
+
+std::wstring EditorForm::GetWindowId() const
 {
 	return kClassName;
 }
@@ -117,9 +121,26 @@ void EditorForm::OnSaveFile()
 
 void EditorForm::OnNewFile()
 {
-	_exec_new = true;
-	if (!_saved) {
-		nim_comp::MsgboxCallback cb = nbase::Bind(&EditorForm::OnMsgBoxCallback, this, std::placeholders::_1);
+	EditorCreateForm* form = (EditorCreateForm*)(nim_comp::WindowsManager::GetInstance()->GetWindow(EditorCreateForm::kClassName, EditorCreateForm::kClassName));
+	if (!form)
+	{
+		form = new EditorCreateForm();
+		form->Create(GetHWND(), EditorCreateForm::kClassName, WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX, 0);
+		form->CenterWindow();
+		form->SetNewFileCallback(nbase::Bind(&EditorForm::DoNewFile, this, std::placeholders::_1));
+		form->SetOpenFileCallback(nbase::Bind(&EditorForm::OnOpenFile, this, std::placeholders::_1));
+		form->ShowWindow();
+	}
+	else
+	{
+		form->ActiveWindow();
+	}
+}
+
+void EditorForm::DoNewFile(EditorCreateForm::CreateType type)
+{
+	if (!_saved && _box_editor_area->GetCount() > 0) {
+		nim_comp::MsgboxCallback cb = nbase::Bind(&EditorForm::OnMsgBoxCallback, this, std::placeholders::_1, type);
 		nim_comp::ShowMsgBox(GetHWND(), cb, L"STRID_UNSAVE_TIP", true, L"STRID_HINT", true, L"STRING_OK", true, L"STRING_CANCEL", true);
 		return;
 	}
@@ -127,7 +148,6 @@ void EditorForm::OnNewFile()
 	_box_editor_area->RemoveAll();
 	_editor_area = new EditorArea;
 	_box_editor_area->Add(_editor_area);
-	_exec_new = false;
 }
 
 void EditorForm::OnOpenFile(const std::wstring& path)
@@ -146,21 +166,16 @@ void EditorForm::OnSelectPathCallback(BOOL ret, std::wstring path)
 	}
 	_saved = true;
 	_last_save_path = path;
-	if (XmlHelper::GetInstance()->ConvertXml(_editor_area, path)) {
-		if (_exec_new) {
-			OnNewFile();
-		}
-	}
-	else {
+	if (!XmlHelper::GetInstance()->ConvertXml(_editor_area, path)) {
 		nim_comp::ShowMsgBox(GetHWND(), nim_comp::MsgboxCallback(), L"STRID_SAVE_FAIL", true, L"STRID_HINT");
 	}
 }
 
-void EditorForm::OnMsgBoxCallback(nim_comp::MsgBoxRet ret)
+void EditorForm::OnMsgBoxCallback(nim_comp::MsgBoxRet ret, EditorCreateForm::CreateType type)
 {
 	if (ret == nim_comp::MB_NO) {
 		_saved = true;
-		OnNewFile();
+		DoNewFile(type);
 		return;
 	}
 	OnSaveFile();
@@ -168,5 +183,10 @@ void EditorForm::OnMsgBoxCallback(nim_comp::MsgBoxRet ret)
 
 void EditorForm::OpenCreateForm()
 {
-	//nim_comp::WindowsManager::SingletonShow<EditorCreateForm>(EditorCreateForm::kClassName);
+	EditorCreateForm* form = new EditorCreateForm();
+	form->Create(GetHWND(), EditorCreateForm::kClassName, WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX, 0);
+	form->CenterWindow();
+	form->SetNewFileCallback(nbase::Bind(&EditorForm::DoNewFile, this, std::placeholders::_1));
+	form->SetOpenFileCallback(nbase::Bind(&EditorForm::OnOpenFile, this, std::placeholders::_1));
+	form->ShowWindow();
 }
