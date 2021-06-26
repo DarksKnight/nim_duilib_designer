@@ -27,13 +27,16 @@ private:
 	void OnNewFile();
 	void DoNewFile(EditorCreateForm::CreateType type);
 	void OnOpenFile(const std::wstring& path);
+	void OnCreateFormClose();
 	void OnSelectPathCallback(BOOL ret, std::wstring path);
 	void OnMsgBoxCallback(nim_comp::MsgBoxRet ret, EditorCreateForm::CreateType type);
 	void OpenCreateForm();
+	void UiChanged();
 private:
 	EditorToolbar* _toolbar;
 	EditorControlsList* _controls_list;
 	EditorArea* _editor_area;
+	ui::Label* _lb_title;
 	ui::Box* _box_container;
 	ui::Box* _box_property;
 	ui::Box* _box_drag_pre;
@@ -44,4 +47,5 @@ private:
 	std::wstring _last_save_path;
 	int _pre_box_width = 100;
 	int _pre_box_height = 60;
+	std::wstring _title = L"";
 };

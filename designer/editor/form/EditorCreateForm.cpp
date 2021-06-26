@@ -54,6 +54,9 @@ LRESULT EditorCreateForm::OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL&
 	else if (_operation_type == OperationType::OPEN_FILE && _open_file_callback) {
 		_open_file_callback(_path);
 	}
+	if (_close_callback) {
+		_close_callback();
+	}
 	return __super::OnClose(uMsg, wParam, lParam, bHandled);
 }
 

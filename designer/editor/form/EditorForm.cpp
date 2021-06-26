@@ -36,6 +36,7 @@ std::wstring EditorForm::GetWindowId() const
 void EditorForm::InitWindow()
 {
 	m_pRoot->AttachBubbledEvent(ui::kEventAll, nbase::Bind(&EditorForm::Notify, this, std::placeholders::_1));
+	_lb_title = (ui::Label*)FindControl(L"lb_title");
 	_toolbar = (EditorToolbar*)FindControl(L"et");
 	_toolbar->InitCtrls();
 	_toolbar->SetSaveCallback(nbase::Bind(&EditorForm::OnSaveFile, this));
@@ -78,7 +79,7 @@ LRESULT EditorForm::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 bool EditorForm::Notify(ui::EventArgs* args)
 {
 	if (args->Type == ui::kEventNotify && args->wParam == CustomEventType::UI_CHANGED) {
-		_saved = false;
+		UiChanged();
 	}
 	return true;
 }
@@ -114,6 +115,7 @@ void EditorForm::OnButtonUp()
 		return;
 	}
 	_editor_area->DropControl(_select_name);
+	UiChanged();
 }
 
 void EditorForm::OnSaveFile()
@@ -135,6 +137,7 @@ void EditorForm::OnSaveFile()
 
 void EditorForm::OnNewFile()
 {
+	_toolbar->SetEnabled(false);
 	EditorCreateForm* form = (EditorCreateForm*)(nim_comp::WindowsManager::GetInstance()->GetWindow(EditorCreateForm::kClassName, EditorCreateForm::kClassName));
 	if (!form) {
 		form = new EditorCreateForm();
@@ -142,6 +145,7 @@ void EditorForm::OnNewFile()
 		form->CenterWindow();
 		form->SetNewFileCallback(nbase::Bind(&EditorForm::DoNewFile, this, std::placeholders::_1));
 		form->SetOpenFileCallback(nbase::Bind(&EditorForm::OnOpenFile, this, std::placeholders::_1));
+		form->SetCloseCallback(nbase::Bind(&EditorForm::OnCreateFormClose, this));
 		form->ShowWindow();
 	}
 	else {
@@ -151,27 +155,37 @@ void EditorForm::OnNewFile()
 
 void EditorForm::DoNewFile(EditorCreateForm::CreateType type)
 {
-	_toolbar->SetEnabled(true);
 	if (!_saved && _box_editor_area->GetCount() > 0) {
 		nim_comp::MsgboxCallback cb = nbase::Bind(&EditorForm::OnMsgBoxCallback, this, std::placeholders::_1, type);
 		nim_comp::ShowMsgBox(GetHWND(), cb, L"STRID_UNSAVE_TIP", true, L"STRID_HINT", true, L"STRING_OK", true, L"STRING_CANCEL", true);
 		return;
 	}
 	_saved = false;
+	_last_save_path = L"";
 	_box_editor_area->RemoveAll();
 	_editor_area = new EditorArea;
 	_box_editor_area->Add(_editor_area);
+	_title = ui::MutiLanSupport::GetInstance()->GetStringViaID(L"STRID_EDITORFORM_TITLE") + L" - " + ui::MutiLanSupport::GetInstance()->GetStringViaID(L"STRID_EDITORFORM_NEW_FILE");
+	_lb_title->SetText(_title);
 }
 
 void EditorForm::OnOpenFile(const std::wstring& path)
 {
-	_toolbar->SetEnabled(true);
 	_box_editor_area->RemoveAll();
 	_saved = true;
 	_last_save_path = path;
 	_editor_area = new EditorArea;
 	_box_editor_area->Add(_editor_area);
 	XmlHelper::GetInstance()->ParseXml(_editor_area, path);
+	std::wstring fileName = L"";
+	nbase::FilePathApartFileName(path, fileName);
+	_title = ui::MutiLanSupport::GetInstance()->GetStringViaID(L"STRID_EDITORFORM_TITLE") + L" - " + fileName;
+	_lb_title->SetText(_title);
+}
+
+void EditorForm::OnCreateFormClose()
+{
+	_toolbar->SetEnabled(true);
 }
 
 void EditorForm::OnSelectPathCallback(BOOL ret, std::wstring path)
@@ -181,6 +195,10 @@ void EditorForm::OnSelectPathCallback(BOOL ret, std::wstring path)
 	}
 	_saved = true;
 	_last_save_path = path;
+	std::wstring fileName;
+	nbase::FilePathApartFileName(_last_save_path, fileName);
+	_title = ui::MutiLanSupport::GetInstance()->GetStringViaID(L"STRID_EDITORFORM_TITLE") + L" - " + fileName;
+	_lb_title->SetText(_title);
 	if (!XmlHelper::GetInstance()->ConvertXml(_editor_area, path)) {
 		nim_comp::ShowMsgBox(GetHWND(), nim_comp::MsgboxCallback(), L"STRID_SAVE_FAIL", true, L"STRID_HINT");
 	}
@@ -198,10 +216,18 @@ void EditorForm::OnMsgBoxCallback(nim_comp::MsgBoxRet ret, EditorCreateForm::Cre
 
 void EditorForm::OpenCreateForm()
 {
+	_toolbar->SetEnabled(false);
 	EditorCreateForm* form = new EditorCreateForm();
 	form->Create(GetHWND(), EditorCreateForm::kClassName, WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX, 0);
 	form->CenterWindow();
 	form->SetNewFileCallback(nbase::Bind(&EditorForm::DoNewFile, this, std::placeholders::_1));
 	form->SetOpenFileCallback(nbase::Bind(&EditorForm::OnOpenFile, this, std::placeholders::_1));
+	form->SetCloseCallback(nbase::Bind(&EditorForm::OnCreateFormClose, this));
 	form->ShowWindow();
+}
+
+void EditorForm::UiChanged()
+{
+	_saved = false;
+	_lb_title->SetText(_title + L" *");
 }

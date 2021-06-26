@@ -30,6 +30,9 @@ public:
 	void SetOpenFileCallback(OpenFileCallback callback) {
 		_open_file_callback = callback;
 	}
+	void SetCloseCallback(StdClosure callback) {
+		_close_callback = callback;
+	}
 private:
 	bool OnCreateTypeSelect(ui::EventArgs* args);
 	bool OnNewFileClick(ui::EventArgs* args);
@@ -45,6 +48,7 @@ private:
 private:
 	NewFileCallback _new_file_callback;
 	OpenFileCallback _open_file_callback;
+	StdClosure _close_callback;
 	OperationType _operation_type = OperationType::NONE;
 	CreateType _create_type = CreateType::NONE;
 	std::wstring _path = L"";
