@@ -2,6 +2,7 @@
 #include "XmlHelper.h"
 #include "../controls/AreaControl.h"
 #include "../controls/AreaBox.h"
+#include "../controls/AreaHBox.h"
 #include "../controls/AreaWindow.h"
 
 XmlHelper::XmlHelper()
@@ -52,17 +53,21 @@ tinyxml2::XMLElement* XmlHelper::GetElement(tinyxml2::XMLDocument* doc, ui::Cont
 	if (!control) {
 		return element;
 	}
-	AreaBox* areaBox = dynamic_cast<AreaBox*>(control);
-	if (areaBox) {
-		AreaWindow* areaWindow = dynamic_cast<AreaWindow*>(control);
-		if (areaWindow) {
-			element = areaWindow->GetElement(doc);
+	ui::Box* box = dynamic_cast<ui::Box*>(control);
+	if (box) {
+		AreaBoxDelegate* areaBox = dynamic_cast<AreaBoxDelegate*>(control);
+		AreaHBoxDelegate* areaHBox = dynamic_cast<AreaHBoxDelegate*>(control);
+		if (areaHBox) {
+			element = areaHBox->GetElement(doc);
 		}
 		else {
 			element = areaBox->GetElement(doc);
 		}
-		for (int i = 0; i < areaBox->GetCount(); i++) {
-			tinyxml2::XMLElement* subEl = GetElement(doc, areaBox->GetItemAt(i));
+		for (int i = 0; i < box->GetCount(); i++) {
+			tinyxml2::XMLElement* subEl = GetElement(doc, box->GetItemAt(i));
+			if (!subEl) {
+				continue;
+			}
 			element->InsertEndChild(subEl);
 		}
 	}
@@ -75,7 +80,7 @@ void XmlHelper::ParseElement(tinyxml2::XMLElement* element, ui::Box* rootBox)
 		return;
 	}
 	for (tinyxml2::XMLElement* currentElement = element->FirstChildElement(); currentElement; currentElement = currentElement->NextSiblingElement()) {
-		AreaControl* areaControl = NULL;
+		AreaControlDelegate* areaControl = NULL;
 		if (_first_node) {
 			_first_node = false;
 			areaControl = new AreaWindow;
@@ -96,6 +101,10 @@ void XmlHelper::ParseElement(tinyxml2::XMLElement* element, ui::Box* rootBox)
 			if (value == L"Box") {
 				areaControl = new AreaBox;
 				rootBox->Add((AreaBox*)areaControl);
+			}
+			else if (value == L"HBox") {
+				areaControl = new AreaHBox;
+				rootBox->Add((AreaHBox*)areaControl);
 			}
 			areaControl->ParseElement(currentElement);
 		}

@@ -329,7 +329,11 @@
   <ItemGroup>
     <ClInclude Include="controls\AreaBox.h" />
     <ClInclude Include="controls\AreaControl.h" />
+    <ClInclude Include="controls\AreaHBox.h" />
     <ClInclude Include="controls\AreaWindow.h" />
+    <ClInclude Include="delegate\AreaBoxDelegate.h" />
+    <ClInclude Include="delegate\AreaControlDelegate.h" />
+    <ClInclude Include="delegate\AreaHBoxDelegate.h" />
     <ClInclude Include="extern_ctrl\ExternCtrlManager.h" />
     <ClInclude Include="form\EditorCreateForm.h" />
     <ClInclude Include="form\EditorForm.h" />
@@ -347,7 +351,11 @@
   <ItemGroup>
     <ClCompile Include="controls\AreaBox.cpp" />
     <ClCompile Include="controls\AreaControl.cpp" />
+    <ClCompile Include="controls\AreaHBox.cpp" />
     <ClCompile Include="controls\AreaWindow.cpp" />
+    <ClCompile Include="delegate\AreaBoxDelegate.cpp" />
+    <ClCompile Include="delegate\AreaControlDelegate.cpp" />
+    <ClCompile Include="delegate\AreaHBoxDelegate.cpp" />
     <ClCompile Include="extern_ctrl\ExternCtrlManager.cpp" />
     <ClCompile Include="form\EditorCreateForm.cpp" />
     <ClCompile Include="form\EditorForm.cpp">

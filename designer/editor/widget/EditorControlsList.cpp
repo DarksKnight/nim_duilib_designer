@@ -4,6 +4,7 @@
 EditorControlsList::EditorControlsList()
 {
 	_datas.push_back(L"Box");
+	_datas.push_back(L"HBox");
 	for (auto it = _datas.begin(); it != _datas.end(); ++it) {
 		ui::Box* boxContainer = new ui::Box;
 		boxContainer->AttachButtonDown(nbase::Bind(&EditorControlsList::OnButtonDown, this, std::placeholders::_1));

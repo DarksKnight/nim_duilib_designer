@@ -25,6 +25,12 @@
     <Filter Include="internal">
       <UniqueIdentifier>{23715ee0-3c88-4dba-a3af-819713f5c539}</UniqueIdentifier>
     </Filter>
+    <Filter Include="controls">
+      <UniqueIdentifier>{6ba17e2d-26a5-4779-82c1-bd52daf88693}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="delegate">
+      <UniqueIdentifier>{06888bc1-cc5d-458a-9238-5cc544e8edd2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -57,23 +63,35 @@
     <ClInclude Include="widget\EditorProperty.h">
       <Filter>widget</Filter>
     </ClInclude>
-    <ClInclude Include="widget\EditorToolbar.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="internal\XmlHelper.h">
-      <Filter>头文件</Filter>
+      <Filter>internal</Filter>
     </ClInclude>
     <ClInclude Include="form\EditorCreateForm.h">
-      <Filter>头文件</Filter>
+      <Filter>form</Filter>
     </ClInclude>
-    <ClInclude Include="controls\AreaBox.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="controls\AreaControl.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="widget\EditorToolbar.h">
+      <Filter>widget</Filter>
     </ClInclude>
     <ClInclude Include="controls\AreaWindow.h">
-      <Filter>头文件</Filter>
+      <Filter>controls</Filter>
+    </ClInclude>
+    <ClInclude Include="controls\AreaControl.h">
+      <Filter>controls</Filter>
+    </ClInclude>
+    <ClInclude Include="controls\AreaBox.h">
+      <Filter>controls</Filter>
+    </ClInclude>
+    <ClInclude Include="controls\AreaHBox.h">
+      <Filter>controls</Filter>
+    </ClInclude>
+    <ClInclude Include="delegate\AreaBoxDelegate.h">
+      <Filter>delegate</Filter>
+    </ClInclude>
+    <ClInclude Include="delegate\AreaControlDelegate.h">
+      <Filter>delegate</Filter>
+    </ClInclude>
+    <ClInclude Include="delegate\AreaHBoxDelegate.h">
+      <Filter>delegate</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -95,23 +113,35 @@
     <ClCompile Include="widget\EditorProperty.cpp">
       <Filter>widget</Filter>
     </ClCompile>
-    <ClCompile Include="widget\EditorToolbar.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="internal\XmlHelper.cpp">
-      <Filter>源文件</Filter>
+      <Filter>internal</Filter>
     </ClCompile>
     <ClCompile Include="form\EditorCreateForm.cpp">
-      <Filter>源文件</Filter>
+      <Filter>form</Filter>
+    </ClCompile>
+    <ClCompile Include="widget\EditorToolbar.cpp">
+      <Filter>widget</Filter>
     </ClCompile>
     <ClCompile Include="controls\AreaBox.cpp">
-      <Filter>源文件</Filter>
+      <Filter>controls</Filter>
     </ClCompile>
     <ClCompile Include="controls\AreaControl.cpp">
-      <Filter>源文件</Filter>
+      <Filter>controls</Filter>
+    </ClCompile>
+    <ClCompile Include="controls\AreaHBox.cpp">
+      <Filter>controls</Filter>
     </ClCompile>
     <ClCompile Include="controls\AreaWindow.cpp">
-      <Filter>源文件</Filter>
+      <Filter>controls</Filter>
+    </ClCompile>
+    <ClCompile Include="delegate\AreaBoxDelegate.cpp">
+      <Filter>delegate</Filter>
+    </ClCompile>
+    <ClCompile Include="delegate\AreaControlDelegate.cpp">
+      <Filter>delegate</Filter>
+    </ClCompile>
+    <ClCompile Include="delegate\AreaHBoxDelegate.cpp">
+      <Filter>delegate</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

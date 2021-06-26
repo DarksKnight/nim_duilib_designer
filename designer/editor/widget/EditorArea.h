@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "../controls/AreaBox.h"
 
 #define PADDING 10
 
@@ -34,4 +35,3 @@ private:
 	Direction _current_direction = Direction::NONE;
 	SelectItemCallback _select_item_callback;
 };
-

@@ -1,7 +1,7 @@
 ﻿#include "../stdafx.h"
-#include "AreaBox.h"
+#include "AreaHBox.h"
 
-AreaBox::AreaBox():AreaBoxDelegate(this)
+AreaHBox::AreaHBox():AreaHBoxDelegate(this)
 {
 	SetFixedWidth(160);
 	SetFixedHeight(80);

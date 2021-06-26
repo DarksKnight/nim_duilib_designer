@@ -1,8 +1,9 @@
 ﻿#include "../stdafx.h"
 #include "EditorArea.h"
 #include "../controls/AreaControl.h"
-#include "../controls/AreaBox.h"
 #include "../controls/AreaWindow.h"
+#include "../controls/AreaHBox.h"
+#include "../controls/AreaBox.h"
 
 EditorArea::EditorArea()
 {
@@ -22,16 +23,20 @@ void EditorArea::DropControl(const std::wstring& name)
 	POINT pt = { 0 };
 	::GetCursorPos(&pt);
 	::ScreenToClient(GetWindow()->GetHWND(), &pt);
-	container = FindParentBox(pt);
-	AreaControl* areaControl = NULL;
+	container = (AreaBox*)FindParentBox(pt);
+	if (!container) {
+		return;
+	}
+	AreaControlDelegate* areaControl = NULL;
 	if (name == L"Box") {
 		areaControl = new AreaBox;
 		container->Add((AreaBox*)areaControl);
 	}
-	ui::UiRect rect = container->GetPos();
-	ui::UiRect margin(pt.x - rect.left, pt.y - rect.top, 0, 0);
-	int lastIndex = container->GetCount() - 1;
-	container->GetItemAt(lastIndex)->SetMargin(margin);
+	else if (name == L"HBox") {
+		areaControl = new AreaHBox;
+		container->Add((AreaHBox*)areaControl);
+	}
+	areaControl->SetUIMargin(pt, container);
 }
 
 bool EditorArea::Notify(ui::EventArgs* args)
@@ -46,17 +51,17 @@ ui::Box* EditorArea::FindParentBox(POINT pt)
 {
 	ui::Control* control = dynamic_cast<ui::Control*>(GetWindow()->FindControl(pt));
 	if (!control) {
-		return this;
+		return NULL;
 	}
-	control = dynamic_cast<ui::Box*>(control);
-	if (control) {
-		return (ui::Box*)control;
+	ui::Box* box = dynamic_cast<ui::Box*>(control);
+	if (box) {
+		return box;
 	}
-	control = control->GetParent();
-	if (!control) {
-		return this;
+	ui::Box* parentBox = dynamic_cast<ui::Box*>(control->GetParent());
+	if (parentBox) {
+		return parentBox;
 	}
-	return (ui::Box*)control;
+	return NULL;
 }
 
 void EditorArea::Reset(ui::Control* control)
