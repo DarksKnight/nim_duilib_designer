@@ -25,17 +25,18 @@ void AreaControlDelegate::ParseElement(tinyxml2::XMLElement* element)
 	std::wstring widthAttr = L"stretch";
 	std::wstring heightAttr = L"stretch";
 	std::wstring marginAttr = L"";
-	if (element->BoolAttribute("name")) {
-		controlName = nbase::UTF8ToUTF16(element->Attribute("name"));
+	const tinyxml2::XMLAttribute* attr = NULL;
+	if (attr = element->FindAttribute("name")) {
+		controlName = nbase::UTF8ToUTF16(attr->Value());
 	}
-	if (element->BoolAttribute("width")) {
-		widthAttr = nbase::UTF8ToUTF16(element->Attribute("width"));
+	if (attr = element->FindAttribute("width")) {
+		widthAttr = nbase::UTF8ToUTF16(attr->Value());
 	}
-	if (element->BoolAttribute("height")) {
-		heightAttr = nbase::UTF8ToUTF16(element->Attribute("height"));
+	if (attr = element->FindAttribute("height")) {
+		heightAttr = nbase::UTF8ToUTF16(attr->Value());
 	}
-	if (element->BoolAttribute("margin")) {
-		marginAttr = nbase::UTF8ToUTF16(element->Attribute("margin"));
+	if (attr = element->FindAttribute("margin")) {
+		marginAttr = nbase::UTF8ToUTF16(attr->Value());
 	}
 	if (!controlName.empty()) {
 		_control->SetName(controlName);
