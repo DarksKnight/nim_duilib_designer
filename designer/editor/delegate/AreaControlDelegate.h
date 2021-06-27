@@ -32,6 +32,12 @@ public:
 	bool IsSelected() {
 		return _selected;
 	}
+	ui::Control* Clone() {
+		ui::Control* ctrl = new ui::Control;
+		ctrl->SetFixedWidth(_control->GetFixedWidth());
+		ctrl->SetFixedHeight(_control->GetFixedHeight());
+		return ctrl;
+	}
 protected:
 	virtual std::wstring GetControlName() = 0;
 protected:
@@ -68,12 +74,14 @@ protected:
 	}
 protected:
 	nim_comp::CMenuElementUI* _menu_delete;
+	nim_comp::CMenuElementUI* _menu_copy;
 	ui::Control* _control = NULL;
 private:
 	bool OnButtonDown(ui::EventArgs* args);
 	bool OnButtonUp(ui::EventArgs* args);
 	bool Notify(ui::EventArgs* args);
 	bool OnItemMenu(ui::EventArgs* args);
+	bool OnItemMenuCopy(ui::EventArgs* args);
 	bool OnItemMenuDelete(ui::EventArgs* args);
 private:
 	enum class Direction

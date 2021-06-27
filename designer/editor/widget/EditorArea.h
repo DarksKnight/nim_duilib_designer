@@ -12,6 +12,7 @@ public:
 	~EditorArea();
 public:
 	void DropControl(const std::wstring& name);
+	void DropControl(ui::Control* control);
 	void RemoveSelectItem();
 public:
 	void SetSelectItemCallback(SelectItemCallback callback) {
@@ -36,4 +37,5 @@ private:
 	POINT _last_point;
 	Direction _current_direction = Direction::NONE;
 	SelectItemCallback _select_item_callback;
+	ui::Control* _copy_control = NULL;
 };

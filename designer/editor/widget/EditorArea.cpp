@@ -50,13 +50,22 @@ void EditorArea::DropControl(const std::wstring& name)
 	}
 }
 
-void EditorArea::RemoveSelectItem()
+void EditorArea::DropControl(ui::Control* control)
 {
-	ui::Box* box = (ui::Box*)GetItemAt(0);
-	if (!box) {
+	ui::Box* container = NULL;
+	POINT pt = { 0 };
+	::GetCursorPos(&pt);
+	::ScreenToClient(GetWindow()->GetHWND(), &pt);
+	container = FindParentBox(pt);
+	if (!container) {
 		return;
 	}
-	ui::Control* selectedItem = FindSelectedItem(box);
+	container->Add(control);
+}
+
+void EditorArea::RemoveSelectItem()
+{
+	ui::Control* selectedItem = FindSelectedItem((ui::Box*)GetItemAt(0));
 	if (!selectedItem) {
 		return;
 	}
@@ -65,14 +74,33 @@ void EditorArea::RemoveSelectItem()
 
 bool EditorArea::Notify(ui::EventArgs* args)
 {
-	if (args->Type == ui::kEventNotify && args->wParam == CustomEventType::CONTROL_BUTTON_DOWN) {
-		Reset(GetItemAt(0));
+	if (args->Type == ui::kEventNotify) {
+		switch (args->wParam)
+		{
+		case CustomEventType::CONTROL_BUTTON_DOWN:
+			Reset(GetItemAt(0));
+			break;
+		case CustomEventType::CONTROL_COPY:
+		{
+			ui::Control* item = FindSelectedItem((ui::Box*)GetItemAt(0));
+			if (item) {
+				_copy_control = ControlHelper::GetInstance()->Clone((AreaControlDelegate*)item);
+			}
+			break;
+		}
+		default:
+			break;
+		}
 	}
 	return true;
 }
 
 ui::Control* EditorArea::FindSelectedItem(ui::Box* box)
 {
+	AreaControlDelegate* curDelegate = dynamic_cast<AreaControlDelegate*>(box);
+	if (curDelegate->IsSelected()) {
+		return box;
+	}
 	for (int i = 0; i < box->GetCount(); i++) {
 		ui::Control* control = box->GetItemAt(i);
 		AreaControlDelegate* delegate = dynamic_cast<AreaControlDelegate*>(control);

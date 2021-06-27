@@ -47,6 +47,7 @@ bool XmlHelper::ParseXml(EditorArea* area, const std::wstring& path)
 	}
 	area->RemoveAll();
 	ParseElement(doc.RootElement(), area);
+	return true;
 }
 
 tinyxml2::XMLElement* XmlHelper::GetElement(tinyxml2::XMLDocument* doc, ui::Control* control)
@@ -71,6 +72,12 @@ tinyxml2::XMLElement* XmlHelper::GetElement(tinyxml2::XMLDocument* doc, ui::Cont
 				continue;
 			}
 			element->InsertEndChild(subEl);
+		}
+	}
+	else {
+		AreaControlDelegate* areaControl = dynamic_cast<AreaControlDelegate*>(control);
+		if (areaControl) {
+			element = areaControl->GetElement(doc);
 		}
 	}
 	return element;

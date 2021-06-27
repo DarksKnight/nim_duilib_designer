@@ -137,6 +137,7 @@ void EditorForm::OnSaveFile()
 void EditorForm::OnNewFile()
 {
 	_toolbar->SetEnabled(false);
+	_controls_list->SetVisible(false);
 	EditorCreateForm* form = (EditorCreateForm*)(nim_comp::WindowsManager::GetInstance()->GetWindow(EditorCreateForm::kClassName, EditorCreateForm::kClassName));
 	if (!form) {
 		form = new EditorCreateForm();
@@ -195,6 +196,7 @@ void EditorForm::DoOpenFile(const std::wstring& path)
 void EditorForm::OnCreateFormClose()
 {
 	_toolbar->SetEnabled(true);
+	_controls_list->SetVisible(true);
 }
 
 void EditorForm::OnSelectPathCallback(BOOL ret, std::wstring path)
@@ -235,6 +237,7 @@ void EditorForm::OnOpenFileMsgBoxCallback(nim_comp::MsgBoxRet ret, const std::ws
 void EditorForm::OpenCreateForm()
 {
 	_toolbar->SetEnabled(false);
+	_controls_list->SetVisible(false);
 	EditorCreateForm* form = new EditorCreateForm();
 	form->Create(GetHWND(), EditorCreateForm::kClassName, WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX, 0);
 	form->CenterWindow();

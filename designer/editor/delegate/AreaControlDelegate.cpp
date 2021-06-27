@@ -127,6 +127,7 @@ bool AreaControlDelegate::Notify(ui::EventArgs* args)
 		if (args->Type == ui::kEventMouseRightButtonDown) {
 			_control->GetWindow()->SendNotify(_control, ui::kEventNotify, CustomEventType::CONTROL_BUTTON_DOWN, 0);
 			args->pSender->SetBorderColor(L"red");
+			_selected = true;
 			OnItemMenu(args);
 		}
 		return true;
@@ -208,7 +209,15 @@ bool AreaControlDelegate::OnItemMenu(ui::EventArgs* args)
 	menu->Init(xml, _T("xml"), point);
 	_menu_delete = (nim_comp::CMenuElementUI*)menu->FindControl(L"menu_editor_control_delete");
 	_menu_delete->AttachSelect(nbase::Bind(&AreaControlDelegate::OnItemMenuDelete, this, std::placeholders::_1));
+	_menu_copy = (nim_comp::CMenuElementUI*)menu->FindControl(L"menu_editor_control_copy");
+	_menu_copy->AttachSelect(nbase::Bind(&AreaControlDelegate::OnItemMenuCopy, this, std::placeholders::_1));
 	OnItemMenu();
+	return true;
+}
+
+bool AreaControlDelegate::OnItemMenuCopy(ui::EventArgs* args)
+{
+	_control->GetWindow()->SendNotify(_control, ui::kEventNotify, CustomEventType::CONTROL_COPY, 0);
 	return true;
 }
 

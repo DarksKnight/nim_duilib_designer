@@ -84,6 +84,12 @@ AreaControlDelegate* ControlHelper::AddControl(ui::Box* box, const std::wstring&
 	return control;
 }
 
+ui::Control* ControlHelper::Clone(AreaControlDelegate* delegate)
+{
+	ui::Control* control = NULL;
+	return control;
+}
+
 void ControlHelper::Remove(ui::Control* control)
 {
 	if (!control) {
