@@ -2,6 +2,8 @@
 #include "EditorForm.h"
 #include "../internal/XmlHelper.h"
 #include "../internal/ControlHelper.h"
+#include "../item/PropertyItem.h"
+#include "../internal/PropertyHelper.h"
 
 const LPCTSTR EditorForm::kClassName = L"EditorForm";
 
@@ -104,13 +106,16 @@ LRESULT EditorForm::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 bool EditorForm::Notify(ui::EventArgs* args)
 {
-	if (args->Type == ui::kEventNotify && (args->wParam == CustomEventType::UI_CHANGED || args->wParam == CustomEventType::CONTROL_SELECTED)) {
-		if (args->wParam == CustomEventType::UI_CHANGED) {
+	if (args->Type == ui::kEventNotify) {
+		if (args->wParam == CustomEventType::UI_CHANGED || args->wParam == CustomEventType::CONTROL_SELECTED) {
 			UiChanged();
 		}
-		ui::Control* item = _editor_area->FindSelectedItem((ui::Box*)_editor_area->GetItemAt(0));
-		if (item) {
-			_editor_property->LoadControlProperty(item);
+		else if (args->wParam == CustomEventType::CONTROL_SET_PROPERTY) {
+			ui::Control* item = _editor_area->FindSelectedItem((ui::Box*)_editor_area->GetItemAt(0));
+			if (item) {
+				PropertyItem* pItem = (PropertyItem*)args->pSender;
+				PropertyHelper::GetInstance()->SetProperty(item, pItem->GetDataName(), pItem->GetValue());
+			}
 		}
 	}
 	return true;
@@ -280,4 +285,10 @@ void EditorForm::UiChanged()
 {
 	_saved = false;
 	_lb_title->SetText(_title + L" *");
+	ui::Control* item = _editor_area->FindSelectedItem((ui::Box*)_editor_area->GetItemAt(0));
+	AreaControlDelegate* delegate = dynamic_cast<AreaControlDelegate*>(item);
+	if (item && delegate) {
+		_editor_property->LoadProperty(delegate->GetControlName(), delegate->GetBasicProperty());
+		_editor_property->LoadControlProperty(item);
+	}
 }

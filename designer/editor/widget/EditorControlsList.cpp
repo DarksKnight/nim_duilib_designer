@@ -36,8 +36,9 @@ void EditorControlsList::LoadData()
 
 bool EditorControlsList::OnButtonDown(ui::EventArgs* args)
 {
+	ui::ListContainerElement* element = (ui::ListContainerElement*)args->pSender;
 	if (_select_callback) {
-		_select_callback(_datas[args->wParam - 1].name);
+		_select_callback(_datas[element->GetIndex()].name);
 	}
 	return true;
 }

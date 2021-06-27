@@ -13,9 +13,14 @@ public:
 	void Reset();
 	void Remove();
 public:
+	virtual std::wstring GetControlName() = 0;
+public:
 	virtual void SetDropIMargin(POINT pt, AreaControlDelegate* target) {
 		ui::UiRect margin(pt.x - _control->GetPos().left, pt.y - _control->GetPos().top, 0, 0);
 		target->SetUIMargin(margin);
+	}
+	std::vector<PropertyData> GetBasicProperty() {
+		return _basic_property;
 	}
 	void SetMove(bool value) {
 		_can_move = value;
@@ -41,8 +46,6 @@ public:
 		ctrl->SetFixedHeight(_control->GetFixedHeight());
 		return ctrl;
 	}
-protected:
-	virtual std::wstring GetControlName() = 0;
 protected:
 	virtual void OnParseElement(tinyxml2::XMLElement* element) {}
 	virtual void OnGetElement(tinyxml2::XMLDocument* doc, tinyxml2::XMLElement* element) {}
@@ -79,6 +82,7 @@ protected:
 	nim_comp::CMenuElementUI* _menu_delete;
 	nim_comp::CMenuElementUI* _menu_copy;
 	ui::Control* _control = NULL;
+	std::vector<PropertyData> _basic_property;
 private:
 	bool OnButtonDown(ui::EventArgs* args);
 	bool OnButtonUp(ui::EventArgs* args);

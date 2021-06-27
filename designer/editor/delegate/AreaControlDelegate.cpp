@@ -8,6 +8,10 @@ AreaControlDelegate::AreaControlDelegate(ui::Control* control):_control(control)
 	control->AttachAllEvents(nbase::Bind(&AreaControlDelegate::Notify, this, std::placeholders::_1));
 	control->SetBorderColor(L"blue");
 	control->SetBorderSize(1);
+	_basic_property.push_back(PropertyData(L"name", L"名称"));
+	_basic_property.push_back(PropertyData(L"width", L"宽度"));
+	_basic_property.push_back(PropertyData(L"height", L"高度"));
+	_basic_property.push_back(PropertyData(L"margin", L"外边距"));
 }
 
 AreaControlDelegate::~AreaControlDelegate()
@@ -17,34 +21,41 @@ AreaControlDelegate::~AreaControlDelegate()
 void AreaControlDelegate::ParseElement(tinyxml2::XMLElement* element)
 {
 	std::wstring value = nbase::UTF8ToUTF16(element->Value());
-	std::string widthAttr = "stretch";
-	std::string heightAttr = "stretch";
-	std::string marginAttr = "";
+	std::wstring controlName = L"";
+	std::wstring widthAttr = L"stretch";
+	std::wstring heightAttr = L"stretch";
+	std::wstring marginAttr = L"";
+	if (element->BoolAttribute("name")) {
+		controlName = nbase::UTF8ToUTF16(element->Attribute("name"));
+	}
 	if (element->BoolAttribute("width")) {
-		widthAttr = element->Attribute("width");
+		widthAttr = nbase::UTF8ToUTF16(element->Attribute("width"));
 	}
 	if (element->BoolAttribute("height")) {
-		heightAttr = element->Attribute("height");
+		heightAttr = nbase::UTF8ToUTF16(element->Attribute("height"));
 	}
 	if (element->BoolAttribute("margin")) {
-		marginAttr = element->Attribute("margin");
+		marginAttr = nbase::UTF8ToUTF16(element->Attribute("margin"));
+	}
+	if (!controlName.empty()) {
+		_control->SetName(controlName);
 	}
 	int width = 0;
 	int height = 0;
-	if (widthAttr == "auto") {
+	if (widthAttr == L"auto") {
 		width = DUI_LENGTH_AUTO;
 	}
-	else if (widthAttr == "stretch") {
+	else if (widthAttr == L"stretch") {
 		width = DUI_LENGTH_STRETCH;
 	}
 	else {
 		nbase::StringToInt(widthAttr, &width);
 	}
 	_control->SetFixedWidth(width);
-	if (heightAttr == "auto") {
+	if (heightAttr == L"auto") {
 		height = DUI_LENGTH_AUTO;
 	}
-	else if (heightAttr == "stretch") {
+	else if (heightAttr == L"stretch") {
 		height = DUI_LENGTH_STRETCH;
 	}
 	else {
@@ -52,14 +63,13 @@ void AreaControlDelegate::ParseElement(tinyxml2::XMLElement* element)
 	}
 	_control->SetFixedHeight(height);
 	if (!marginAttr.empty()) {
-		std::vector<std::string> marginVector = ConvertVector(nim_comp::StringHelper::Split(marginAttr, ","));
-		int left, top, right, bottom = 0;
-		nbase::StringToInt(marginVector[0], &left);
-		nbase::StringToInt(marginVector[1], &top);
-		nbase::StringToInt(marginVector[2], &right);
-		nbase::StringToInt(marginVector[3], &bottom);
-		ui::UiRect margin(left, top, right, bottom);
-		_control->SetMargin(margin);
+		ui::UiRect rcMargin;
+		LPTSTR pstr = NULL;
+		rcMargin.left = _tcstol(marginAttr.c_str(), &pstr, 10);
+		rcMargin.top = _tcstol(pstr + 1, &pstr, 10);
+		rcMargin.right = _tcstol(pstr + 1, &pstr, 10);
+		rcMargin.bottom = _tcstol(pstr + 1, &pstr, 10);
+		_control->SetMargin(rcMargin);
 	}
 	OnParseElement(element);
 }
@@ -67,6 +77,10 @@ void AreaControlDelegate::ParseElement(tinyxml2::XMLElement* element)
 tinyxml2::XMLElement* AreaControlDelegate::GetElement(tinyxml2::XMLDocument* doc)
 {
 	tinyxml2::XMLElement* element = doc->NewElement(nbase::UTF16ToUTF8(GetControlName()).c_str());
+	std::wstring controlName = _control->GetName();
+	if (!controlName.empty()) {
+		element->SetAttribute("name", nbase::UTF16ToUTF8(controlName).c_str());
+	}
 	if (!CheckWidthAndHeight(_control->GetFixedWidth())) {
 		element->SetAttribute("width", _control->GetFixedWidth());
 	}
