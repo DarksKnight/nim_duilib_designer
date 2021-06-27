@@ -1,11 +1,11 @@
 ﻿#include "../stdafx.h"
 #include "EditorControlsList.h"
+#include "../internal/ControlHelper.h"
 
 EditorControlsList::EditorControlsList()
 {
-	_datas.push_back(L"Box");
-	_datas.push_back(L"HBox");
-	for (auto it = _datas.begin(); it != _datas.end(); ++it) {
+	std::vector<std::wstring> datas = ControlHelper::GetInstance()->GetControlList();
+	for (auto it = datas.begin(); it != datas.end(); ++it) {
 		ui::Box* boxContainer = new ui::Box;
 		boxContainer->AttachButtonDown(nbase::Bind(&EditorControlsList::OnButtonDown, this, std::placeholders::_1));
 		boxContainer->AttachButtonUp(nbase::Bind(&EditorControlsList::OnButtonUp, this, std::placeholders::_1));

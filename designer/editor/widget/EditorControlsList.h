@@ -24,5 +24,4 @@ private:
 private:
 	SelectCallback _select_callback;
 	ButtonUpCallback _button_up_callback;
-	std::vector<std::wstring> _datas;
 };

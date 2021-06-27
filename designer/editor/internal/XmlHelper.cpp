@@ -4,6 +4,8 @@
 #include "../controls/AreaBox.h"
 #include "../controls/AreaHBox.h"
 #include "../controls/AreaWindow.h"
+#include "../controls/AreaVBox.h"
+#include "ControlHelper.h"
 
 XmlHelper::XmlHelper()
 {
@@ -98,14 +100,7 @@ void XmlHelper::ParseElement(tinyxml2::XMLElement* element, ui::Box* rootBox)
 		}
 		else {
 			std::wstring value = nbase::UTF8ToUTF16(currentElement->Value());
-			if (value == L"Box") {
-				areaControl = new AreaBox;
-				rootBox->Add((AreaBox*)areaControl);
-			}
-			else if (value == L"HBox") {
-				areaControl = new AreaHBox;
-				rootBox->Add((AreaHBox*)areaControl);
-			}
+			areaControl = ControlHelper::GetInstance()->AddControl(rootBox, value);
 			areaControl->ParseElement(currentElement);
 		}
 		ui::Box* containerBox = dynamic_cast<ui::Box*>(areaControl);

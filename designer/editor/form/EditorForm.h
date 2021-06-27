@@ -47,7 +47,5 @@ private:
 	std::wstring _select_name = L"";
 	bool _saved = false;
 	std::wstring _last_save_path;
-	int _pre_box_width = 100;
-	int _pre_box_height = 60;
 	std::wstring _title = L"";
 };

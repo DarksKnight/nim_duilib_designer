@@ -11,8 +11,10 @@ public:
 	void ParseElement(tinyxml2::XMLElement* element);
 	tinyxml2::XMLElement* GetElement(tinyxml2::XMLDocument* doc);
 public:
-	virtual void SetDropIMargin(POINT pt, AreaControlDelegate* target) = 0;
-public:
+	virtual void SetDropIMargin(POINT pt, AreaControlDelegate* target) {
+		ui::UiRect margin(pt.x - _control->GetPos().left, pt.y - _control->GetPos().top, 0, 0);
+		target->SetUIMargin(margin);
+	}
 	void SetMove(bool value) {
 		_can_move = value;
 	}

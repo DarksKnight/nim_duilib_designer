@@ -1,6 +1,7 @@
 ﻿#include "../stdafx.h"
 #include "EditorForm.h"
 #include "../internal/XmlHelper.h"
+#include "../internal/ControlHelper.h"
 
 const LPCTSTR EditorForm::kClassName = L"EditorForm";
 
@@ -88,16 +89,9 @@ void EditorForm::OnSelect(const std::wstring& name)
 {
 	_select_name = name;
 	ui::Box* preBox = new ui::Box;
-	if (_select_name == L"Box" || _select_name == L"HBox" || _select_name == L"VBox") {
-		_pre_box_width = 100;
-		_pre_box_height = 60;
-	}
-	else if (_select_name == L"Label") {
-		_pre_box_width = 50;
-		_pre_box_height = 20;
-	}
-	preBox->SetFixedWidth(_pre_box_width);
-	preBox->SetFixedHeight(_pre_box_height);
+	ui::CSize preSize = ControlHelper::GetInstance()->GetPreSize(_select_name);
+	preBox->SetFixedWidth(preSize.cx);
+	preBox->SetFixedHeight(preSize.cy);
 	preBox->SetBkColor(L"bk_wnd_darkcolor");
 	_box_drag_pre->Add(preBox);
 	_box_drag_pre->SetVisible(true);

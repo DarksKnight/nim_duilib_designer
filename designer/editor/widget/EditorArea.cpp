@@ -4,6 +4,8 @@
 #include "../controls/AreaWindow.h"
 #include "../controls/AreaHBox.h"
 #include "../controls/AreaBox.h"
+#include "../controls/AreaVBox.h"
+#include "../internal/ControlHelper.h"
 
 EditorArea::EditorArea()
 {
@@ -27,16 +29,24 @@ void EditorArea::DropControl(const std::wstring& name)
 	if (!container) {
 		return;
 	}
-	AreaControlDelegate* areaControl = NULL;
-	if (name == L"Box") {
-		areaControl = new AreaBox;
-		container->Add((AreaBox*)areaControl);
-		((AreaBox*)container)->SetDropIMargin(pt, areaControl);
+	AreaControlDelegate* areaControl = ControlHelper::GetInstance()->AddControl(container, name);
+	if (!areaControl) {
+		return;
 	}
-	else if (name == L"HBox") {
-		areaControl = new AreaHBox;
-		container->Add((AreaHBox*)areaControl);
-		((AreaHBox*)container)->SetDropIMargin(pt, areaControl);
+	AreaBox* tempBox = dynamic_cast<AreaBox*>(container);
+	if (tempBox) {
+		tempBox->SetDropIMargin(pt, areaControl);
+		return;
+	}
+	AreaHBox* tempHBox = dynamic_cast<AreaHBox*>(container);
+	if (tempHBox) {
+		tempHBox->SetDropIMargin(pt, areaControl);
+		return;
+	}
+	AreaVBox* tempVBox = dynamic_cast<AreaVBox*>(container);
+	if (tempVBox) {
+		tempVBox->SetDropIMargin(pt, areaControl);
+		return;
 	}
 }
 
