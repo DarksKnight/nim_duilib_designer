@@ -8,8 +8,6 @@ public:
 	EditorToolbar();
 	~EditorToolbar();
 public:
-	void InitCtrls();
-public:
 	void SetSaveCallback(StdClosure callback) {
 		_save_callback = callback;
 	}

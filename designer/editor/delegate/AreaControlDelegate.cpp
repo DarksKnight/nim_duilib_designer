@@ -93,10 +93,11 @@ void AreaControlDelegate::Remove()
 
 bool AreaControlDelegate::OnButtonDown(ui::EventArgs* args)
 {
+	_is_button_down = true;
 	_control->GetWindow()->SendNotify(_control, ui::kEventNotify, CustomEventType::CONTROL_BUTTON_DOWN, 0);
 	args->pSender->SetBorderColor(L"red");
-	_is_button_down = true;
 	_selected = true;
+	_control->GetWindow()->SendNotify(_control, ui::kEventNotify, CustomEventType::CONTROL_SELECTED, 0);
 	ui::UiRect controlRect = args->pSender->GetPos();
 	if (args->ptMouse.x - controlRect.left < PADDING) {
 		_current_direction = Direction::LEFT;
@@ -128,6 +129,7 @@ bool AreaControlDelegate::Notify(ui::EventArgs* args)
 			_control->GetWindow()->SendNotify(_control, ui::kEventNotify, CustomEventType::CONTROL_BUTTON_DOWN, 0);
 			args->pSender->SetBorderColor(L"red");
 			_selected = true;
+			_control->GetWindow()->SendNotify(_control, ui::kEventNotify, CustomEventType::CONTROL_SELECTED, 0);
 			OnItemMenu(args);
 		}
 		return true;

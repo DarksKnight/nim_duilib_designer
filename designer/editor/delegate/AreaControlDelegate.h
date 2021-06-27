@@ -26,6 +26,9 @@ public:
 	void SetUIMargin(ui::UiRect margin) {
 		_control->SetMargin(margin);
 	}
+	void SetControlName(const std::wstring & name) {
+		_control->SetName(name);
+	}
 	ui::Control* GetCtonrol() {
 		return _control;
 	}

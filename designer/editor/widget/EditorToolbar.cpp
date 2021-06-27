@@ -4,17 +4,13 @@
 EditorToolbar::EditorToolbar()
 {
 	ui::GlobalManager::FillBoxWithCache(this, L"layout/box_toolbar.xml");
+	_btn_tool_file = (ui::Button*)FindSubControl(L"btn_tool_file");
+	_btn_tool_file->AttachClick(nbase::Bind(&EditorToolbar::OnClickFile, this, std::placeholders::_1));
 }
 
 
 EditorToolbar::~EditorToolbar()
 {
-}
-
-void EditorToolbar::InitCtrls()
-{
-	_btn_tool_file = (ui::Button*)FindSubControl(L"btn_tool_file");
-	_btn_tool_file->AttachClick(nbase::Bind(&EditorToolbar::OnClickFile, this, std::placeholders::_1));
 }
 
 bool EditorToolbar::OnClickFile(ui::EventArgs* args)

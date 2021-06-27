@@ -2,6 +2,7 @@
 #include "../widget/EditorControlsList.h"
 #include "../widget/EditorArea.h"
 #include "../widget/EditorToolbar.h"
+#include "../widget/EditorProperty.h"
 #include "EditorCreateForm.h"
 
 class EditorForm : public nim_comp::WindowEx
@@ -38,9 +39,9 @@ private:
 	EditorToolbar* _toolbar;
 	EditorControlsList* _controls_list;
 	EditorArea* _editor_area;
+	EditorProperty* _editor_property;
 	ui::Label* _lb_title;
 	ui::Box* _box_container;
-	ui::Box* _box_property;
 	ui::Box* _box_drag_pre;
 	ui::Box* _box_editor_area;
 private:

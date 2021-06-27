@@ -14,6 +14,7 @@ public:
 	void DropControl(const std::wstring& name);
 	void DropControl(ui::Control* control);
 	void RemoveSelectItem();
+	ui::Control* FindSelectedItem(ui::Box* box);
 public:
 	void SetSelectItemCallback(SelectItemCallback callback) {
 		_select_item_callback = callback;
@@ -21,7 +22,6 @@ public:
 private:
 	bool Notify(ui::EventArgs* args);
 private:
-	ui::Control* FindSelectedItem(ui::Box* box);
 	ui::Box* FindParentBox(POINT pt);
 	void Reset(ui::Control* control);
 private:

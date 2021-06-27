@@ -63,7 +63,7 @@ AreaControlDelegate* ControlHelper::CreateControl(const std::wstring& name)
 	return control;
 }
 
-AreaControlDelegate* ControlHelper::AddControl(ui::Box* box, const std::wstring& name)
+AreaControlDelegate* ControlHelper::AddControl(ui::Box* box, const std::wstring& name, const std::wstring& controlName)
 {
 	AreaControlDelegate* control = CreateControl(name);
 	if (!control) {
@@ -81,6 +81,7 @@ AreaControlDelegate* ControlHelper::AddControl(ui::Box* box, const std::wstring&
 	else if (name == L"Control") {
 		box->Add((AreaControl*)control);
 	}
+	control->SetControlName(controlName);
 	return control;
 }
 
@@ -115,4 +116,50 @@ void ControlHelper::Remove(ui::Control* control)
 		tempControl->Remove();
 		return;
 	}
+}
+
+bool ControlHelper::CheckDupliName(const std::wstring& name, ui::Box* box)
+{
+	if (!box) {
+		return false;
+	}
+	for (int i = 0; i < box->GetCount(); i++) {
+		ui::Control* control = box->GetItemAt(i);
+		if (control->GetName() == name) {
+			return true;
+		}
+		ui::Box* container = dynamic_cast<ui::Box*>(control);
+		if (container) {
+			bool result = CheckDupliName(name, container);
+			if (result) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+std::wstring ControlHelper::GetControlName(const std::wstring& name, ui::Box* box)
+{
+	std::wstring controlName = L"";
+	if (name == L"Box") {
+		controlName = name + nbase::IntToString16(_box_index);
+		_box_index++;
+	}
+	else if (name == L"HBox") {
+		controlName = name + nbase::IntToString16(_hbox_index);
+		_hbox_index++;
+	}
+	else if (name == L"VBox") {
+		controlName = name + nbase::IntToString16(_vbox_index);
+		_vbox_index++;
+	}
+	else if (name == L"Control") {
+		controlName = name + nbase::IntToString16(_control_index);
+		_control_index++;
+	}
+	if (CheckDupliName(name, box)) {
+		return GetControlName(name, box);
+	}
+	return controlName;
 }

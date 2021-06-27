@@ -31,6 +31,9 @@
     <Filter Include="delegate">
       <UniqueIdentifier>{06888bc1-cc5d-458a-9238-5cc544e8edd2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="item">
+      <UniqueIdentifier>{e898759f-ca34-4016-9988-33c394a07b09}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -108,6 +111,12 @@
     <ClInclude Include="internal\ControlHelper.h">
       <Filter>internal</Filter>
     </ClInclude>
+    <ClInclude Include="item\PropertyItem.h">
+      <Filter>item</Filter>
+    </ClInclude>
+    <ClInclude Include="internal\PropertyHelper.h">
+      <Filter>internal</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -171,6 +180,12 @@
       <Filter>controls</Filter>
     </ClCompile>
     <ClCompile Include="internal\ControlHelper.cpp">
+      <Filter>internal</Filter>
+    </ClCompile>
+    <ClCompile Include="item\PropertyItem.cpp">
+      <Filter>item</Filter>
+    </ClCompile>
+    <ClCompile Include="internal\PropertyHelper.cpp">
       <Filter>internal</Filter>
     </ClCompile>
   </ItemGroup>

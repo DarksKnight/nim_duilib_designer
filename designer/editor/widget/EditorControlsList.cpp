@@ -37,7 +37,7 @@ void EditorControlsList::LoadData()
 bool EditorControlsList::OnButtonDown(ui::EventArgs* args)
 {
 	if (_select_callback) {
-		_select_callback(_datas[args->wParam].name);
+		_select_callback(_datas[args->wParam - 1].name);
 	}
 	return true;
 }

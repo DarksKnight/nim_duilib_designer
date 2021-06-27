@@ -39,18 +39,17 @@ void EditorForm::InitWindow()
 	m_pRoot->AttachBubbledEvent(ui::kEventAll, nbase::Bind(&EditorForm::Notify, this, std::placeholders::_1));
 	_lb_title = (ui::Label*)FindControl(L"lb_title");
 	_toolbar = (EditorToolbar*)FindControl(L"et");
-	_toolbar->InitCtrls();
 	_toolbar->SetSaveCallback(nbase::Bind(&EditorForm::OnSaveFile, this));
 	_toolbar->SetNewFileCallback(nbase::Bind(&EditorForm::OnNewFile, this));
 	_toolbar->SetOpenFileCallback(nbase::Bind(&EditorForm::OnOpenFile, this, std::placeholders::_1));
 	_box_container = (ui::Box*)FindControl(L"box_container");
 	_controls_list = (EditorControlsList*)FindControl(L"ecl");
-	_box_property = (ui::Box*)FindControl(L"box_property");
+	_editor_property = (EditorProperty*)FindControl(L"ep");
 	_box_drag_pre = (ui::Box*)FindControl(L"box_drag_pre");
 	_box_editor_area = (ui::Box*)FindControl(L"box_editor_area");
 	int width = GetPos().GetWidth();
 	_controls_list->SetFixedWidth(width / 6);
-	_box_property->SetFixedWidth(width / 5);
+	_editor_property->SetFixedWidth(width / 5);
 	_controls_list->SetSelectCallback(nbase::Bind(&EditorForm::OnSelect, this ,std::placeholders::_1));
 	_controls_list->SetButtonUpCallback(nbase::Bind(&EditorForm::OnButtonUp, this));
 	nbase::ThreadManager::PostTask(kThreadUI, nbase::Bind(&EditorForm::OpenCreateForm, this));
@@ -105,8 +104,14 @@ LRESULT EditorForm::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 bool EditorForm::Notify(ui::EventArgs* args)
 {
-	if (args->Type == ui::kEventNotify && args->wParam == CustomEventType::UI_CHANGED) {
-		UiChanged();
+	if (args->Type == ui::kEventNotify && (args->wParam == CustomEventType::UI_CHANGED || args->wParam == CustomEventType::CONTROL_SELECTED)) {
+		if (args->wParam == CustomEventType::UI_CHANGED) {
+			UiChanged();
+		}
+		ui::Control* item = _editor_area->FindSelectedItem((ui::Box*)_editor_area->GetItemAt(0));
+		if (item) {
+			_editor_property->LoadControlProperty(item);
+		}
 	}
 	return true;
 }
@@ -159,6 +164,7 @@ void EditorForm::OnNewFile()
 {
 	_toolbar->SetEnabled(false);
 	_controls_list->SetVisible(false);
+	_editor_property->SetVisible(false);
 	EditorCreateForm* form = (EditorCreateForm*)(nim_comp::WindowsManager::GetInstance()->GetWindow(EditorCreateForm::kClassName, EditorCreateForm::kClassName));
 	if (!form) {
 		form = new EditorCreateForm();
@@ -218,6 +224,7 @@ void EditorForm::OnCreateFormClose()
 {
 	_toolbar->SetEnabled(true);
 	_controls_list->SetVisible(true);
+	_editor_property->SetVisible(true);
 }
 
 void EditorForm::OnSelectPathCallback(BOOL ret, std::wstring path)
@@ -259,6 +266,7 @@ void EditorForm::OpenCreateForm()
 {
 	_toolbar->SetEnabled(false);
 	_controls_list->SetVisible(false);
+	_editor_property->SetVisible(false);
 	EditorCreateForm* form = new EditorCreateForm();
 	form->Create(GetHWND(), EditorCreateForm::kClassName, WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX, 0);
 	form->CenterWindow();

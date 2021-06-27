@@ -343,7 +343,9 @@
     <ClInclude Include="form\EditorForm.h" />
     <ClInclude Include="internal\ControlHelper.h" />
     <ClInclude Include="internal\Global.h" />
+    <ClInclude Include="internal\PropertyHelper.h" />
     <ClInclude Include="internal\XmlHelper.h" />
+    <ClInclude Include="item\PropertyItem.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -371,7 +373,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="internal\ControlHelper.cpp" />
+    <ClCompile Include="internal\PropertyHelper.cpp" />
     <ClCompile Include="internal\XmlHelper.cpp" />
+    <ClCompile Include="item\PropertyItem.cpp" />
     <ClCompile Include="main.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../stdafx.h</PrecompiledHeaderFile>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
