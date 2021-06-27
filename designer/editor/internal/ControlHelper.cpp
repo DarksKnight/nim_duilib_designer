@@ -15,15 +15,15 @@ ControlHelper::~ControlHelper()
 {
 }
 
-std::vector<std::wstring> ControlHelper::GetControlList()
+std::vector<ControlData> ControlHelper::GetControlList()
 {
 	if (!_datas.empty()) {
 		return _datas;
 	}
-	_datas.push_back(L"Box");
-	_datas.push_back(L"HBox");
-	_datas.push_back(L"VBox");
-	_datas.push_back(L"Control");
+	_datas.push_back(ControlData(L"Box", L"无约束容器"));
+	_datas.push_back(ControlData(L"HBox", L"横向容器"));
+	_datas.push_back(ControlData(L"VBox", L"纵向容器"));
+	_datas.push_back(ControlData(L"Control", L"基础控件"));
 	return _datas;
 }
 

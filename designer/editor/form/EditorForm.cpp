@@ -79,6 +79,27 @@ LRESULT EditorForm::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			_editor_area->RemoveSelectItem();
 		}
 	}
+	else if (uMsg == WM_NCLBUTTONDBLCLK) {
+		if (IsZoomed(GetHWND())) {
+			ui::Control* pMaxButton = (ui::Control*)FindControl(L"maxbtn");
+			ui::Control* pRestoreButton = (ui::Control*)FindControl(L"restorebtn");
+			if (pMaxButton && pRestoreButton) {
+				pMaxButton->SetVisible(true);
+				pRestoreButton->SetVisible(false);
+			}
+			SendMessage(WM_SYSCOMMAND, SC_RESTORE, 0);
+		}
+		else {
+			ui::Control* pMaxButton = (ui::Control*)FindControl(L"maxbtn");
+			ui::Control* pRestoreButton = (ui::Control*)FindControl(L"restorebtn");
+			if (pMaxButton && pRestoreButton) {
+				pMaxButton->SetVisible(false);
+				pRestoreButton->SetVisible(true);
+			}
+			SendMessage(WM_SYSCOMMAND, SC_MAXIMIZE, 0);
+		}
+		return 1;
+	}
 	return __super::HandleMessage(uMsg, wParam, lParam);
 }
 
