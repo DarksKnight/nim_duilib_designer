@@ -83,3 +83,30 @@ AreaControlDelegate* ControlHelper::AddControl(ui::Box* box, const std::wstring&
 	}
 	return control;
 }
+
+void ControlHelper::Remove(ui::Control* control)
+{
+	if (!control) {
+		return;
+	}
+	AreaHBoxDelegate* tempHBox = dynamic_cast<AreaHBoxDelegate*>(control);
+	if (tempHBox) {
+		tempHBox->Remove();
+		return;
+	}
+	AreaVBoxDelegate* tempVBox = dynamic_cast<AreaVBoxDelegate*>(control);
+	if (tempVBox) {
+		tempVBox->Remove();
+		return;
+	}
+	AreaBoxDelegate* tempBox = dynamic_cast<AreaBoxDelegate*>(control);
+	if (tempBox) {
+		tempBox->Remove();
+		return;
+	}
+	AreaControlDelegate* tempControl = dynamic_cast<AreaControlDelegate*>(control);
+	if (tempControl) {
+		tempControl->Remove();
+		return;
+	}
+}

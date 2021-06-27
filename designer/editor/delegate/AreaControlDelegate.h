@@ -10,6 +10,8 @@ public:
 public:
 	void ParseElement(tinyxml2::XMLElement* element);
 	tinyxml2::XMLElement* GetElement(tinyxml2::XMLDocument* doc);
+	void Reset();
+	void Remove();
 public:
 	virtual void SetDropIMargin(POINT pt, AreaControlDelegate* target) {
 		ui::UiRect margin(pt.x - _control->GetPos().left, pt.y - _control->GetPos().top, 0, 0);
@@ -26,6 +28,9 @@ public:
 	}
 	ui::Control* GetCtonrol() {
 		return _control;
+	}
+	bool IsSelected() {
+		return _selected;
 	}
 protected:
 	virtual std::wstring GetControlName() = 0;
@@ -67,7 +72,7 @@ protected:
 private:
 	bool OnButtonDown(ui::EventArgs* args);
 	bool OnButtonUp(ui::EventArgs* args);
-	bool OnMouseEvent(ui::EventArgs* args);
+	bool Notify(ui::EventArgs* args);
 	bool OnItemMenu(ui::EventArgs* args);
 	bool OnItemMenuDelete(ui::EventArgs* args);
 private:
@@ -80,6 +85,7 @@ private:
 		BOTTOM
 	};
 private:
+	bool _selected = false;
 	bool _is_button_down = false;
 	Direction _current_direction = Direction::NONE;
 	POINT _last_point;

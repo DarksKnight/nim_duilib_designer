@@ -5,7 +5,7 @@ AreaControlDelegate::AreaControlDelegate(ui::Control* control):_control(control)
 {
 	control->AttachButtonDown(nbase::Bind(&AreaControlDelegate::OnButtonDown, this, std::placeholders::_1));
 	control->AttachButtonUp(nbase::Bind(&AreaControlDelegate::OnButtonUp, this, std::placeholders::_1));
-	control->AttachAllEvents(nbase::Bind(&AreaControlDelegate::OnMouseEvent, this, std::placeholders::_1));
+	control->AttachAllEvents(nbase::Bind(&AreaControlDelegate::Notify, this, std::placeholders::_1));
 	control->SetBorderColor(L"blue");
 	control->SetBorderSize(1);
 }
@@ -80,11 +80,23 @@ tinyxml2::XMLElement* AreaControlDelegate::GetElement(tinyxml2::XMLDocument* doc
 	return element;
 }
 
+void AreaControlDelegate::Reset()
+{
+	_selected = false;
+	_control->SetBorderColor(L"blue");
+}
+
+void AreaControlDelegate::Remove()
+{
+	_control->GetParent()->Remove(_control);
+}
+
 bool AreaControlDelegate::OnButtonDown(ui::EventArgs* args)
 {
 	_control->GetWindow()->SendNotify(_control, ui::kEventNotify, CustomEventType::CONTROL_BUTTON_DOWN, 0);
 	args->pSender->SetBorderColor(L"red");
 	_is_button_down = true;
+	_selected = true;
 	ui::UiRect controlRect = args->pSender->GetPos();
 	if (args->ptMouse.x - controlRect.left < PADDING) {
 		_current_direction = Direction::LEFT;
@@ -104,12 +116,12 @@ bool AreaControlDelegate::OnButtonDown(ui::EventArgs* args)
 
 bool AreaControlDelegate::OnButtonUp(ui::EventArgs* args)
 {
-	_is_button_down = false;
 	_current_direction = Direction::NONE;
+	_is_button_down = false;
 	return true;
 }
 
-bool AreaControlDelegate::OnMouseEvent(ui::EventArgs* args)
+bool AreaControlDelegate::Notify(ui::EventArgs* args)
 {
 	if (args->Type != ui::kEventMouseMove) {
 		if (args->Type == ui::kEventMouseRightButtonDown) {
@@ -202,6 +214,6 @@ bool AreaControlDelegate::OnItemMenu(ui::EventArgs* args)
 
 bool AreaControlDelegate::OnItemMenuDelete(ui::EventArgs* args)
 {
-	_control->GetParent()->Remove(_control);
+	Remove();
 	return true;
 }

@@ -71,8 +71,13 @@ LRESULT EditorForm::OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& b
 
 LRESULT EditorForm::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	if (uMsg == WM_KEYDOWN && wParam == 'S' && ::GetKeyState(VK_CONTROL) < 0) {
-		OnSaveFile();
+	if (uMsg == WM_KEYDOWN) {
+		if (wParam == 'S' && ::GetKeyState(VK_CONTROL) < 0) {
+			OnSaveFile();
+		}
+		else if (::GetKeyState(VK_DELETE) < 0) {
+			_editor_area->RemoveSelectItem();
+		}
 	}
 	return __super::HandleMessage(uMsg, wParam, lParam);
 }

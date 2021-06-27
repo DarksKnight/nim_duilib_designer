@@ -16,5 +16,6 @@ enum ControlType
 enum CustomEventType
 {
 	UI_CHANGED = 0,
-	CONTROL_BUTTON_DOWN
+	CONTROL_BUTTON_DOWN,
+	REMOVE_CONTROL
 };

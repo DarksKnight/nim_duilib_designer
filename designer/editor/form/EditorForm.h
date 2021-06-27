@@ -46,6 +46,6 @@ private:
 private:
 	std::wstring _select_name = L"";
 	bool _saved = false;
-	std::wstring _last_save_path;
+	std::wstring _last_save_path = L"";
 	std::wstring _title = L"";
 };
