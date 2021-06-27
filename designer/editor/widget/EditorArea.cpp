@@ -23,7 +23,7 @@ void EditorArea::DropControl(const std::wstring& name)
 	POINT pt = { 0 };
 	::GetCursorPos(&pt);
 	::ScreenToClient(GetWindow()->GetHWND(), &pt);
-	container = (AreaBox*)FindParentBox(pt);
+	container = FindParentBox(pt);
 	if (!container) {
 		return;
 	}
@@ -31,12 +31,13 @@ void EditorArea::DropControl(const std::wstring& name)
 	if (name == L"Box") {
 		areaControl = new AreaBox;
 		container->Add((AreaBox*)areaControl);
+		((AreaBox*)container)->SetDropIMargin(pt, areaControl);
 	}
 	else if (name == L"HBox") {
 		areaControl = new AreaHBox;
 		container->Add((AreaHBox*)areaControl);
+		((AreaHBox*)container)->SetDropIMargin(pt, areaControl);
 	}
-	areaControl->SetUIMargin(pt, container);
 }
 
 bool EditorArea::Notify(ui::EventArgs* args)

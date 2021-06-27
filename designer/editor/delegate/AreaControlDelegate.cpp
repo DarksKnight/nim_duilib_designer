@@ -80,30 +80,6 @@ tinyxml2::XMLElement* AreaControlDelegate::GetElement(tinyxml2::XMLDocument* doc
 	return element;
 }
 
-void AreaControlDelegate::SetUIMargin(POINT pt, ui::Box* container)
-{
-	ui::UiRect margin;
-	ui::HBox* tempHBox = dynamic_cast<ui::HBox*>(container);
-	ui::VBox* tempVBox = dynamic_cast<ui::VBox*>(container);
-	ui::Box* tempBox = dynamic_cast<ui::Box*>(container);
-	if (tempHBox) {
-		ui::Control* preCtrl = FindPreControl(_control);
-		if (preCtrl) {
-			margin.left = pt.x - preCtrl->GetPos().right;
-			margin.top = pt.y - preCtrl->GetPos().top;
-		}
-		else {
-			margin.left = pt.x - container->GetPos().left;
-			margin.top = pt.y - container->GetPos().top;
-		}
-	}
-	else {
-		margin.left = pt.x - container->GetPos().left;
-		margin.top = pt.y - container->GetPos().top;
-	}
-	_control->SetMargin(margin);
-}
-
 bool AreaControlDelegate::OnButtonDown(ui::EventArgs* args)
 {
 	_control->GetWindow()->SendNotify(_control, ui::kEventNotify, CustomEventType::CONTROL_BUTTON_DOWN, 0);

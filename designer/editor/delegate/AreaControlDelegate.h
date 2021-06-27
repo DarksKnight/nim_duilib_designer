@@ -10,13 +10,20 @@ public:
 public:
 	void ParseElement(tinyxml2::XMLElement* element);
 	tinyxml2::XMLElement* GetElement(tinyxml2::XMLDocument* doc);
-	void SetUIMargin(POINT pt, ui::Box* container);
+public:
+	virtual void SetDropIMargin(POINT pt, AreaControlDelegate* target) = 0;
 public:
 	void SetMove(bool value) {
 		_can_move = value;
 	}
 	void SetShowMenu(bool value) {
 		_show_menu = value;
+	}
+	void SetUIMargin(ui::UiRect margin) {
+		_control->SetMargin(margin);
+	}
+	ui::Control* GetCtonrol() {
+		return _control;
 	}
 protected:
 	virtual std::wstring GetControlName() = 0;
@@ -41,6 +48,9 @@ protected:
 	ui::Control* FindPreControl(ui::Control* control) {
 		ui::Control* preCtrl = NULL;
 		ui::Box* box = control->GetParent();
+		if (!box) {
+			return NULL;
+		}
 		for (int i = 0; i < box->GetCount(); i++) {
 			if (box->GetItemAt(i) == control) {
 				return preCtrl;

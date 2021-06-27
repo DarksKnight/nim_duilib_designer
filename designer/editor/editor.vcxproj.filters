@@ -93,6 +93,12 @@
     <ClInclude Include="delegate\AreaHBoxDelegate.h">
       <Filter>delegate</Filter>
     </ClInclude>
+    <ClInclude Include="controls\AreaVBox.h">
+      <Filter>controls</Filter>
+    </ClInclude>
+    <ClInclude Include="delegate\AreaVBoxDelegate.h">
+      <Filter>delegate</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -141,6 +147,12 @@
       <Filter>delegate</Filter>
     </ClCompile>
     <ClCompile Include="delegate\AreaHBoxDelegate.cpp">
+      <Filter>delegate</Filter>
+    </ClCompile>
+    <ClCompile Include="controls\AreaVBox.cpp">
+      <Filter>controls</Filter>
+    </ClCompile>
+    <ClCompile Include="delegate\AreaVBoxDelegate.cpp">
       <Filter>delegate</Filter>
     </ClCompile>
   </ItemGroup>
