@@ -5,7 +5,7 @@ AreaVBoxDelegate::AreaVBoxDelegate(ui::Control* control):AreaBoxDelegate(control
 {
 }
 
-void AreaVBoxDelegate::SetDropIMargin(POINT pt, AreaControlDelegate* target)
+void AreaVBoxDelegate::SetDropUIMargin(POINT pt, AreaControlDelegate* target)
 {
 	ui::UiRect margin;
 	ui::Control* preCtrl = FindPreControl(target->GetCtonrol());

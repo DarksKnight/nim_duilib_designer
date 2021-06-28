@@ -5,7 +5,7 @@ AreaHBoxDelegate::AreaHBoxDelegate(ui::Control* control):AreaBoxDelegate(control
 {
 }
 
-void AreaHBoxDelegate::SetDropIMargin(POINT pt, AreaControlDelegate* target)
+void AreaHBoxDelegate::SetDropUIMargin(POINT pt, AreaControlDelegate* target)
 {
 	ui::UiRect margin;
 	ui::Control* preCtrl = FindPreControl(target->GetCtonrol());

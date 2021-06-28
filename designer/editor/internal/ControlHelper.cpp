@@ -98,6 +98,26 @@ AreaControlDelegate* ControlHelper::AddControl(ui::Box* box, const std::wstring&
 	return delegate;
 }
 
+void ControlHelper::SetDropUIMargin(ui::Box* box, POINT pt, AreaControlDelegate* delegate)
+{
+	AreaBox* tempBox = dynamic_cast<AreaBox*>(box);
+	if (tempBox)
+	if (tempBox) {
+		tempBox->SetDropUIMargin(pt, delegate);
+		return;
+	}
+	AreaHBox* tempHBox = dynamic_cast<AreaHBox*>(box);
+	if (tempHBox) {
+		tempHBox->SetDropUIMargin(pt, delegate);
+		return;
+	}
+	AreaVBox* tempVBox = dynamic_cast<AreaVBox*>(box);
+	if (tempVBox) {
+		tempVBox->SetDropUIMargin(pt, delegate);
+		return;
+	}
+}
+
 void ControlHelper::Remove(ui::Control* control)
 {
 	if (!control) {

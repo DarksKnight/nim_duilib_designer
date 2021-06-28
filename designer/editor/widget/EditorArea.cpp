@@ -27,21 +27,7 @@ void EditorArea::DropControl(const std::wstring& name)
 	ui::Box* container = FindParentBox(pt);
 	std::wstring controlName = ControlHelper::GetInstance()->GetControlName(name, (ui::Box*)GetItemAt(0));
 	AreaControlDelegate* areaControl = ControlHelper::GetInstance()->AddControl(container, name, controlName);
-	AreaBox* tempBox = dynamic_cast<AreaBox*>(container);
-	if (tempBox) {
-		tempBox->SetDropIMargin(pt, areaControl);
-		return;
-	}
-	AreaHBox* tempHBox = dynamic_cast<AreaHBox*>(container);
-	if (tempHBox) {
-		tempHBox->SetDropIMargin(pt, areaControl);
-		return;
-	}
-	AreaVBox* tempVBox = dynamic_cast<AreaVBox*>(container);
-	if (tempVBox) {
-		tempVBox->SetDropIMargin(pt, areaControl);
-		return;
-	}
+	ControlHelper::GetInstance()->SetDropUIMargin(container, pt, areaControl);
 }
 
 void EditorArea::DropControl(ui::Control* control)
@@ -92,24 +78,15 @@ ui::Control* EditorArea::FindSelectedItem(ui::Box* box)
 bool EditorArea::Notify(ui::EventArgs* args)
 {
 	if (args->Type == ui::kEventNotify) {
-		switch (args->wParam)
-		{
-		case CustomEventType::CONTROL_BUTTON_DOWN:
+		if (args->wParam == CustomEventType::CONTROL_BUTTON_DOWN) {
 			Reset(GetItemAt(0));
-			break;
-		case CustomEventType::CONTROL_COPY:
-		{
+		}
+		else if (args->wParam == CustomEventType::CONTROL_COPY) {
 			ui::Control* ctrl = args->pSender;
 			_copy_ctrl = new ui::Control(*ctrl);
-			break;
 		}
-		case CustomEventType::CONTROL_PASTE:
-		{
+		else if (args->wParam == CustomEventType::CONTROL_PASTE) {
 			ui::Control* selectedItem = FindSelectedItem((ui::Box*)GetItemAt(0));
-			break;
-		}
-		default:
-			break;
 		}
 	}
 	return true;
