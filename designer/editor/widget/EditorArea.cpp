@@ -21,20 +21,12 @@ EditorArea::~EditorArea()
 
 void EditorArea::DropControl(const std::wstring& name)
 {
-	ui::Box* container = NULL;
 	POINT pt = { 0 };
 	::GetCursorPos(&pt);
 	::ScreenToClient(GetWindow()->GetHWND(), &pt);
-	container = FindParentBox(pt);
-	if (!container) {
-		return;
-	}
-	AreaControlDelegate* areaControl = ControlHelper::GetInstance()->AddControl(container, name);
-	if (!areaControl) {
-		return;
-	}
+	ui::Box* container = FindParentBox(pt);
 	std::wstring controlName = ControlHelper::GetInstance()->GetControlName(name, (ui::Box*)GetItemAt(0));
-	areaControl->SetControlName(controlName);
+	AreaControlDelegate* areaControl = ControlHelper::GetInstance()->AddControl(container, name, controlName);
 	AreaBox* tempBox = dynamic_cast<AreaBox*>(container);
 	if (tempBox) {
 		tempBox->SetDropIMargin(pt, areaControl);
@@ -59,9 +51,6 @@ void EditorArea::DropControl(ui::Control* control)
 	::GetCursorPos(&pt);
 	::ScreenToClient(GetWindow()->GetHWND(), &pt);
 	container = FindParentBox(pt);
-	if (!container) {
-		return;
-	}
 	container->Add(control);
 }
 
@@ -110,10 +99,13 @@ bool EditorArea::Notify(ui::EventArgs* args)
 			break;
 		case CustomEventType::CONTROL_COPY:
 		{
-			ui::Control* item = FindSelectedItem((ui::Box*)GetItemAt(0));
-			if (item) {
-				_copy_control = ControlHelper::GetInstance()->Clone((AreaControlDelegate*)item);
-			}
+			ui::Control* ctrl = args->pSender;
+			_copy_ctrl = new ui::Control(*ctrl);
+			break;
+		}
+		case CustomEventType::CONTROL_PASTE:
+		{
+			ui::Control* selectedItem = FindSelectedItem((ui::Box*)GetItemAt(0));
 			break;
 		}
 		default:
@@ -137,7 +129,7 @@ ui::Box* EditorArea::FindParentBox(POINT pt)
 	if (parentBox) {
 		return parentBox;
 	}
-	return NULL;
+	return (ui::Box*)GetItemAt(0);
 }
 
 void EditorArea::Reset(ui::Control* control)

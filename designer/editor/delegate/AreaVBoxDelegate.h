@@ -9,6 +9,6 @@ public:
 	void SetDropIMargin(POINT pt, AreaControlDelegate* target) override;
 protected:
 	std::wstring GetControlName() {
-		return L"VBox";
+		return DUI_CTR_VBOX;
 	}
 };

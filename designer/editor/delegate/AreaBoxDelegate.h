@@ -7,6 +7,6 @@ public:
 	AreaBoxDelegate(ui::Control* control);
 protected:
 	std::wstring GetControlName() {
-		return L"Box";
+		return DUI_CTR_BOX;
 	}
 };

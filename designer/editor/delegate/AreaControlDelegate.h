@@ -13,8 +13,9 @@ public:
 	void Reset();
 	void Remove();
 public:
-	virtual std::wstring GetControlName() = 0;
-public:
+	virtual std::wstring GetControlName() {
+		return DUI_CTR_CONTROL;
+	}
 	virtual void SetDropIMargin(POINT pt, AreaControlDelegate* target) {
 		ui::UiRect margin(pt.x - _control->GetPos().left, pt.y - _control->GetPos().top, 0, 0);
 		target->SetUIMargin(margin);
@@ -39,12 +40,6 @@ public:
 	}
 	bool IsSelected() {
 		return _selected;
-	}
-	ui::Control* Clone() {
-		ui::Control* ctrl = new ui::Control;
-		ctrl->SetFixedWidth(_control->GetFixedWidth());
-		ctrl->SetFixedHeight(_control->GetFixedHeight());
-		return ctrl;
 	}
 protected:
 	virtual void OnParseElement(tinyxml2::XMLElement* element) {}
@@ -81,6 +76,7 @@ protected:
 protected:
 	nim_comp::CMenuElementUI* _menu_delete;
 	nim_comp::CMenuElementUI* _menu_copy;
+	nim_comp::CMenuElementUI* _menu_paste;
 	ui::Control* _control = NULL;
 	std::vector<PropertyData> _basic_property;
 private:
@@ -89,6 +85,7 @@ private:
 	bool Notify(ui::EventArgs* args);
 	bool OnItemMenu(ui::EventArgs* args);
 	bool OnItemMenuCopy(ui::EventArgs* args);
+	bool OnItemMenuPaste(ui::EventArgs* args);
 	bool OnItemMenuDelete(ui::EventArgs* args);
 private:
 	enum class Direction

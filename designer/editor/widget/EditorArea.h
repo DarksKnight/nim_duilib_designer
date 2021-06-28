@@ -37,5 +37,5 @@ private:
 	POINT _last_point;
 	Direction _current_direction = Direction::NONE;
 	SelectItemCallback _select_item_callback;
-	ui::Control* _copy_control = NULL;
+	ui::Control* _copy_ctrl = NULL;
 };

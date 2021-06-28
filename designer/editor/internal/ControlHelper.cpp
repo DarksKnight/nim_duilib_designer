@@ -30,65 +30,72 @@ std::vector<ControlData> ControlHelper::GetControlList()
 ui::CSize ControlHelper::GetPreSize(const std::wstring& name)
 {
 	ui::CSize size(50, 50);
-	if (name == L"Box" || name == L"HBox" || name == L"VBox") {
-		size.cx = 100;
-		size.cy = 60;
-	}
-	else if (name == L"Control") {
-		size.cx = 50;
-		size.cy = 50;
-	}
-	else if (name == L"Label") {
-		size.cx = 50;
-		size.cy = 20;
+	SIZE_T cchLen = name.length();
+	switch (cchLen) {
+	case 3:
+		if (name == DUI_CTR_BOX) {
+			size.cx = 100;
+			size.cy = 60;
+		}
+		break;
+	case 4:
+		if (name == DUI_CTR_HBOX || name == DUI_CTR_VBOX) {
+			size.cx = 100;
+			size.cy = 60;
+		}
+		break;
+	case 5:
+		if (name == DUI_CTR_LABEL) {
+			size.cx = 50;
+			size.cy = 20;
+		}
+		break;
+	case 7:
+		if (name == DUI_CTR_CONTROL) {
+			size.cx = 50;
+			size.cy = 50;
+		}
+		break;
+	default:
+		break;
 	}
 	return size;
 }
 
-AreaControlDelegate* ControlHelper::CreateControl(const std::wstring& name)
-{
-	AreaControlDelegate* control = NULL;
-	if (name == L"Box") {
-		control = new AreaBox;
-	}
-	else if (name == L"HBox") {
-		control = new AreaHBox;
-	}
-	else if (name == L"VBox") {
-		control = new AreaVBox;
-	}
-	else if (name == L"Control") {
-		control = new AreaControl;
-	}
-	return control;
-}
-
 AreaControlDelegate* ControlHelper::AddControl(ui::Box* box, const std::wstring& name, const std::wstring& controlName)
 {
-	AreaControlDelegate* control = CreateControl(name);
-	if (!control) {
-		return NULL;
+	AreaControlDelegate* delegate = NULL;
+	SIZE_T cchLen = name.length();
+	switch (cchLen) {
+	case 3:
+		if (name == DUI_CTR_BOX) {
+			delegate = new AreaBox;
+			box->Add((AreaBox*)delegate);
+		}
+		break;
+	case 4:
+		if (name == DUI_CTR_HBOX) {
+			delegate = new AreaHBox;
+			box->Add((AreaHBox*)delegate);
+		}
+		else if (name == DUI_CTR_VBOX) {
+			delegate = new AreaVBox;
+			box->Add((AreaVBox*)delegate);
+		}
+		break;
+	case 7:
+		if (name == DUI_CTR_CONTROL) {
+			delegate = new AreaControl;
+			box->Add((AreaControl*)delegate);
+		}
+		break;
+	default:
+		delegate = new AreaBox;
+		box->Add((AreaBox*)delegate);
+		break;
 	}
-	if (name == L"Box") {
-		box->Add((AreaBox*)control);
-	}
-	else if (name == L"HBox") {
-		box->Add((AreaHBox*)control);
-	}
-	else if (name == L"VBox") {
-		box->Add((AreaVBox*)control);
-	}
-	else if (name == L"Control") {
-		box->Add((AreaControl*)control);
-	}
-	control->SetControlName(controlName);
-	return control;
-}
-
-ui::Control* ControlHelper::Clone(AreaControlDelegate* delegate)
-{
-	ui::Control* control = NULL;
-	return control;
+	delegate->SetControlName(controlName);
+	return delegate;
 }
 
 void ControlHelper::Remove(ui::Control* control)
