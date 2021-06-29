@@ -1,17 +1,17 @@
 ﻿#include "../stdafx.h"
 #include "EditorArea.h"
 #include "../controls/AreaControl.h"
-#include "../controls/AreaWindow.h"
 #include "../controls/AreaHBox.h"
 #include "../controls/AreaBox.h"
 #include "../controls/AreaVBox.h"
 #include "../internal/ControlHelper.h"
+#include "../internal/CopyHelper.h"
 
 EditorArea::EditorArea()
 {
 	AttachBubbledEvent(ui::kEventAll, nbase::Bind(&EditorArea::Notify, this, std::placeholders::_1));
-	AreaWindow* areaWindow = new AreaWindow;
-	Add(areaWindow);
+	_area_window = new AreaWindow;
+	Add(_area_window);
 }
 
 
@@ -50,6 +50,9 @@ void EditorArea::RemoveSelectItem()
 ui::Control* EditorArea::FindSelectedItem(ui::Box* box)
 {
 	AreaControlDelegate* curDelegate = dynamic_cast<AreaControlDelegate*>(box);
+	if (!curDelegate) {
+		return NULL;
+	}
 	if (curDelegate->IsSelected()) {
 		return box;
 	}
@@ -80,11 +83,10 @@ bool EditorArea::Notify(ui::EventArgs* args)
 			Reset(GetItemAt(0));
 		}
 		else if (args->wParam == CustomEventType::CONTROL_COPY) {
-			ui::Control* ctrl = args->pSender;
-			_copy_ctrl = new ui::Control(*ctrl);
+			CopyHelper::GetInstance()->Copy(args->pSender);
 		}
 		else if (args->wParam == CustomEventType::CONTROL_PASTE) {
-			ui::Control* selectedItem = FindSelectedItem((ui::Box*)GetItemAt(0));
+			CopyHelper::GetInstance()->Paste();
 		}
 	}
 	return true;

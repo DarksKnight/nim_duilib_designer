@@ -5,4 +5,5 @@ class AreaHBox : public ui::HBox, public AreaHBoxDelegate
 {
 public:
 	AreaHBox();
+	AreaHBox(const AreaHBox& box);
 };

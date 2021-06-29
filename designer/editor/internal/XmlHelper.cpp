@@ -107,7 +107,7 @@ void XmlHelper::ParseElement(tinyxml2::XMLElement* element, ui::Box* rootBox)
 		}
 		else {
 			std::wstring value = nbase::UTF8ToUTF16(currentElement->Value());
-			areaControl = ControlHelper::GetInstance()->AddControl(rootBox, value);
+			areaControl = ControlHelper::GetInstance()->DropControl(rootBox, value);
 			areaControl->ParseElement(currentElement);
 		}
 		ui::Box* containerBox = dynamic_cast<ui::Box*>(areaControl);

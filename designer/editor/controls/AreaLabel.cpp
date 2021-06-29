@@ -8,6 +8,7 @@ AreaLabel::AreaLabel():AreaLabelDelegate(this)
 }
 
 
-AreaLabel::~AreaLabel()
+AreaLabel::AreaLabel(const AreaLabel& label) :AreaLabelDelegate(this),ui::Label(label)
 {
+
 }

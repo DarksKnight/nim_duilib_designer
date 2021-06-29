@@ -94,7 +94,7 @@ void ControlHelper::DropControl(ui::Box* box, POINT pt, const std::wstring& name
 		box->Add((AreaBox*)delegate);
 		break;
 	}
-	std::wstring controlName = GetControlName(name, box);
+	std::wstring controlName = GetName(name);
 	delegate->SetControlName(controlName);
 	AreaBox* tempBox = dynamic_cast<AreaBox*>(box);
 	if (tempBox) {
@@ -111,6 +111,41 @@ void ControlHelper::DropControl(ui::Box* box, POINT pt, const std::wstring& name
 		tempVBox->SetDropUIMargin(pt, delegate);
 		return;
 	}
+}
+
+AreaControlDelegate* ControlHelper::DropControl(ui::Box* box, const std::wstring& name)
+{
+	AreaControlDelegate* delegate = NULL;
+	SIZE_T cchLen = name.length();
+	switch (cchLen) {
+	case 3:
+		if (name == DUI_CTR_BOX) {
+			delegate = new AreaBox;
+			box->Add((AreaBox*)delegate);
+		}
+		break;
+	case 4:
+		if (name == DUI_CTR_HBOX) {
+			delegate = new AreaHBox;
+			box->Add((AreaHBox*)delegate);
+		}
+		else if (name == DUI_CTR_VBOX) {
+			delegate = new AreaVBox;
+			box->Add((AreaVBox*)delegate);
+		}
+		break;
+	case 7:
+		if (name == DUI_CTR_CONTROL) {
+			delegate = new AreaControl;
+			box->Add((AreaControl*)delegate);
+		}
+		break;
+	default:
+		delegate = new AreaBox;
+		box->Add((AreaBox*)delegate);
+		break;
+	}
+	return delegate;
 }
 
 void ControlHelper::Remove(ui::Control* control)
@@ -161,7 +196,7 @@ bool ControlHelper::CheckDupliName(const std::wstring& name, ui::Box* box)
 	return false;
 }
 
-std::wstring ControlHelper::GetControlName(const std::wstring& name, ui::Box* box)
+std::wstring ControlHelper::GetName(const std::wstring& name)
 {
 	std::wstring controlName = L"";
 	if (name == L"Box") {
@@ -180,8 +215,8 @@ std::wstring ControlHelper::GetControlName(const std::wstring& name, ui::Box* bo
 		controlName = name + nbase::IntToString16(_control_index);
 		_control_index++;
 	}
-	if (CheckDupliName(name, box)) {
-		return GetControlName(name, box);
+	if (CheckDupliName(name, _container_box)) {
+		return GetName(name);
 	}
 	return controlName;
 }

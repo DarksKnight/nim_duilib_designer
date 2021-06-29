@@ -2,7 +2,7 @@
 
 #define PADDING 10
 
-class AreaControlDelegate: nbase::SupportWeakCallback
+class AreaControlDelegate: public nbase::SupportWeakCallback
 {
 public:
 	AreaControlDelegate(ui::Control* control);
@@ -40,6 +40,9 @@ public:
 	}
 	bool IsSelected() {
 		return _selected;
+	}
+	std::wstring GetName() {
+		return _control->GetName();
 	}
 protected:
 	virtual void OnParseElement(tinyxml2::XMLElement* element) {}

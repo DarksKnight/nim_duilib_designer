@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "../controls/AreaBox.h"
+#include "../controls/AreaWindow.h"
 
 #define PADDING 10
 
@@ -19,6 +20,9 @@ public:
 	void SetSelectItemCallback(SelectItemCallback callback) {
 		_select_item_callback = callback;
 	}
+	AreaWindow* GetAreaWindow() {
+		return _area_window;
+	}
 private:
 	bool Notify(ui::EventArgs* args);
 private:
@@ -37,5 +41,5 @@ private:
 	POINT _last_point;
 	Direction _current_direction = Direction::NONE;
 	SelectItemCallback _select_item_callback;
-	ui::Control* _copy_ctrl = NULL;
+	AreaWindow* _area_window = NULL;
 };

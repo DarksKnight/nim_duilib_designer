@@ -117,6 +117,9 @@
     <ClInclude Include="internal\PropertyHelper.h">
       <Filter>internal</Filter>
     </ClInclude>
+    <ClInclude Include="internal\CopyHelper.h">
+      <Filter>internal</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -186,6 +189,9 @@
       <Filter>item</Filter>
     </ClCompile>
     <ClCompile Include="internal\PropertyHelper.cpp">
+      <Filter>internal</Filter>
+    </ClCompile>
+    <ClCompile Include="internal\CopyHelper.cpp">
       <Filter>internal</Filter>
     </ClCompile>
   </ItemGroup>

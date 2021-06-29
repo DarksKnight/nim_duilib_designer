@@ -5,4 +5,5 @@ class AreaVBox : public ui::VBox, public AreaVBoxDelegate
 {
 public:
 	AreaVBox();
+	AreaVBox(const AreaVBox& box);
 };

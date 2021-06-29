@@ -4,6 +4,7 @@
 #include "../internal/ControlHelper.h"
 #include "../item/PropertyItem.h"
 #include "../internal/PropertyHelper.h"
+#include "../internal/CopyHelper.h"
 
 const LPCTSTR EditorForm::kClassName = L"EditorForm";
 
@@ -76,6 +77,13 @@ LRESULT EditorForm::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		if (wParam == 'S' && ::GetKeyState(VK_CONTROL) < 0) {
 			OnSaveFile();
 		}
+		else if (wParam == 'C' && ::GetKeyState(VK_CONTROL) < 0) {
+			ui::Control* ctrl = _editor_area->FindSelectedItem(_editor_area->GetAreaWindow());
+			CopyHelper::GetInstance()->Copy(ctrl);
+		}
+		else if (wParam == 'V' && ::GetKeyState(VK_CONTROL) < 0) {
+			CopyHelper::GetInstance()->Paste();
+		}
 		else if (::GetKeyState(VK_DELETE) < 0) {
 			_editor_area->RemoveSelectItem();
 		}
@@ -111,7 +119,7 @@ bool EditorForm::Notify(ui::EventArgs* args)
 			UiChanged();
 		}
 		else if (args->wParam == CustomEventType::CONTROL_SET_PROPERTY) {
-			ui::Control* item = _editor_area->FindSelectedItem((ui::Box*)_editor_area->GetItemAt(0));
+			ui::Control* item = _editor_area->FindSelectedItem(_editor_area->GetAreaWindow());
 			if (item) {
 				PropertyItem* pItem = (PropertyItem*)args->pSender;
 				PropertyHelper::GetInstance()->SetProperty(item, pItem->GetDataName(), pItem->GetValue());
@@ -197,6 +205,7 @@ void EditorForm::DoNewFile(EditorCreateForm::CreateType type)
 	_box_editor_area->RemoveAll();
 	_editor_area = new EditorArea;
 	_box_editor_area->Add(_editor_area);
+	ControlHelper::GetInstance()->SetContainerBox(_editor_area);
 	_title = ui::MutiLanSupport::GetInstance()->GetStringViaID(L"STRID_EDITORFORM_TITLE") + L" - " + ui::MutiLanSupport::GetInstance()->GetStringViaID(L"STRID_EDITORFORM_NEW_FILE");
 	_lb_title->SetText(_title);
 }
@@ -218,6 +227,7 @@ void EditorForm::DoOpenFile(const std::wstring& path)
 	_last_save_path = path;
 	_editor_area = new EditorArea;
 	_box_editor_area->Add(_editor_area);
+	ControlHelper::GetInstance()->SetContainerBox(_editor_area);
 	XmlHelper::GetInstance()->ParseXml(_editor_area, path);
 	std::wstring fileName = L"";
 	nbase::FilePathApartFileName(path, fileName);

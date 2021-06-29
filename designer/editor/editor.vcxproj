@@ -346,6 +346,7 @@
     <ClInclude Include="form\EditorCreateForm.h" />
     <ClInclude Include="form\EditorForm.h" />
     <ClInclude Include="internal\ControlHelper.h" />
+    <ClInclude Include="internal\CopyHelper.h" />
     <ClInclude Include="internal\Global.h" />
     <ClInclude Include="internal\PropertyHelper.h" />
     <ClInclude Include="internal\XmlHelper.h" />
@@ -377,6 +378,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="internal\ControlHelper.cpp" />
+    <ClCompile Include="internal\CopyHelper.cpp" />
     <ClCompile Include="internal\PropertyHelper.cpp" />
     <ClCompile Include="internal\XmlHelper.cpp" />
     <ClCompile Include="item\PropertyItem.cpp">

@@ -5,4 +5,5 @@ class AreaBox : public ui::Box, public AreaBoxDelegate
 {
 public:
 	AreaBox();
+	AreaBox(const AreaBox & box);
 };

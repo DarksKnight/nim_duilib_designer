@@ -5,5 +5,5 @@ class AreaLabel : public ui::Label, public AreaLabelDelegate
 {
 public:
 	AreaLabel();
-	~AreaLabel();
+	AreaLabel(const AreaLabel& label);
 };

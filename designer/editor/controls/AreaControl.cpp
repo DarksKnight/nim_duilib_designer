@@ -8,6 +8,6 @@ AreaControl::AreaControl():AreaControlDelegate(this)
 }
 
 
-AreaControl::~AreaControl()
+AreaControl::AreaControl(const AreaControl& control):AreaControlDelegate(this),ui::Control(control)
 {
 }

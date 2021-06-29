@@ -5,5 +5,5 @@ class AreaControl : public ui::Control, public AreaControlDelegate
 {
 public:
 	AreaControl();
-	~AreaControl();
+	AreaControl(const AreaControl& control);
 };

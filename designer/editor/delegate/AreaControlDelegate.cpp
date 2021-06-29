@@ -3,11 +3,11 @@
 
 AreaControlDelegate::AreaControlDelegate(ui::Control* control):_control(control)
 {
-	control->AttachButtonDown(nbase::Bind(&AreaControlDelegate::OnButtonDown, this, std::placeholders::_1));
-	control->AttachButtonUp(nbase::Bind(&AreaControlDelegate::OnButtonUp, this, std::placeholders::_1));
-	control->AttachAllEvents(nbase::Bind(&AreaControlDelegate::Notify, this, std::placeholders::_1));
-	control->SetBorderColor(L"blue");
-	control->SetBorderSize(1);
+	_control->AttachButtonDown(nbase::Bind(&AreaControlDelegate::OnButtonDown, this, std::placeholders::_1));
+	_control->AttachButtonUp(nbase::Bind(&AreaControlDelegate::OnButtonUp, this, std::placeholders::_1));
+	_control->AttachAllEvents(nbase::Bind(&AreaControlDelegate::Notify, this, std::placeholders::_1));
+	_control->SetBorderColor(L"blue");
+	_control->SetBorderSize(1);
 	_basic_property.push_back(PropertyData(L"name", L"名称"));
 	_basic_property.push_back(PropertyData(L"width", L"宽度"));
 	_basic_property.push_back(PropertyData(L"height", L"高度"));
