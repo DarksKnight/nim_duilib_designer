@@ -62,7 +62,7 @@ ui::CSize ControlHelper::GetPreSize(const std::wstring& name)
 	return size;
 }
 
-AreaControlDelegate* ControlHelper::AddControl(ui::Box* box, const std::wstring& name, const std::wstring& controlName)
+void ControlHelper::DropControl(ui::Box* box, POINT pt, const std::wstring& name)
 {
 	AreaControlDelegate* delegate = NULL;
 	SIZE_T cchLen = name.length();
@@ -94,14 +94,9 @@ AreaControlDelegate* ControlHelper::AddControl(ui::Box* box, const std::wstring&
 		box->Add((AreaBox*)delegate);
 		break;
 	}
+	std::wstring controlName = GetControlName(name, box);
 	delegate->SetControlName(controlName);
-	return delegate;
-}
-
-void ControlHelper::SetDropUIMargin(ui::Box* box, POINT pt, AreaControlDelegate* delegate)
-{
 	AreaBox* tempBox = dynamic_cast<AreaBox*>(box);
-	if (tempBox)
 	if (tempBox) {
 		tempBox->SetDropUIMargin(pt, delegate);
 		return;

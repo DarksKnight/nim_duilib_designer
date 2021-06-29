@@ -11,8 +11,7 @@ public:
 public:
 	std::vector<ControlData> GetControlList();
 	ui::CSize GetPreSize(const std::wstring & name);
-	AreaControlDelegate* AddControl(ui::Box* box, const std::wstring& name, const std::wstring & controlName = L"");
-	void SetDropUIMargin(ui::Box* box, POINT pt, AreaControlDelegate* delegate);
+	void DropControl(ui::Box* box, POINT pt, const std::wstring& name);
 	void Remove(ui::Control* control);
 	bool CheckDupliName(const std::wstring& name, ui::Box* box);
 	std::wstring GetControlName(const std::wstring& name, ui::Box* box);

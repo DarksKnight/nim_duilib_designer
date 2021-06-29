@@ -25,9 +25,7 @@ void EditorArea::DropControl(const std::wstring& name)
 	::GetCursorPos(&pt);
 	::ScreenToClient(GetWindow()->GetHWND(), &pt);
 	ui::Box* container = FindParentBox(pt);
-	std::wstring controlName = ControlHelper::GetInstance()->GetControlName(name, (ui::Box*)GetItemAt(0));
-	AreaControlDelegate* areaControl = ControlHelper::GetInstance()->AddControl(container, name, controlName);
-	ControlHelper::GetInstance()->SetDropUIMargin(container, pt, areaControl);
+	ControlHelper::GetInstance()->DropControl(container, pt, name);
 }
 
 void EditorArea::DropControl(ui::Control* control)
