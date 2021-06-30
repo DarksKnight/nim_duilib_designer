@@ -5,6 +5,7 @@
 #include "../controls/AreaHBox.h"
 #include "../controls/AreaBox.h"
 #include "../controls/AreaVBox.h"
+#include "../controls/AreaLabel.h"
 
 ControlHelper::ControlHelper()
 {
@@ -20,10 +21,11 @@ std::vector<ControlData> ControlHelper::GetControlList()
 	if (!_datas.empty()) {
 		return _datas;
 	}
-	_datas.push_back(ControlData(L"Box", L"无约束容器"));
-	_datas.push_back(ControlData(L"HBox", L"横向容器"));
-	_datas.push_back(ControlData(L"VBox", L"纵向容器"));
-	_datas.push_back(ControlData(L"Control", L"基础控件"));
+	_datas.push_back(ControlData(DUI_CTR_BOX, L"无约束容器"));
+	_datas.push_back(ControlData(DUI_CTR_HBOX, L"横向容器"));
+	_datas.push_back(ControlData(DUI_CTR_VBOX, L"纵向容器"));
+	_datas.push_back(ControlData(DUI_CTR_CONTROL, L"基础控件"));
+	_datas.push_back(ControlData(DUI_CTR_LABEL, L"文本控件"));
 	return _datas;
 }
 
@@ -83,6 +85,12 @@ void ControlHelper::DropControl(ui::Box* box, POINT pt, const std::wstring& name
 			box->Add((AreaVBox*)delegate);
 		}
 		break;
+	case 5:
+		if (name == DUI_CTR_LABEL) {
+			delegate = new AreaLabel;
+			box->Add((AreaLabel*)delegate);
+		}
+		break;
 	case 7:
 		if (name == DUI_CTR_CONTROL) {
 			delegate = new AreaControl;
@@ -134,6 +142,12 @@ AreaControlDelegate* ControlHelper::DropControl(ui::Box* box, const std::wstring
 			box->Add((AreaVBox*)delegate);
 		}
 		break;
+	case 5:
+		if (name == DUI_CTR_LABEL) {
+			delegate = new AreaLabel;
+			box->Add((AreaLabel*)delegate);
+		}
+		break;
 	case 7:
 		if (name == DUI_CTR_CONTROL) {
 			delegate = new AreaControl;
@@ -173,6 +187,11 @@ void ControlHelper::Remove(ui::Control* control)
 		tempControl->Remove();
 		return;
 	}
+	AreaLabelDelegate* tempLabel = dynamic_cast<AreaLabelDelegate*>(control);
+	if (tempLabel) {
+		tempLabel->Remove();
+		return;
+	}
 }
 
 bool ControlHelper::CheckDupliName(const std::wstring& name, ui::Box* box)
@@ -199,21 +218,23 @@ bool ControlHelper::CheckDupliName(const std::wstring& name, ui::Box* box)
 std::wstring ControlHelper::GetName(const std::wstring& name)
 {
 	std::wstring controlName = L"";
-	if (name == L"Box") {
-		controlName = name + nbase::IntToString16(_box_index);
-		_box_index++;
-	}
-	else if (name == L"HBox") {
-		controlName = name + nbase::IntToString16(_hbox_index);
-		_hbox_index++;
-	}
-	else if (name == L"VBox") {
-		controlName = name + nbase::IntToString16(_vbox_index);
-		_vbox_index++;
-	}
-	else if (name == L"Control") {
-		controlName = name + nbase::IntToString16(_control_index);
-		_control_index++;
+	SIZE_T cchLen = name.length();
+	switch (cchLen) {
+	case 3:
+		if (name == DUI_CTR_BOX) controlName = name + nbase::IntToString16(_box_index++);
+		break;
+	case 4:
+		if (name == DUI_CTR_HBOX) controlName = name + nbase::IntToString16(_hbox_index++);
+		else if (name == DUI_CTR_VBOX) controlName = name + nbase::IntToString16(_vbox_index++);
+		break;
+	case 5:
+		if (name == DUI_CTR_LABEL) controlName = name + nbase::IntToString16(_label_index++);
+		break;
+	case 7:
+		if (name == DUI_CTR_CONTROL) controlName = name + nbase::IntToString16(_control_index++);
+		break;
+	default:
+		break;
 	}
 	if (CheckDupliName(controlName, _container_box)) {
 		return GetName(name);

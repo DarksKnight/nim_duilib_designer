@@ -28,4 +28,5 @@ private:
 	int _hbox_index = 0;
 	int _vbox_index = 0;
 	int _control_index = 0;
+	int _label_index = 0;
 };

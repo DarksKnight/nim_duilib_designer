@@ -3,8 +3,9 @@
 
 AreaLabel::AreaLabel():AreaLabelDelegate(this)
 {
-	SetFixedWidth(50);
-	SetFixedHeight(50);
+	SetFixedWidth(80);
+	SetFixedHeight(30);
+	SetText(L"文本");
 }
 
 
