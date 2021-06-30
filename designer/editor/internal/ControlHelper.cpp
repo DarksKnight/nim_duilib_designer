@@ -6,6 +6,7 @@
 #include "../controls/AreaBox.h"
 #include "../controls/AreaVBox.h"
 #include "../controls/AreaLabel.h"
+#include "../controls/AreaRichEdit.h"
 
 ControlHelper::ControlHelper()
 {
@@ -26,6 +27,7 @@ std::vector<ControlData> ControlHelper::GetControlList()
 	_datas.push_back(ControlData(DUI_CTR_VBOX, L"纵向容器"));
 	_datas.push_back(ControlData(DUI_CTR_CONTROL, L"基础控件"));
 	_datas.push_back(ControlData(DUI_CTR_LABEL, L"文本控件"));
+	_datas.push_back(ControlData(DUI_CTR_RICHEDIT, L"输入控件"));
 	return _datas;
 }
 
@@ -97,6 +99,12 @@ void ControlHelper::DropControl(ui::Box* box, POINT pt, const std::wstring& name
 			box->Add((AreaControl*)delegate);
 		}
 		break;
+	case 8:
+		if (name == DUI_CTR_RICHEDIT) {
+			delegate = new AreaRichEdit;
+			box->Add((AreaRichEdit*)delegate);
+		}
+		break;
 	default:
 		delegate = new AreaBox;
 		box->Add((AreaBox*)delegate);
@@ -154,6 +162,12 @@ AreaControlDelegate* ControlHelper::DropControl(ui::Box* box, const std::wstring
 			box->Add((AreaControl*)delegate);
 		}
 		break;
+	case 8:
+		if (name == DUI_CTR_RICHEDIT) {
+			delegate = new AreaRichEdit;
+			box->Add((AreaRichEdit*)delegate);
+		}
+		break;
 	default:
 		delegate = new AreaBox;
 		box->Add((AreaBox*)delegate);
@@ -190,6 +204,11 @@ void ControlHelper::Remove(ui::Control* control)
 	AreaLabelDelegate* tempLabel = dynamic_cast<AreaLabelDelegate*>(control);
 	if (tempLabel) {
 		tempLabel->Remove();
+		return;
+	}
+	AreaRichEditDelegate* tempRichEdit = dynamic_cast<AreaRichEditDelegate*>(control);
+	if (tempRichEdit) {
+		tempRichEdit->Remove();
 		return;
 	}
 }
@@ -232,6 +251,9 @@ std::wstring ControlHelper::GetName(const std::wstring& name)
 		break;
 	case 7:
 		if (name == DUI_CTR_CONTROL) controlName = name + nbase::IntToString16(_control_index++);
+		break;
+	case 8:
+		if (name == DUI_CTR_RICHEDIT) controlName = name + nbase::IntToString16(_richedit_index++);
 		break;
 	default:
 		break;

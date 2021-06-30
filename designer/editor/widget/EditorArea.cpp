@@ -99,7 +99,7 @@ ui::Box* EditorArea::FindParentBox(POINT pt)
 		return NULL;
 	}
 	ui::Box* box = dynamic_cast<ui::Box*>(control);
-	if (box) {
+	if (box && !dynamic_cast<ui::RichEdit*>(control)) {
 		return box;
 	}
 	ui::Box* parentBox = dynamic_cast<ui::Box*>(control->GetParent());

@@ -29,4 +29,5 @@ private:
 	int _vbox_index = 0;
 	int _control_index = 0;
 	int _label_index = 0;
+	int _richedit_index = 0;
 };

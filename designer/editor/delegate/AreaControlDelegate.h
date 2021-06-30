@@ -41,9 +41,6 @@ public:
 	bool IsSelected() {
 		return _selected;
 	}
-	std::wstring GetName() {
-		return _control->GetName();
-	}
 protected:
 	virtual void OnParseElement(tinyxml2::XMLElement* element) {}
 	virtual void OnGetElement(tinyxml2::XMLDocument* doc, tinyxml2::XMLElement* element) {}

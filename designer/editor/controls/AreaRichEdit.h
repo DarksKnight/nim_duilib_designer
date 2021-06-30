@@ -5,6 +5,6 @@ class AreaRichEdit : public ui::RichEdit, public AreaRichEditDelegate
 {
 public:
 	AreaRichEdit();
-	AreaRichEdit(const AreaRichEdit& richedit);
+	AreaRichEdit(const AreaRichEdit& richEdit);
 	~AreaRichEdit();
 };

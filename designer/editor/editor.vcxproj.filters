@@ -120,6 +120,12 @@
     <ClInclude Include="internal\CopyHelper.h">
       <Filter>internal</Filter>
     </ClInclude>
+    <ClInclude Include="controls\AreaRichEdit.h">
+      <Filter>controls</Filter>
+    </ClInclude>
+    <ClInclude Include="delegate\AreaRichEditDelegate.h">
+      <Filter>delegate</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -193,6 +199,12 @@
     </ClCompile>
     <ClCompile Include="internal\CopyHelper.cpp">
       <Filter>internal</Filter>
+    </ClCompile>
+    <ClCompile Include="controls\AreaRichEdit.cpp">
+      <Filter>controls</Filter>
+    </ClCompile>
+    <ClCompile Include="delegate\AreaRichEditDelegate.cpp">
+      <Filter>delegate</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
