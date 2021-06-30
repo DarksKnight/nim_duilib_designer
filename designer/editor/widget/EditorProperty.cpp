@@ -42,6 +42,10 @@ void EditorProperty::LoadControlProperty(ui::Control* control)
 	SetProperty(L"height", nbase::IntToString16(control->GetFixedHeight()));
 	ui::UiRect margin = control->GetMargin();
 	SetProperty(L"margin", nbase::StringPrintf(L"%d,%d,%d,%d", margin.left, margin.top, margin.right, margin.bottom));
+	ui::Label* label = dynamic_cast<ui::Label*>(control);
+	if (label) SetProperty(L"text", label->GetText());
+	ui::RichEdit* richEdit = dynamic_cast<ui::RichEdit*>(control);
+	if (richEdit) SetProperty(L"text", richEdit->GetText());
 }
 
 void EditorProperty::SetProperty(const std::wstring& name, const std::wstring& value)

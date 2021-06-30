@@ -10,18 +10,6 @@ PropertyHelper::~PropertyHelper()
 {
 }
 
-std::vector<PropertyData> PropertyHelper::GetBasicProperty()
-{
-	if (!_basic_property.empty()) {
-		return _basic_property;
-	}
-	_basic_property.push_back(PropertyData(L"name", L"名称"));
-	_basic_property.push_back(PropertyData(L"width", L"宽度"));
-	_basic_property.push_back(PropertyData(L"height", L"高度"));
-	_basic_property.push_back(PropertyData(L"margin", L"外边距"));
-	return _basic_property;
-}
-
 void PropertyHelper::SetProperty(ui::Control* control, const std::wstring& name, const std::wstring& value)
 {
 	if (name == L"name") {
@@ -45,5 +33,17 @@ void PropertyHelper::SetProperty(ui::Control* control, const std::wstring& name,
 		rcMargin.right = _tcstol(pstr + 1, &pstr, 10);
 		rcMargin.bottom = _tcstol(pstr + 1, &pstr, 10);
 		control->SetMargin(rcMargin);
+	}
+	else if (name == L"text") {
+		ui::Label* label = dynamic_cast<ui::Label*>(control);
+		if (label) {
+			label->SetText(value);
+			return;
+		}
+		ui::RichEdit* richEdit = dynamic_cast<ui::RichEdit*>(control);
+		if (richEdit) {
+			richEdit->SetText(value);
+			return;
+		}
 	}
 }
