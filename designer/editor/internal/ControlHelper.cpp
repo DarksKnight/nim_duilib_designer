@@ -215,7 +215,7 @@ std::wstring ControlHelper::GetName(const std::wstring& name)
 		controlName = name + nbase::IntToString16(_control_index);
 		_control_index++;
 	}
-	if (CheckDupliName(name, _container_box)) {
+	if (CheckDupliName(controlName, _container_box)) {
 		return GetName(name);
 	}
 	return controlName;

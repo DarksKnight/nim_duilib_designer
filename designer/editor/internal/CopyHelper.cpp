@@ -36,7 +36,7 @@ void CopyHelper::Paste()
 	if (!_copy_ctrl_parent || !_copy_ctrl) {
 		return;
 	}
-	std::wstring name = ControlHelper::GetInstance()->GetName(_copy_ctrl->GetName());
+	std::wstring name = ControlHelper::GetInstance()->GetName(_copy_ctrl->GetControlName());
 	((AreaBox*)_copy_ctrl)->SetName(name);
 	_copy_ctrl->SetUIMargin(ui::UiRect());
 	std::wstring ctrlName = _copy_ctrl->GetControlName();
