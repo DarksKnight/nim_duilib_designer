@@ -23,6 +23,9 @@ public:
 	std::vector<PropertyData> GetBasicProperty() {
 		return _basic_property;
 	}
+	std::vector<PropertyData> GetExtProperty() {
+		return _ext_property;
+	}
 	void SetMove(bool value) {
 		_can_move = value;
 	}
@@ -79,6 +82,7 @@ protected:
 	nim_comp::CMenuElementUI* _menu_paste;
 	ui::Control* _control = NULL;
 	std::vector<PropertyData> _basic_property;
+	std::vector<PropertyData> _ext_property;
 private:
 	bool OnButtonDown(ui::EventArgs* args);
 	bool OnButtonUp(ui::EventArgs* args);

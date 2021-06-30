@@ -298,7 +298,7 @@ void EditorForm::UiChanged()
 	ui::Control* item = _editor_area->FindSelectedItem((ui::Box*)_editor_area->GetItemAt(0));
 	AreaControlDelegate* delegate = dynamic_cast<AreaControlDelegate*>(item);
 	if (item && delegate) {
-		_editor_property->LoadProperty(delegate->GetControlName(), delegate->GetBasicProperty());
+		_editor_property->LoadProperty(delegate->GetControlName(), delegate);
 		_editor_property->LoadControlProperty(item);
 	}
 }

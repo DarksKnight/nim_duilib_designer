@@ -5,8 +5,7 @@ AreaRichEdit::AreaRichEdit():AreaRichEditDelegate(this)
 {
 	SetFixedWidth(100);
 	SetFixedHeight(30);
-	SetText(L"请输入文字");
-	SetEnabled(false);
+	InitProperty();
 }
 
 AreaRichEdit::AreaRichEdit(const AreaRichEdit& richEdit): AreaRichEditDelegate(this)
@@ -15,10 +14,18 @@ AreaRichEdit::AreaRichEdit(const AreaRichEdit& richEdit): AreaRichEditDelegate(t
 	SetFixedWidth(richEdit.GetFixedWidth());
 	SetFixedHeight(richEdit.GetFixedHeight());;
 	SetMargin(richEdit.GetMargin());
-	SetEnabled(false);
-	SetText(L"请输入文字");
+	InitProperty();
 }
 
 AreaRichEdit::~AreaRichEdit()
 {
+}
+
+void AreaRichEdit::InitProperty()
+{
+	SetEnabled(false);
+	std::wstring text = L"请输入文字";
+	SetText(text);
+	_ext_property.clear();
+	_ext_property.push_back(PropertyData(L"text", L"请输入文字", text));
 }

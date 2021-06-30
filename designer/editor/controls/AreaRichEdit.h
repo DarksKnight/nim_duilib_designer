@@ -7,4 +7,6 @@ public:
 	AreaRichEdit();
 	AreaRichEdit(const AreaRichEdit& richEdit);
 	~AreaRichEdit();
+private:
+	void InitProperty();
 };

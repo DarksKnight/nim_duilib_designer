@@ -14,15 +14,21 @@ EditorProperty::~EditorProperty()
 {
 }
 
-void EditorProperty::LoadProperty(const std::wstring& name, const std::vector<PropertyData> & datas)
+void EditorProperty::LoadProperty(const std::wstring& name, AreaControlDelegate* delegate)
 {
-	if (_current_name == name && _current_datas.size() == datas.size()) {
+	if (_current_name == name 
+		&& _basic_property.size() == delegate->GetBasicProperty().size() 
+		&& _ext_property.size() == delegate->GetExtProperty().size()) {
 		return;
 	}
 	_current_name = name;
-	_current_datas = datas;
+	_basic_property = delegate->GetBasicProperty();
+	_ext_property = delegate->GetExtProperty();
 	_list_propery->RemoveAll();
-	for (auto it = datas.begin(); it != datas.end(); ++it) {
+	std::vector<PropertyData> tempProperty;
+	tempProperty.insert(tempProperty.end(), _basic_property.begin(), _basic_property.end());
+	tempProperty.insert(tempProperty.end(), _ext_property.begin(), _ext_property.end());
+	for (auto it = tempProperty.begin(); it != tempProperty.end(); ++it) {
 		PropertyItem* item = new PropertyItem(*it);
 		_list_propery->Add(item);
 		item->InitCtrls();
