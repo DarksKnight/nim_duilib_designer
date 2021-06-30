@@ -60,6 +60,14 @@ LRESULT EditorCreateForm::OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL&
 	return __super::OnClose(uMsg, wParam, lParam, bHandled);
 }
 
+LRESULT EditorCreateForm::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	if (uMsg == WM_KEYDOWN && wParam == VK_RETURN) {
+		OnNewFileClick(NULL);
+	}
+	return __super::HandleMessage(uMsg, wParam, lParam);
+}
+
 bool EditorCreateForm::OnCreateTypeSelect(ui::EventArgs* args)
 {
 	switch (args->wParam)

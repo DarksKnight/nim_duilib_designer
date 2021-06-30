@@ -33,6 +33,8 @@ public:
 	void SetCloseCallback(StdClosure callback) {
 		_close_callback = callback;
 	}
+protected:
+	LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam) override;
 private:
 	bool OnCreateTypeSelect(ui::EventArgs* args);
 	bool OnNewFileClick(ui::EventArgs* args);
