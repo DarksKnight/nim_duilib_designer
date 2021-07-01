@@ -7,6 +7,8 @@
 #include "../controls/AreaVBox.h"
 #include "../controls/AreaLabel.h"
 #include "../controls/AreaRichEdit.h"
+#include "../controls/AreaButton.h"
+#include "../controls/AreaCheckBox.h"
 
 CopyHelper::CopyHelper()
 {
@@ -53,6 +55,16 @@ void CopyHelper::Copy(ui::Control* ctrl)
 		_copy_ctrl = new AreaRichEdit(*richEdit);
 		return;
 	}
+	AreaButton* button = dynamic_cast<AreaButton*>(ctrl);
+	if (button) {
+		_copy_ctrl = new AreaButton(*button);
+		return;
+	}
+	AreaCheckBox* checkbox = dynamic_cast<AreaCheckBox*>(ctrl);
+	if (checkbox) {
+		_copy_ctrl = new AreaCheckBox(*checkbox);
+		return;
+	}
 }
 
 void CopyHelper::Paste()
@@ -87,6 +99,12 @@ void CopyHelper::Paste()
 			_copy_ctrl_parent->Add(new AreaLabel(*(AreaLabel*)_copy_ctrl));
 		}
 		break;
+	case 6:
+		if (ctrlName == DUI_CTR_BUTTON) {
+			((AreaButton*)_copy_ctrl)->SetName(name);
+			_copy_ctrl_parent->Add(new AreaButton(*(AreaButton*)_copy_ctrl));
+		}
+		break;
 	case 7:
 		if (ctrlName == DUI_CTR_CONTROL) {
 			((AreaControl*)_copy_ctrl)->SetName(name);
@@ -97,6 +115,10 @@ void CopyHelper::Paste()
 		if (ctrlName == DUI_CTR_RICHEDIT) {
 			((AreaRichEdit*)_copy_ctrl)->SetName(name);
 			_copy_ctrl_parent->Add(new AreaRichEdit(*(AreaRichEdit*)_copy_ctrl));
+		}
+		else if (ctrlName == DUI_CTR_CHECKBOX) {
+			((AreaCheckBox*)_copy_ctrl)->SetName(name);
+			_copy_ctrl_parent->Add(new AreaCheckBox(*(AreaCheckBox*)_copy_ctrl));
 		}
 		break;
 	default:

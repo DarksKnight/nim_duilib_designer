@@ -8,6 +8,7 @@
 #include "../controls/AreaLabel.h"
 #include "../controls/AreaRichEdit.h"
 #include "../controls/AreaButton.h"
+#include "../controls/AreaCheckBox.h"
 
 ControlHelper::ControlHelper()
 {
@@ -30,6 +31,7 @@ std::vector<ControlData> ControlHelper::GetControlList()
 	_datas.push_back(ControlData(DUI_CTR_LABEL, L"文本控件"));
 	_datas.push_back(ControlData(DUI_CTR_RICHEDIT, L"输入控件"));
 	_datas.push_back(ControlData(DUI_CTR_BUTTON, L"按钮"));
+	_datas.push_back(ControlData(DUI_CTR_CHECKBOX, L"复选框"));
 	return _datas;
 }
 
@@ -66,6 +68,16 @@ ui::CSize ControlHelper::GetPreSize(const std::wstring& name)
 		if (name == DUI_CTR_CONTROL) {
 			size.cx = 50;
 			size.cy = 50;
+		}
+		break;
+	case 8:
+		if (name == DUI_CTR_RICHEDIT) {
+			size.cx = 80;
+			size.cy = 30;
+		}
+		else if (name == DUI_CTR_CHECKBOX) {
+			size.cx = 80;
+			size.cy = 30;
 		}
 		break;
 	default:
@@ -117,6 +129,10 @@ void ControlHelper::DropControl(ui::Box* box, POINT pt, const std::wstring& name
 		if (name == DUI_CTR_RICHEDIT) {
 			delegate = new AreaRichEdit;
 			box->Add((AreaRichEdit*)delegate);
+		}
+		else if (name == DUI_CTR_CHECKBOX) {
+			delegate = new AreaCheckBox;
+			box->Add((AreaCheckBox*)delegate);
 		}
 		break;
 	default:
@@ -187,6 +203,10 @@ AreaControlDelegate* ControlHelper::DropControl(ui::Box* box, const std::wstring
 			delegate = new AreaRichEdit;
 			box->Add((AreaRichEdit*)delegate);
 		}
+		else if (name == DUI_CTR_CHECKBOX) {
+			delegate = new AreaCheckBox;
+			box->Add((AreaCheckBox*)delegate);
+		}
 		break;
 	default:
 		delegate = new AreaBox;
@@ -236,6 +256,11 @@ void ControlHelper::Remove(ui::Control* control)
 		tempButton->Remove();
 		return;
 	}
+	AreaCheckBoxDelegate* tempCheckBox = dynamic_cast<AreaCheckBoxDelegate*>(control);
+	if (tempCheckBox) {
+		tempCheckBox->Remove();
+		return;
+	}
 }
 
 bool ControlHelper::CheckDupliName(const std::wstring& name, ui::Box* box)
@@ -282,6 +307,7 @@ std::wstring ControlHelper::GetName(const std::wstring& name)
 		break;
 	case 8:
 		if (name == DUI_CTR_RICHEDIT) controlName = name + nbase::IntToString16(_richedit_index++);
+		else if (name == DUI_CTR_CHECKBOX) controlName = name + nbase::IntToString16(_checkbox_index++);
 		break;
 	default:
 		break;

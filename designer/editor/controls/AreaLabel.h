@@ -6,6 +6,4 @@ class AreaLabel : public ui::Label, public AreaLabelDelegate
 public:
 	AreaLabel();
 	AreaLabel(const AreaLabel& label);
-private:
-	void InitProperty();
 };
