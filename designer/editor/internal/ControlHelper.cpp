@@ -7,6 +7,7 @@
 #include "../controls/AreaVBox.h"
 #include "../controls/AreaLabel.h"
 #include "../controls/AreaRichEdit.h"
+#include "../controls/AreaButton.h"
 
 ControlHelper::ControlHelper()
 {
@@ -28,6 +29,7 @@ std::vector<ControlData> ControlHelper::GetControlList()
 	_datas.push_back(ControlData(DUI_CTR_CONTROL, L"基础控件"));
 	_datas.push_back(ControlData(DUI_CTR_LABEL, L"文本控件"));
 	_datas.push_back(ControlData(DUI_CTR_RICHEDIT, L"输入控件"));
+	_datas.push_back(ControlData(DUI_CTR_BUTTON, L"按钮"));
 	return _datas;
 }
 
@@ -50,6 +52,12 @@ ui::CSize ControlHelper::GetPreSize(const std::wstring& name)
 		break;
 	case 5:
 		if (name == DUI_CTR_LABEL) {
+			size.cx = 50;
+			size.cy = 20;
+		}
+		break;
+	case 6:
+		if (name == DUI_CTR_BUTTON) {
 			size.cx = 50;
 			size.cy = 20;
 		}
@@ -91,6 +99,12 @@ void ControlHelper::DropControl(ui::Box* box, POINT pt, const std::wstring& name
 		if (name == DUI_CTR_LABEL) {
 			delegate = new AreaLabel;
 			box->Add((AreaLabel*)delegate);
+		}
+		break;
+	case 6:
+		if (name == DUI_CTR_BUTTON) {
+			delegate = new AreaButton;
+			box->Add((AreaButton*)delegate);
 		}
 		break;
 	case 7:
@@ -156,6 +170,12 @@ AreaControlDelegate* ControlHelper::DropControl(ui::Box* box, const std::wstring
 			box->Add((AreaLabel*)delegate);
 		}
 		break;
+	case 6:
+		if (name == DUI_CTR_BUTTON) {
+			delegate = new AreaButton;
+			box->Add((AreaButton*)delegate);
+		}
+		break;
 	case 7:
 		if (name == DUI_CTR_CONTROL) {
 			delegate = new AreaControl;
@@ -211,6 +231,11 @@ void ControlHelper::Remove(ui::Control* control)
 		tempRichEdit->Remove();
 		return;
 	}
+	AreaButtonDelegate* tempButton = dynamic_cast<AreaButtonDelegate*>(control);
+	if (tempButton) {
+		tempButton->Remove();
+		return;
+	}
 }
 
 bool ControlHelper::CheckDupliName(const std::wstring& name, ui::Box* box)
@@ -248,6 +273,9 @@ std::wstring ControlHelper::GetName(const std::wstring& name)
 		break;
 	case 5:
 		if (name == DUI_CTR_LABEL) controlName = name + nbase::IntToString16(_label_index++);
+		break;
+	case 6:
+		if (name == DUI_CTR_BUTTON) controlName = name + nbase::IntToString16(_button_index++);
 		break;
 	case 7:
 		if (name == DUI_CTR_CONTROL) controlName = name + nbase::IntToString16(_control_index++);

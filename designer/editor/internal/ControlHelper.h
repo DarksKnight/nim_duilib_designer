@@ -30,4 +30,5 @@ private:
 	int _control_index = 0;
 	int _label_index = 0;
 	int _richedit_index = 0;
+	int _button_index = 0;
 };

@@ -332,6 +332,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="controls\AreaBox.h" />
+    <ClInclude Include="controls\AreaButton.h" />
     <ClInclude Include="controls\AreaControl.h" />
     <ClInclude Include="controls\AreaHBox.h" />
     <ClInclude Include="controls\AreaLabel.h" />
@@ -339,6 +340,7 @@
     <ClInclude Include="controls\AreaVBox.h" />
     <ClInclude Include="controls\AreaWindow.h" />
     <ClInclude Include="delegate\AreaBoxDelegate.h" />
+    <ClInclude Include="delegate\AreaButtonDelegate.h" />
     <ClInclude Include="delegate\AreaControlDelegate.h" />
     <ClInclude Include="delegate\AreaHBoxDelegate.h" />
     <ClInclude Include="delegate\AreaLabelDelegate.h" />
@@ -364,6 +366,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="controls\AreaBox.cpp" />
+    <ClCompile Include="controls\AreaButton.cpp" />
     <ClCompile Include="controls\AreaControl.cpp" />
     <ClCompile Include="controls\AreaHBox.cpp" />
     <ClCompile Include="controls\AreaLabel.cpp" />
@@ -371,6 +374,7 @@
     <ClCompile Include="controls\AreaVBox.cpp" />
     <ClCompile Include="controls\AreaWindow.cpp" />
     <ClCompile Include="delegate\AreaBoxDelegate.cpp" />
+    <ClCompile Include="delegate\AreaButtonDelegate.cpp" />
     <ClCompile Include="delegate\AreaControlDelegate.cpp" />
     <ClCompile Include="delegate\AreaHBoxDelegate.cpp" />
     <ClCompile Include="delegate\AreaLabelDelegate.cpp" />
