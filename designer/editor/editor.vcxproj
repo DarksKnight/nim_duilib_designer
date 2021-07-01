@@ -355,6 +355,7 @@
     <ClInclude Include="internal\CopyHelper.h" />
     <ClInclude Include="internal\Global.h" />
     <ClInclude Include="internal\PropertyHelper.h" />
+    <ClInclude Include="internal\SettingsHelper.h" />
     <ClInclude Include="internal\XmlHelper.h" />
     <ClInclude Include="item\PropertyItem.h" />
     <ClInclude Include="main.h" />
@@ -392,6 +393,7 @@
     <ClCompile Include="internal\ControlHelper.cpp" />
     <ClCompile Include="internal\CopyHelper.cpp" />
     <ClCompile Include="internal\PropertyHelper.cpp" />
+    <ClCompile Include="internal\SettingsHelper.cpp" />
     <ClCompile Include="internal\XmlHelper.cpp" />
     <ClCompile Include="item\PropertyItem.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>

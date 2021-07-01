@@ -1,5 +1,6 @@
 ﻿#include "../stdafx.h"
 #include "EditorCreateForm.h"
+#include "../internal/SettingsHelper.h"
 
 const LPCTSTR EditorCreateForm::kClassName = L"EditorCreateForm";
 
@@ -43,7 +44,7 @@ void EditorCreateForm::InitWindow()
 	_btn_open_file->AttachClick(nbase::Bind(&EditorCreateForm::OnOpenFileClick, this, std::placeholders::_1));
 	_btn_cancel = (ui::Button*)FindControl(L"btn_cancel");
 	_btn_cancel->AttachClick(nbase::Bind(&EditorCreateForm::OnCancelClick, this, std::placeholders::_1));
-
+	SettingsHelper::GetInstance()->Set(L"ccc", L"aaa", L"bbb");
 }
 
 LRESULT EditorCreateForm::OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)

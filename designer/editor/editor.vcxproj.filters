@@ -138,6 +138,9 @@
     <ClInclude Include="controls\AreaCheckBox.h">
       <Filter>controls</Filter>
     </ClInclude>
+    <ClInclude Include="internal\SettingsHelper.h">
+      <Filter>internal</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -229,6 +232,9 @@
     </ClCompile>
     <ClCompile Include="controls\AreaCheckBox.cpp">
       <Filter>controls</Filter>
+    </ClCompile>
+    <ClCompile Include="internal\SettingsHelper.cpp">
+      <Filter>internal</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
