@@ -185,7 +185,7 @@ void EditorForm::OnNewFile()
 		form->CenterWindow();
 		form->SetNewFileCallback(nbase::Bind(&EditorForm::DoNewFile, this, std::placeholders::_1));
 		form->SetOpenFileCallback(nbase::Bind(&EditorForm::OnOpenFile, this, std::placeholders::_1));
-		form->SetCloseCallback(nbase::Bind(&EditorForm::OnCreateFormClose, this));
+		form->SetCloseCallback(nbase::Bind(&EditorForm::OnCreateFormClose, this, std::placeholders::_1));
 		form->ShowWindow();
 	}
 	else {
@@ -235,9 +235,12 @@ void EditorForm::DoOpenFile(const std::wstring& path)
 	_lb_title->SetText(_title);
 }
 
-void EditorForm::OnCreateFormClose()
+void EditorForm::OnCreateFormClose(EditorCreateForm::OperationType type)
 {
 	_toolbar->SetEnabled(true);
+	if (type == EditorCreateForm::OperationType::NONE) {
+		return;
+	}
 	_controls_list->SetVisible(true);
 	_editor_property->SetVisible(true);
 }
@@ -287,7 +290,7 @@ void EditorForm::OpenCreateForm()
 	form->CenterWindow();
 	form->SetNewFileCallback(nbase::Bind(&EditorForm::DoNewFile, this, std::placeholders::_1));
 	form->SetOpenFileCallback(nbase::Bind(&EditorForm::OnOpenFile, this, std::placeholders::_1));
-	form->SetCloseCallback(nbase::Bind(&EditorForm::OnCreateFormClose, this));
+	form->SetCloseCallback(nbase::Bind(&EditorForm::OnCreateFormClose, this, std::placeholders::_1));
 	form->ShowWindow();
 }
 
