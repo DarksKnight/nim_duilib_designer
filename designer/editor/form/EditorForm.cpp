@@ -5,6 +5,7 @@
 #include "../item/PropertyItem.h"
 #include "../internal/PropertyHelper.h"
 #include "../internal/CopyHelper.h"
+#include "../internal/SettingsHelper.h"
 
 const LPCTSTR EditorForm::kClassName = L"EditorForm";
 
@@ -43,7 +44,7 @@ void EditorForm::InitWindow()
 	_lb_title = (ui::Label*)FindControl(L"lb_title");
 	_toolbar = (EditorToolbar*)FindControl(L"et");
 	_toolbar->SetSaveCallback(nbase::Bind(&EditorForm::OnSaveFile, this));
-	_toolbar->SetNewFileCallback(nbase::Bind(&EditorForm::OnNewFile, this));
+	_toolbar->SetNewFileCallback(nbase::Bind(&EditorForm::OpenCreateForm, this));
 	_toolbar->SetOpenFileCallback(nbase::Bind(&EditorForm::OnOpenFile, this, std::placeholders::_1));
 	_box_container = (ui::Box*)FindControl(L"box_container");
 	_controls_list = (EditorControlsList*)FindControl(L"ecl");
@@ -55,7 +56,10 @@ void EditorForm::InitWindow()
 	_editor_property->SetFixedWidth(width / 5);
 	_controls_list->SetSelectCallback(nbase::Bind(&EditorForm::OnSelect, this ,std::placeholders::_1));
 	_controls_list->SetButtonUpCallback(nbase::Bind(&EditorForm::OnButtonUp, this));
-	nbase::ThreadManager::PostTask(kThreadUI, nbase::Bind(&EditorForm::OpenCreateForm, this));
+	std::wstring value = SettingsHelper::GetInstance()->Get(CONFIG_TAG_CREATE, CONFIG_KEY_CREATE_SHOW, L"1");
+	if (value == L"1") {
+		nbase::ThreadManager::PostTask(kThreadUI, nbase::Bind(&EditorForm::OpenCreateForm, this));
+	}
 }
 
 LRESULT EditorForm::OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
@@ -173,26 +177,6 @@ void EditorForm::OnSaveFile()
 	fileDlg->AyncShowSaveFileDlg(callback2);
 }
 
-void EditorForm::OnNewFile()
-{
-	_toolbar->SetEnabled(false);
-	_controls_list->SetVisible(false);
-	_editor_property->SetVisible(false);
-	EditorCreateForm* form = (EditorCreateForm*)(nim_comp::WindowsManager::GetInstance()->GetWindow(EditorCreateForm::kClassName, EditorCreateForm::kClassName));
-	if (!form) {
-		form = new EditorCreateForm();
-		form->Create(GetHWND(), EditorCreateForm::kClassName, WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX, 0);
-		form->CenterWindow();
-		form->SetNewFileCallback(nbase::Bind(&EditorForm::DoNewFile, this, std::placeholders::_1));
-		form->SetOpenFileCallback(nbase::Bind(&EditorForm::OnOpenFile, this, std::placeholders::_1));
-		form->SetCloseCallback(nbase::Bind(&EditorForm::OnCreateFormClose, this, std::placeholders::_1));
-		form->ShowWindow();
-	}
-	else {
-		form->ActiveWindow();
-	}
-}
-
 void EditorForm::DoNewFile(EditorCreateForm::CreateType type)
 {
 	if (!_saved && _box_editor_area->GetCount() > 0) {
@@ -285,13 +269,22 @@ void EditorForm::OpenCreateForm()
 	_toolbar->SetEnabled(false);
 	_controls_list->SetVisible(false);
 	_editor_property->SetVisible(false);
-	EditorCreateForm* form = new EditorCreateForm();
-	form->Create(GetHWND(), EditorCreateForm::kClassName, WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX, 0);
-	form->CenterWindow();
-	form->SetNewFileCallback(nbase::Bind(&EditorForm::DoNewFile, this, std::placeholders::_1));
-	form->SetOpenFileCallback(nbase::Bind(&EditorForm::OnOpenFile, this, std::placeholders::_1));
-	form->SetCloseCallback(nbase::Bind(&EditorForm::OnCreateFormClose, this, std::placeholders::_1));
-	form->ShowWindow();
+	if (_editor_area) {
+		_editor_area->RemoveAll();
+	}
+	EditorCreateForm* form = (EditorCreateForm*)(nim_comp::WindowsManager::GetInstance()->GetWindow(EditorCreateForm::kClassName, EditorCreateForm::kClassName));
+	if (form) {
+		form->ActiveWindow();
+	}
+	else {
+		form = new EditorCreateForm();
+		form->Create(GetHWND(), EditorCreateForm::kClassName, WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX, 0);
+		form->CenterWindow();
+		form->SetNewFileCallback(nbase::Bind(&EditorForm::DoNewFile, this, std::placeholders::_1));
+		form->SetOpenFileCallback(nbase::Bind(&EditorForm::OnOpenFile, this, std::placeholders::_1));
+		form->SetCloseCallback(nbase::Bind(&EditorForm::OnCreateFormClose, this, std::placeholders::_1));
+		form->ShowWindow();
+	}
 }
 
 void EditorForm::UiChanged()

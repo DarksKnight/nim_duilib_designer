@@ -41,6 +41,7 @@ private:
 	bool OnNewFileClick(ui::EventArgs* args);
 	bool OnOpenFileClick(ui::EventArgs* args);
 	bool OnCancelClick(ui::EventArgs* args);
+	bool OnSelectSettings(ui::EventArgs* args);
 private:
 	void OnSelectPathCallback(BOOL ret, std::wstring path);
 private:
@@ -48,6 +49,7 @@ private:
 	ui::Button* _btn_new_file;
 	ui::Button* _btn_open_file;
 	ui::Button* _btn_cancel;
+	ui::CheckBox* _cb_settings_show;
 private:
 	NewFileCallback _new_file_callback;
 	OpenFileCallback _open_file_callback;

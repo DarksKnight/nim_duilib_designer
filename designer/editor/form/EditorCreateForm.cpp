@@ -35,6 +35,9 @@ std::wstring EditorCreateForm::GetWindowId() const
 
 void EditorCreateForm::InitWindow()
 {
+	_cb_settings_show = (ui::CheckBox*)FindControl(L"cb_settings_show");
+	_cb_settings_show->AttachSelect(nbase::Bind(&EditorCreateForm::OnSelectSettings, this, std::placeholders::_1));
+	_cb_settings_show->AttachUnSelect(nbase::Bind(&EditorCreateForm::OnSelectSettings, this, std::placeholders::_1));
 	_list_create_type = (ui::ListBox*)FindControl(L"list_create_type");
 	_list_create_type->AttachSelect(nbase::Bind(&EditorCreateForm::OnCreateTypeSelect, this, std::placeholders::_1));
 	_list_create_type->SelectItem(0);
@@ -44,7 +47,8 @@ void EditorCreateForm::InitWindow()
 	_btn_open_file->AttachClick(nbase::Bind(&EditorCreateForm::OnOpenFileClick, this, std::placeholders::_1));
 	_btn_cancel = (ui::Button*)FindControl(L"btn_cancel");
 	_btn_cancel->AttachClick(nbase::Bind(&EditorCreateForm::OnCancelClick, this, std::placeholders::_1));
-	SettingsHelper::GetInstance()->Set(L"ccc", L"aaa", L"bbb");
+	std::wstring value = SettingsHelper::GetInstance()->Get(CONFIG_TAG_CREATE, CONFIG_KEY_CREATE_SHOW, L"1");
+	_cb_settings_show->Selected(value == L"1");
 }
 
 LRESULT EditorCreateForm::OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
@@ -109,6 +113,17 @@ bool EditorCreateForm::OnOpenFileClick(ui::EventArgs* args)
 bool EditorCreateForm::OnCancelClick(ui::EventArgs* args)
 {
 	Close();
+	return true;
+}
+
+bool EditorCreateForm::OnSelectSettings(ui::EventArgs * args)
+{
+	if (_cb_settings_show->IsSelected()) {
+		SettingsHelper::GetInstance()->Set(CONFIG_TAG_CREATE, CONFIG_KEY_CREATE_SHOW, L"1");
+	}
+	else {
+		SettingsHelper::GetInstance()->Set(CONFIG_TAG_CREATE, CONFIG_KEY_CREATE_SHOW, L"0");
+	}
 	return true;
 }
 

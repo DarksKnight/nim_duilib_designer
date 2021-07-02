@@ -25,7 +25,6 @@ private:
 	void OnSelect(const std::wstring & name);
 	void OnButtonUp();
 	void OnSaveFile();
-	void OnNewFile();
 	void DoNewFile(EditorCreateForm::CreateType type);
 	void OnOpenFile(const std::wstring& path);
 	void DoOpenFile(const std::wstring& path);

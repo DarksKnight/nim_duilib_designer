@@ -2,6 +2,9 @@
 #include "../stdafx.h"
 #include "base/memory/singleton.h"
 
+#define CONFIG_TAG_CREATE L"CreateForm"
+#define CONFIG_KEY_CREATE_SHOW L"Show"
+
 enum ThreadId
 {
 	kThreadUI
