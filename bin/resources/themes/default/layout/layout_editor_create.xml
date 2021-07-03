@@ -11,8 +11,7 @@
       <VBox bkcolor="bk_editor_create">
         <HBox height="400">
           <VListBox name="list_create_type" width="180" bordercolor="dark_gray" bordersize="1" margin="5,5,5,5" bkcolor="white" />
-          <Box margin="0,5,5,5" bordercolor="dark_gray" bordersize="1">
-          </Box>
+          <Box name="box_preview" padding="1,1,1,1" margin="0,5,5,5" bordercolor="dark_gray" bordersize="1" mousechild="false"/>
         </HBox>
         <Control height="1" bkcolor="dark_gray" margin="5,10,5,0"/>
         <Box bkcolor="white">

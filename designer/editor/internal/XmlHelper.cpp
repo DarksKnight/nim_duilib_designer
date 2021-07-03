@@ -38,15 +38,15 @@ bool XmlHelper::ConvertXml(EditorArea* area, const std::wstring& path, bool wind
 	}
 }
 
-bool XmlHelper::ParseXml(EditorArea* area, const std::wstring& path)
+bool XmlHelper::ParseXml(ui::Box* box, const std::wstring& path)
 {
 	tinyxml2::XMLDocument doc;
 	tinyxml2::XMLError result = doc.LoadFile(nbase::UTF16ToUTF8(path).c_str());
 	if (result != tinyxml2::XML_SUCCESS) {
 		return false;
 	}
-	area->RemoveAll();
-	ParseElement(doc.RootElement(), area);
+	box->RemoveAll();
+	ParseElement(doc.RootElement(), box);
 	return true;
 }
 

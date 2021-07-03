@@ -46,6 +46,7 @@ private:
 	ui::Button* _btn_open_file;
 	ui::Button* _btn_cancel;
 	ui::CheckBox* _cb_settings_show;
+	ui::Box* _box_preview;
 private:
 	NewFileCallback _new_file_callback;
 	OpenFileCallback _open_file_callback;

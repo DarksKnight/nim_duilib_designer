@@ -2,6 +2,7 @@
 #include "EditorCreateForm.h"
 #include "../internal/SettingsHelper.h"
 #include "../item/CreateDataItem.h"
+#include "../internal/XmlHelper.h"
 
 const LPCTSTR EditorCreateForm::kClassName = L"EditorCreateForm";
 
@@ -40,6 +41,7 @@ std::wstring EditorCreateForm::GetWindowId() const
 
 void EditorCreateForm::InitWindow()
 {
+	_box_preview = (ui::Box*)FindControl(L"box_preview");
 	_cb_settings_show = (ui::CheckBox*)FindControl(L"cb_settings_show");
 	_cb_settings_show->AttachSelect(nbase::Bind(&EditorCreateForm::OnSelectSettings, this, std::placeholders::_1));
 	_cb_settings_show->AttachUnSelect(nbase::Bind(&EditorCreateForm::OnSelectSettings, this, std::placeholders::_1));
@@ -86,6 +88,8 @@ bool EditorCreateForm::OnCreateTypeSelect(ui::EventArgs* args)
 {
 	CreateDataItem* item = (CreateDataItem*)(_list_create_type->GetItemAt(args->wParam));
 	_create_flag = item->GetDataName();
+	std::wstring templeteXml = ui::GlobalManager::GetResourcePath() + L"templete\\templete_" + _create_flag + L".xml";
+	XmlHelper::GetInstance()->ParseXml(_box_preview, templeteXml);
 	return true;
 }
 

@@ -17,12 +17,28 @@ void PropertyHelper::SetProperty(ui::Control* control, const std::wstring& name,
 	}
 	else if (name == L"width") {
 		int width = 0;
-		nbase::StringToInt(value, &width);
+		if (value == L"auto") {
+			width = DUI_LENGTH_AUTO;
+		}
+		else if (value == L"stretch") {
+			width = DUI_LENGTH_STRETCH;
+		}
+		else {
+			nbase::StringToInt(value, &width);
+		}
 		control->SetFixedWidth(width);
 	}
 	else if (name == L"height") {
 		int height = 0;
-		nbase::StringToInt(value, &height);
+		if (value == L"auto") {
+			height = DUI_LENGTH_AUTO;
+		}
+		else if (value == L"stretch") {
+			height = DUI_LENGTH_STRETCH;
+		}
+		else {
+			nbase::StringToInt(value, &height);
+		}
 		control->SetFixedHeight(height);
 	}
 	else if (name == L"margin") {
@@ -43,6 +59,11 @@ void PropertyHelper::SetProperty(ui::Control* control, const std::wstring& name,
 		ui::RichEdit* richEdit = dynamic_cast<ui::RichEdit*>(control);
 		if (richEdit) {
 			richEdit->SetText(value);
+			return;
+		}
+		ui::Button* btn = dynamic_cast<ui::Button*>(control);
+		if (btn) {
+			btn->SetText(value);
 			return;
 		}
 	}
