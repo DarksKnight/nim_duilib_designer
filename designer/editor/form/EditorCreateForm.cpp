@@ -1,11 +1,15 @@
 ﻿#include "../stdafx.h"
 #include "EditorCreateForm.h"
 #include "../internal/SettingsHelper.h"
+#include "../item/CreateDataItem.h"
 
 const LPCTSTR EditorCreateForm::kClassName = L"EditorCreateForm";
 
 EditorCreateForm::EditorCreateForm()
 {
+	_create_data_infos.push_back(CreateDataInfo(L"window", L"窗口"));
+	_create_data_infos.push_back(CreateDataInfo(L"box", L"自定义控件"));
+	_create_data_infos.push_back(CreateDataInfo(L"dialog", L"弹窗"));
 }
 
 
@@ -39,6 +43,10 @@ void EditorCreateForm::InitWindow()
 	_cb_settings_show->AttachSelect(nbase::Bind(&EditorCreateForm::OnSelectSettings, this, std::placeholders::_1));
 	_cb_settings_show->AttachUnSelect(nbase::Bind(&EditorCreateForm::OnSelectSettings, this, std::placeholders::_1));
 	_list_create_type = (ui::ListBox*)FindControl(L"list_create_type");
+	for (auto it = _create_data_infos.begin(); it != _create_data_infos.end(); ++it) {
+		CreateDataItem* item = new CreateDataItem(*it);
+		_list_create_type->Add(item);
+	}
 	_list_create_type->AttachSelect(nbase::Bind(&EditorCreateForm::OnCreateTypeSelect, this, std::placeholders::_1));
 	_list_create_type->SelectItem(0);
 	_btn_new_file = (ui::Button*)FindControl(L"btn_new_file"); 

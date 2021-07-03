@@ -141,6 +141,9 @@
     <ClInclude Include="internal\SettingsHelper.h">
       <Filter>internal</Filter>
     </ClInclude>
+    <ClInclude Include="item\CreateDataItem.h">
+      <Filter>item</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -236,6 +239,9 @@
     <ClCompile Include="internal\SettingsHelper.cpp">
       <Filter>internal</Filter>
     </ClCompile>
+    <ClCompile Include="item\CreateDataItem.cpp">
+      <Filter>item</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="editor.rc">
@@ -249,8 +255,5 @@
     <Image Include="editor.ico">
       <Filter>资源文件</Filter>
     </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\bin\resources.zip" />
   </ItemGroup>
 </Project>

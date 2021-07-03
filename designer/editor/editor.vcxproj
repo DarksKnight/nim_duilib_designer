@@ -357,6 +357,7 @@
     <ClInclude Include="internal\PropertyHelper.h" />
     <ClInclude Include="internal\SettingsHelper.h" />
     <ClInclude Include="internal\XmlHelper.h" />
+    <ClInclude Include="item\CreateDataItem.h" />
     <ClInclude Include="item\PropertyItem.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="resource.h" />
@@ -395,6 +396,7 @@
     <ClCompile Include="internal\PropertyHelper.cpp" />
     <ClCompile Include="internal\SettingsHelper.cpp" />
     <ClCompile Include="internal\XmlHelper.cpp" />
+    <ClCompile Include="item\CreateDataItem.cpp" />
     <ClCompile Include="item\PropertyItem.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
@@ -414,9 +416,6 @@
   <ItemGroup>
     <Image Include="editor.ico" />
     <Image Include="small.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\bin\resources.zip" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\base\base.vcxproj">

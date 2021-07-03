@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Window>
+  <ListContainerElement height="30" bordersize="1" bordercolor="bk_wnd_darkcolor">
+    <HBox>
+      <Label name="lb_desc" width="100" height="20" valign="center" margin="10,0,0,0"/>
+      <Control width="1" bkcolor="bk_wnd_darkcolor"/>
+      <RichEdit name="re_value" height="20" valign="center" margin="5,0,10,0" multiline="false" wantreturnmsg="true"/>
+    </HBox>
+  </ListContainerElement>
+</Window>

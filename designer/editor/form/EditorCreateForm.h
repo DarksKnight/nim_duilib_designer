@@ -57,5 +57,6 @@ private:
 	OperationType _operation_type = OperationType::NONE;
 	CreateType _create_type = CreateType::NONE;
 	std::wstring _path = L"";
+	std::vector<CreateDataInfo> _create_data_infos;
 };
 

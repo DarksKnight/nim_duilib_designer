@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Window>
+  <Box height="30">
+    <Button name="btn_tool_file" textid="STRID_EDITORFORM_TOOL_FILE" width="40" height="30"/>
+  </Box>
+</Window>

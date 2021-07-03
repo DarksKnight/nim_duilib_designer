@@ -27,6 +27,17 @@ enum CustomEventType
 	CONTROL_SET_PROPERTY
 };
 
+struct CreateDataInfo
+{
+	std::wstring name = L"";
+	std::wstring desc = L"";
+
+	CreateDataInfo(std::wstring name, std::wstring desc) {
+		this->name = name;
+		this->desc = desc;
+	}
+};
+
 struct ControlData
 {
 	std::wstring name = L"";
