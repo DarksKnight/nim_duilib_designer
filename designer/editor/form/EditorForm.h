@@ -24,14 +24,13 @@ private:
 	bool Notify(ui::EventArgs* args);
 	void OnSelect(const std::wstring & name);
 	void OnButtonUp();
-	void OnSaveFile();
+	void SaveFile();
 	void DoNewFile(EditorCreateForm::CreateType type);
-	void OnOpenFile(const std::wstring& path);
+	void OnOpenFile();
 	void DoOpenFile(const std::wstring& path);
 	void OnCreateFormClose(EditorCreateForm::OperationType type);
-	void OnSelectPathCallback(BOOL ret, std::wstring path);
-	void OnNewFileMsgBoxCallback(nim_comp::MsgBoxRet ret, EditorCreateForm::CreateType type);
-	void OnOpenFileMsgBoxCallback(nim_comp::MsgBoxRet ret, const std::wstring & path);
+	void OnSaveSelectPathCallback(BOOL ret, std::wstring path);
+	void OnOpenSelectPathCallback(BOOL ret, std::wstring path);
 	void OpenCreateForm();
 	void UiChanged();
 private:
@@ -48,4 +47,5 @@ private:
 	bool _saved = false;
 	std::wstring _last_save_path = L"";
 	std::wstring _title = L"";
+	EditorCreateForm::CreateType _current_create_type = EditorCreateForm::CreateType::NONE;
 };

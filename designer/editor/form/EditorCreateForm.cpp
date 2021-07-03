@@ -41,7 +41,7 @@ void EditorCreateForm::InitWindow()
 	_list_create_type = (ui::ListBox*)FindControl(L"list_create_type");
 	_list_create_type->AttachSelect(nbase::Bind(&EditorCreateForm::OnCreateTypeSelect, this, std::placeholders::_1));
 	_list_create_type->SelectItem(0);
-	_btn_new_file = (ui::Button*)FindControl(L"btn_new_file");
+	_btn_new_file = (ui::Button*)FindControl(L"btn_new_file"); 
 	_btn_new_file->AttachClick(nbase::Bind(&EditorCreateForm::OnNewFileClick, this, std::placeholders::_1));
 	_btn_open_file = (ui::Button*)FindControl(L"btn_open_file");
 	_btn_open_file->AttachClick(nbase::Bind(&EditorCreateForm::OnOpenFileClick, this, std::placeholders::_1));

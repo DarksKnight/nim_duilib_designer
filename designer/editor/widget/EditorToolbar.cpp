@@ -48,25 +48,8 @@ bool EditorToolbar::OnMenuNewFile(ui::EventArgs* args)
 
 bool EditorToolbar::OnMenuOpenFile(ui::EventArgs* args)
 {
-	nim_comp::CFileDialogEx* fileDlg = new nim_comp::CFileDialogEx;
-	std::map<LPCTSTR, LPCTSTR> filters;
-	filters[L"File Format(*.xml)"] = L"*.xml";
-	fileDlg->SetFilter(filters);
-	fileDlg->SetFileName(L"newFile");
-	fileDlg->SetDefExt(L".xml");
-	fileDlg->SetParentWnd(GetWindow()->GetHWND());
-	nim_comp::CFileDialogEx::FileDialogCallback2 callback2 = nbase::Bind(&EditorToolbar::OnSelectPathCallback, this, std::placeholders::_1, std::placeholders::_2);
-	fileDlg->AyncShowOpenFileDlg(callback2);
+	if (_open_file_callback) {
+		_open_file_callback();
+	}
 	return true;
-}
-
-void EditorToolbar::OnSelectPathCallback(BOOL ret, std::wstring path)
-{
-	if (!ret) {
-		return;
-	}
-	if (!_open_file_callback) {
-		return;
-	}
-	_open_file_callback(path);
 }

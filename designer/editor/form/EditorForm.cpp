@@ -43,9 +43,9 @@ void EditorForm::InitWindow()
 	m_pRoot->AttachBubbledEvent(ui::kEventAll, nbase::Bind(&EditorForm::Notify, this, std::placeholders::_1));
 	_lb_title = (ui::Label*)FindControl(L"lb_title");
 	_toolbar = (EditorToolbar*)FindControl(L"et");
-	_toolbar->SetSaveCallback(nbase::Bind(&EditorForm::OnSaveFile, this));
+	_toolbar->SetSaveCallback(nbase::Bind(&EditorForm::SaveFile, this));
 	_toolbar->SetNewFileCallback(nbase::Bind(&EditorForm::OpenCreateForm, this));
-	_toolbar->SetOpenFileCallback(nbase::Bind(&EditorForm::OnOpenFile, this, std::placeholders::_1));
+	_toolbar->SetOpenFileCallback(nbase::Bind(&EditorForm::OnOpenFile, this));
 	_box_container = (ui::Box*)FindControl(L"box_container");
 	_controls_list = (EditorControlsList*)FindControl(L"ecl");
 	_editor_property = (EditorProperty*)FindControl(L"ep");
@@ -79,7 +79,7 @@ LRESULT EditorForm::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	if (uMsg == WM_KEYDOWN) {
 		if (wParam == 'S' && ::GetKeyState(VK_CONTROL) < 0) {
-			OnSaveFile();
+			SaveFile();
 		}
 		else if (wParam == 'C' && ::GetKeyState(VK_CONTROL) < 0) {
 			ui::Control* ctrl = _editor_area->FindSelectedItem(_editor_area->GetAreaWindow());
@@ -160,48 +160,51 @@ void EditorForm::OnButtonUp()
 	UiChanged();
 }
 
-void EditorForm::OnSaveFile()
+void EditorForm::SaveFile()
 {
-	if (!_last_save_path.empty()) {
-		OnSelectPathCallback(TRUE, _last_save_path);
+	if (_last_save_path.empty()) {
+		nim_comp::ShowMsgBox(GetHWND(), NULL, L"STRID_UNSAVE_ERROR_NOT_FOUND_FILE", true, L"STRID_HINT", true, L"STRING_OK", true);
+		return;
+	}
+	if (!XmlHelper::GetInstance()->ConvertXml(_editor_area, _last_save_path)) {
+		nim_comp::ShowMsgBox(GetHWND(), nim_comp::MsgboxCallback(), L"STRID_UNSAVE_ERROR_NOT_FOUND_FILE", true, L"STRID_HINT");
+		return;
+	}
+	std::wstring fileName;
+	nbase::FilePathApartFileName(_last_save_path, fileName);
+	_title = ui::MutiLanSupport::GetInstance()->GetStringViaID(L"STRID_EDITORFORM_TITLE") + L" - " + fileName;
+	_lb_title->SetText(_title);
+}
+
+void EditorForm::DoNewFile(EditorCreateForm::CreateType type)
+{
+	_current_create_type = type;
+	nim_comp::CFileDialogEx* fileDlg = new nim_comp::CFileDialogEx;
+	std::map<LPCTSTR, LPCTSTR> filters;
+	filters[L"File Format(*.xml)"] = L"*.xml";
+	fileDlg->SetFilter(filters);
+	fileDlg->SetFileName(L"new");
+	fileDlg->SetDefExt(L".xml");
+	fileDlg->SetParentWnd(GetHWND());
+	nim_comp::CFileDialogEx::FileDialogCallback2 callback2 = nbase::Bind(&EditorForm::OnSaveSelectPathCallback, this, std::placeholders::_1, std::placeholders::_2);
+	fileDlg->AyncShowSaveFileDlg(callback2);
+}
+
+void EditorForm::OnOpenFile()
+{
+	if (!_saved && _box_editor_area->GetCount() > 0) {
+		nim_comp::ShowMsgBox(GetHWND(), NULL, L"STRID_UNSAVE_TIP", true, L"STRID_HINT", true, L"STRING_OK", true);
 		return;
 	}
 	nim_comp::CFileDialogEx* fileDlg = new nim_comp::CFileDialogEx;
 	std::map<LPCTSTR, LPCTSTR> filters;
 	filters[L"File Format(*.xml)"] = L"*.xml";
 	fileDlg->SetFilter(filters);
-	fileDlg->SetFileName(L"newFile");
+	fileDlg->SetFileName(L"open");
 	fileDlg->SetDefExt(L".xml");
 	fileDlg->SetParentWnd(GetHWND());
-	nim_comp::CFileDialogEx::FileDialogCallback2 callback2 = nbase::Bind(&EditorForm::OnSelectPathCallback, this, std::placeholders::_1, std::placeholders::_2);
-	fileDlg->AyncShowSaveFileDlg(callback2);
-}
-
-void EditorForm::DoNewFile(EditorCreateForm::CreateType type)
-{
-	if (!_saved && _box_editor_area->GetCount() > 0) {
-		nim_comp::MsgboxCallback cb = nbase::Bind(&EditorForm::OnNewFileMsgBoxCallback, this, std::placeholders::_1, type);
-		nim_comp::ShowMsgBox(GetHWND(), cb, L"STRID_UNSAVE_TIP", true, L"STRID_HINT", true, L"STRING_OK", true, L"STRING_CANCEL", true);
-		return;
-	}
-	_saved = false;
-	_last_save_path = L"";
-	_box_editor_area->RemoveAll();
-	_editor_area = new EditorArea;
-	_box_editor_area->Add(_editor_area);
-	ControlHelper::GetInstance()->SetContainerBox(_editor_area);
-	_title = ui::MutiLanSupport::GetInstance()->GetStringViaID(L"STRID_EDITORFORM_TITLE") + L" - " + ui::MutiLanSupport::GetInstance()->GetStringViaID(L"STRID_EDITORFORM_NEW_FILE");
-	_lb_title->SetText(_title);
-}
-
-void EditorForm::OnOpenFile(const std::wstring& path)
-{
-	if (!_saved && _box_editor_area->GetCount() > 0) {
-		nim_comp::MsgboxCallback cb = nbase::Bind(&EditorForm::OnOpenFileMsgBoxCallback, this, std::placeholders::_1, path);
-		nim_comp::ShowMsgBox(GetHWND(), cb, L"STRID_UNSAVE_TIP", true, L"STRID_HINT", true, L"STRING_OK", true, L"STRING_CANCEL", true);
-		return;
-	}
-	DoOpenFile(path);
+	nim_comp::CFileDialogEx::FileDialogCallback2 callback2 = nbase::Bind(&EditorForm::OnOpenSelectPathCallback, this, std::placeholders::_1, std::placeholders::_2);
+	fileDlg->AyncShowOpenFileDlg(callback2);
 }
 
 void EditorForm::DoOpenFile(const std::wstring& path)
@@ -209,6 +212,9 @@ void EditorForm::DoOpenFile(const std::wstring& path)
 	_box_editor_area->RemoveAll();
 	_saved = true;
 	_last_save_path = path;
+	_toolbar->SetEnabled(true);
+	_controls_list->SetVisible(true);
+	_editor_property->SetVisible(true);
 	_editor_area = new EditorArea;
 	_box_editor_area->Add(_editor_area);
 	ControlHelper::GetInstance()->SetContainerBox(_editor_area);
@@ -222,43 +228,31 @@ void EditorForm::DoOpenFile(const std::wstring& path)
 void EditorForm::OnCreateFormClose(EditorCreateForm::OperationType type)
 {
 	_toolbar->SetEnabled(true);
-	if (type == EditorCreateForm::OperationType::NONE) {
-		return;
-	}
-	_controls_list->SetVisible(true);
-	_editor_property->SetVisible(true);
 }
 
-void EditorForm::OnSelectPathCallback(BOOL ret, std::wstring path)
+void EditorForm::OnSaveSelectPathCallback(BOOL ret, std::wstring path)
 {
 	if (!ret) {
 		return;
 	}
 	_saved = true;
 	_last_save_path = path;
+	_toolbar->SetEnabled(true);
+	_controls_list->SetVisible(true);
+	_editor_property->SetVisible(true);
 	std::wstring fileName;
 	nbase::FilePathApartFileName(_last_save_path, fileName);
 	_title = ui::MutiLanSupport::GetInstance()->GetStringViaID(L"STRID_EDITORFORM_TITLE") + L" - " + fileName;
 	_lb_title->SetText(_title);
-	if (!XmlHelper::GetInstance()->ConvertXml(_editor_area, path)) {
-		nim_comp::ShowMsgBox(GetHWND(), nim_comp::MsgboxCallback(), L"STRID_SAVE_FAIL", true, L"STRID_HINT");
-	}
+	nbase::WriteFile(_last_save_path, "");
+	_box_editor_area->RemoveAll();
+	_editor_area = new EditorArea;
+	_box_editor_area->Add(_editor_area);
 }
 
-void EditorForm::OnNewFileMsgBoxCallback(nim_comp::MsgBoxRet ret, EditorCreateForm::CreateType type)
+void EditorForm::OnOpenSelectPathCallback(BOOL ret, std::wstring path)
 {
-	if (ret == nim_comp::MB_NO) {
-		_saved = true;
-		DoNewFile(type);
-		return;
-	}
-	OnSaveFile();
-}
-
-void EditorForm::OnOpenFileMsgBoxCallback(nim_comp::MsgBoxRet ret, const std::wstring& path)
-{
-	if (ret == nim_comp::MB_YES) {
-		OnSaveFile();
+	if (!ret) {
 		return;
 	}
 	DoOpenFile(path);
@@ -266,6 +260,10 @@ void EditorForm::OnOpenFileMsgBoxCallback(nim_comp::MsgBoxRet ret, const std::ws
 
 void EditorForm::OpenCreateForm()
 {
+	if (!_saved && _box_editor_area->GetCount() > 0) {
+		nim_comp::ShowMsgBox(GetHWND(), NULL, L"STRID_UNSAVE_TIP", true, L"STRID_HINT", true, L"STRING_OK", true);
+		return;
+	}
 	_toolbar->SetEnabled(false);
 	_controls_list->SetVisible(false);
 	_editor_property->SetVisible(false);
@@ -281,7 +279,7 @@ void EditorForm::OpenCreateForm()
 		form->Create(GetHWND(), EditorCreateForm::kClassName, WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX, 0);
 		form->CenterWindow();
 		form->SetNewFileCallback(nbase::Bind(&EditorForm::DoNewFile, this, std::placeholders::_1));
-		form->SetOpenFileCallback(nbase::Bind(&EditorForm::OnOpenFile, this, std::placeholders::_1));
+		form->SetOpenFileCallback(nbase::Bind(&EditorForm::DoOpenFile, this, std::placeholders::_1));
 		form->SetCloseCallback(nbase::Bind(&EditorForm::OnCreateFormClose, this, std::placeholders::_1));
 		form->ShowWindow();
 	}
