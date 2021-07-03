@@ -7,12 +7,17 @@ AreaLabelDelegate::AreaLabelDelegate(ui::Control* control):AreaControlDelegate(c
 
 void AreaLabelDelegate::OnParseElement(tinyxml2::XMLElement* element)
 {
-	std::wstring text = L"";
+	ui::Label* label = (ui::Label*)_control;
 	const tinyxml2::XMLAttribute* attr = NULL;
 	if (attr = element->FindAttribute("text")) {
-		text = nbase::UTF8ToUTF16(attr->Value());
+		label->SetText(nbase::UTF8ToUTF16(attr->Value()));
 	}
-	((ui::Label*)_control)->SetText(text);
+	else {
+		label->SetText(L"");
+	}
+	if (attr = element->FindAttribute("font")) {
+		label->SetFont(nbase::UTF8ToUTF16(attr->Value()));
+	}
 }
 
 void AreaLabelDelegate::OnGetElement(tinyxml2::XMLDocument* doc, tinyxml2::XMLElement* element)

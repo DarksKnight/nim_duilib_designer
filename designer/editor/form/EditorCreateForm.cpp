@@ -8,6 +8,7 @@ const LPCTSTR EditorCreateForm::kClassName = L"EditorCreateForm";
 EditorCreateForm::EditorCreateForm()
 {
 	_create_data_infos.push_back(CreateDataInfo(L"window", L"窗口"));
+	_create_data_infos.push_back(CreateDataInfo(L"window_title", L"窗口(带默认标题栏)"));
 	_create_data_infos.push_back(CreateDataInfo(L"box", L"自定义控件"));
 	_create_data_infos.push_back(CreateDataInfo(L"dialog", L"弹窗"));
 }
