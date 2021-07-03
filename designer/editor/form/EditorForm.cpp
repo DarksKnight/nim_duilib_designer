@@ -264,12 +264,6 @@ void EditorForm::OpenCreateForm()
 		nim_comp::ShowMsgBox(GetHWND(), NULL, L"STRID_UNSAVE_TIP", true, L"STRID_HINT", true, L"STRING_OK", true);
 		return;
 	}
-	_toolbar->SetEnabled(false);
-	_controls_list->SetVisible(false);
-	_editor_property->SetVisible(false);
-	if (_editor_area) {
-		_editor_area->RemoveAll();
-	}
 	EditorCreateForm* form = (EditorCreateForm*)(nim_comp::WindowsManager::GetInstance()->GetWindow(EditorCreateForm::kClassName, EditorCreateForm::kClassName));
 	if (form) {
 		form->ActiveWindow();
