@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Window size="200,70">
+    <Box>
+        <Label width="auto" height="auto" text="hello world" valign="center" halign="center"/>
+        <HBox valign="bottom" halign="right" height="auto" width="auto" margin="0,0,10,20">
+            <Button class="btn_global_blue_80x30" width="auto" height="auto" text="confirm" margin="0,0,5,0"/>
+            <Button class="btn_global_white_80x30" width="auto" height="auto" text="cancel"/>
+        </HBox>
+    </Box>
+</Window>

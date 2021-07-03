@@ -11,6 +11,7 @@ public:
 public:
 	bool ConvertXml(EditorArea* area, const std::wstring & path, bool window = true);
 	bool ParseXml(ui::Box* box, const std::wstring & path);
+	bool ParseXmlPreview(ui::Box* box, const std::wstring& path);
 private:
 	tinyxml2::XMLElement* GetElement(tinyxml2::XMLDocument* doc, ui::Control* control);
 	void ParseElement(tinyxml2::XMLElement* element, ui::Box* rootBox);
@@ -24,6 +25,5 @@ private:
 	}
 private:
 	const std::string _xml_header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-	bool _first_node = true;
 };
 

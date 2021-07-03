@@ -9,7 +9,7 @@ const LPCTSTR EditorCreateForm::kClassName = L"EditorCreateForm";
 EditorCreateForm::EditorCreateForm()
 {
 	_create_data_infos.push_back(CreateDataInfo(L"window", L"窗口"));
-	_create_data_infos.push_back(CreateDataInfo(L"window_title", L"窗口(带默认标题栏)"));
+	_create_data_infos.push_back(CreateDataInfo(L"window_with_title", L"窗口(带默认标题栏)"));
 	_create_data_infos.push_back(CreateDataInfo(L"box", L"自定义控件"));
 	_create_data_infos.push_back(CreateDataInfo(L"dialog", L"弹窗"));
 }
@@ -89,7 +89,7 @@ bool EditorCreateForm::OnCreateTypeSelect(ui::EventArgs* args)
 	CreateDataItem* item = (CreateDataItem*)(_list_create_type->GetItemAt(args->wParam));
 	_create_flag = item->GetDataName();
 	std::wstring templeteXml = ui::GlobalManager::GetResourcePath() + L"templete\\templete_" + _create_flag + L".xml";
-	XmlHelper::GetInstance()->ParseXml(_box_preview, templeteXml);
+	XmlHelper::GetInstance()->ParseXmlPreview(_box_preview, templeteXml);
 	return true;
 }
 

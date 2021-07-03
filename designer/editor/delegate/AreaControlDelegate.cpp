@@ -83,6 +83,20 @@ void AreaControlDelegate::ParseElement(tinyxml2::XMLElement* element)
 		}
 		_control->SetVerAlignType(type);
 	}
+	if (attr = element->FindAttribute("halign")) {
+		std::wstring halignAttr = nbase::UTF8ToUTF16(attr->Value());
+		ui::HorAlignType type;
+		if (halignAttr == L"left") {
+			type = ui::kHorAlignLeft;
+		}
+		else if (halignAttr == L"center") {
+			type = ui::kHorAlignCenter;
+		}
+		else {
+			type = ui::kHorAlignRight;
+		}
+		_control->SetHorAlignType(type);
+	}
 	if (attr = element->FindAttribute("bkimage")) {
 		_control->SetBkImage(nbase::UTF8ToUTF16(attr->Value()));
 	}

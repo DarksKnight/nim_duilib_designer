@@ -46,6 +46,30 @@ bool XmlHelper::ParseXml(ui::Box* box, const std::wstring& path)
 		return false;
 	}
 	box->RemoveAll();
+	AreaControlDelegate* areaControl = new AreaWindow;
+	box->Add((AreaWindow*)areaControl);
+	areaControl->ParseElement(doc.RootElement());
+	AreaWindow* areaWindow = (AreaWindow*)areaControl;
+	std::string sizeAttr = doc.RootElement()->Attribute("size");
+	std::vector<std::string> sizeVector = ConvertVector(nim_comp::StringHelper::Split(sizeAttr, ","));
+	int width = 0;
+	nbase::StringToInt(sizeVector[0], &width);
+	areaWindow->SetFixedWidth(width);
+	int height = 0;
+	nbase::StringToInt(sizeVector[1], &height);
+	areaWindow->SetFixedHeight(height);
+	ParseElement(doc.RootElement(), box);
+	return true;
+}
+
+bool XmlHelper::ParseXmlPreview(ui::Box* box, const std::wstring& path)
+{
+	tinyxml2::XMLDocument doc;
+	tinyxml2::XMLError result = doc.LoadFile(nbase::UTF16ToUTF8(path).c_str());
+	if (result != tinyxml2::XML_SUCCESS) {
+		return false;
+	}
+	box->RemoveAll();
 	ParseElement(doc.RootElement(), box);
 	return true;
 }
@@ -89,27 +113,9 @@ void XmlHelper::ParseElement(tinyxml2::XMLElement* element, ui::Box* rootBox)
 		return;
 	}
 	for (tinyxml2::XMLElement* currentElement = element->FirstChildElement(); currentElement; currentElement = currentElement->NextSiblingElement()) {
-		AreaControlDelegate* areaControl = NULL;
-		if (_first_node) {
-			_first_node = false;
-			areaControl = new AreaWindow;
-			rootBox->Add((AreaWindow*)areaControl);
-			areaControl->ParseElement(currentElement);
-			AreaWindow* areaWindow = (AreaWindow*)areaControl;
-			std::string sizeAttr = element->Attribute("size");
-			std::vector<std::string> sizeVector = ConvertVector(nim_comp::StringHelper::Split(sizeAttr, ","));
-			int width = 0;
-			nbase::StringToInt(sizeVector[0], &width);
-			areaWindow->SetFixedWidth(width);
-			int height = 0;
-			nbase::StringToInt(sizeVector[1], &height);
-			areaWindow->SetFixedHeight(height);
-		}
-		else {
-			std::wstring value = nbase::UTF8ToUTF16(currentElement->Value());
-			areaControl = ControlHelper::GetInstance()->DropControl(rootBox, value);
-			areaControl->ParseElement(currentElement);
-		}
+		std::wstring value = nbase::UTF8ToUTF16(currentElement->Value());
+		AreaControlDelegate* areaControl = ControlHelper::GetInstance()->DropControl(rootBox, value);
+		areaControl->ParseElement(currentElement);
 		ui::Box* containerBox = dynamic_cast<ui::Box*>(areaControl);
 		if (!currentElement->NoChildren() && containerBox) {
 			ParseElement(currentElement, containerBox);

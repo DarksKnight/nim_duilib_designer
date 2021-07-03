@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Window size="500,500">
+    <Box>
+        <VBox>
+            <HBox width="stretch" height="35" bkcolor="bk_wnd_lightcolor">
+                <Control width="30" height="30" margin="5,0,0,0" valign="center" bkimage="drawable/editor/icon_editor_logo.ico"/>
+                <Label name="lb_title" width="auto" text="demo" margin="5,0,0,0" height="auto" font="system_14" valign="center"/>
+                <Control />
+                <Button class="btn_wnd_min" name="minbtn" margin="4,6,0,0"/>
+                <Box width="21" margin="4,6,0,0">
+                    <Button class="btn_wnd_max" name="maxbtn"/>
+                    <Button class="btn_wnd_restore" name="restorebtn" visible="false"/>
+                </Box>
+                <Button class="btn_wnd_close" name="closebtn" margin="4,6,8,0"/>
+            </HBox>
+            <Box>
+                <Label width="auto" height="auto" text="hello world" valign="center" halign="center"/>
+            </Box>
+        </VBox>
+    </Box>
+</Window>

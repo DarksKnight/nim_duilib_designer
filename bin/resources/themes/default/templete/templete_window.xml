@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Window size="500,500">
+    <Box>
+        <Label width="auto" height="auto" text="hello world" valign="center" halign="center"/>
+    </Box>
+</Window>

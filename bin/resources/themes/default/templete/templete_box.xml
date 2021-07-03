@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Window>
+    <Box>
+         <Label width="auto" height="auto" text="custom widget" valign="center" halign="center"/>
+    </Box>
+</Window>
