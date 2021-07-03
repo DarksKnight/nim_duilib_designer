@@ -176,9 +176,13 @@ void EditorForm::SaveFile()
 	_lb_title->SetText(_title);
 }
 
-void EditorForm::DoNewFile(EditorCreateForm::CreateType type)
+void EditorForm::DoNewFile(const std::wstring& flag)
 {
-	_current_create_type = type;
+	_templete_path = ui::GlobalManager::GetResourcePath() + L"templete\\layout\\templete_" + flag + L".xml";
+	if (!nbase::FilePathIsExist(_templete_path, false)) {
+		nim_comp::ShowMsgBox(GetHWND(), NULL, L"STRID_CREATE_ERROR", true, L"STRID_HINT", true, L"STRING_OK", true);
+		return;
+	}
 	nim_comp::CFileDialogEx* fileDlg = new nim_comp::CFileDialogEx;
 	std::map<LPCTSTR, LPCTSTR> filters;
 	filters[L"File Format(*.xml)"] = L"*.xml";
@@ -248,6 +252,9 @@ void EditorForm::OnSaveSelectPathCallback(BOOL ret, std::wstring path)
 	_box_editor_area->RemoveAll();
 	_editor_area = new EditorArea;
 	_box_editor_area->Add(_editor_area);
+	if (!XmlHelper::GetInstance()->ParseXml(_editor_area, _templete_path)) {
+		nim_comp::ShowMsgBox(GetHWND(), NULL, L"STRID_CREATE_ERROR", true, L"STRID_HINT", true, L"STRING_OK", true);
+	}
 }
 
 void EditorForm::OnOpenSelectPathCallback(BOOL ret, std::wstring path)

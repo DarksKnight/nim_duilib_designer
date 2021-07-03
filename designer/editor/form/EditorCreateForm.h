@@ -7,12 +7,8 @@ public:
 	{
 		NONE, NEW_FILE, OPEN_FILE
 	};
-	enum class CreateType
-	{
-		NONE, WINDOW, WIDGET
-	};
 	typedef std::function<void(const std::wstring& path)> OpenFileCallback;
-	typedef std::function<void(CreateType type)> NewFileCallback;
+	typedef std::function<void(const std::wstring & flag)> NewFileCallback;
 	typedef std::function<void(OperationType type)> CloseCallback;
 public:
 	EditorCreateForm();
@@ -54,8 +50,8 @@ private:
 	NewFileCallback _new_file_callback;
 	OpenFileCallback _open_file_callback;
 	CloseCallback _close_callback;
+	std::wstring _create_flag = L"";
 	OperationType _operation_type = OperationType::NONE;
-	CreateType _create_type = CreateType::NONE;
 	std::wstring _path = L"";
 	std::vector<CreateDataInfo> _create_data_infos;
 };

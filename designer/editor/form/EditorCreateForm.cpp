@@ -62,7 +62,7 @@ void EditorCreateForm::InitWindow()
 LRESULT EditorCreateForm::OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	if (_operation_type == OperationType::NEW_FILE && _new_file_callback) {
-		_new_file_callback(_create_type);
+		_new_file_callback(_create_flag);
 	}
 	else if (_operation_type == OperationType::OPEN_FILE && _open_file_callback) {
 		_open_file_callback(_path);
@@ -83,17 +83,8 @@ LRESULT EditorCreateForm::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 bool EditorCreateForm::OnCreateTypeSelect(ui::EventArgs* args)
 {
-	switch (args->wParam)
-	{
-	case 0:
-		_create_type = CreateType::WINDOW;
-		break;
-	case 1:
-		_create_type = CreateType::WIDGET;
-		break;
-	default:
-		break;
-	}
+	CreateDataItem* item = (CreateDataItem*)(_list_create_type->GetItemAt(args->wParam));
+	_create_flag = item->GetDataName();
 	return true;
 }
 

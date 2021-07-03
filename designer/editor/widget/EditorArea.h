@@ -21,7 +21,7 @@ public:
 		_select_item_callback = callback;
 	}
 	AreaWindow* GetAreaWindow() {
-		return _area_window;
+		return (AreaWindow*)GetItemAt(0);
 	}
 private:
 	bool Notify(ui::EventArgs* args);
@@ -41,5 +41,4 @@ private:
 	POINT _last_point;
 	Direction _current_direction = Direction::NONE;
 	SelectItemCallback _select_item_callback;
-	AreaWindow* _area_window = NULL;
 };

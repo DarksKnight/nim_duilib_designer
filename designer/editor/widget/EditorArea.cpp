@@ -10,8 +10,6 @@
 EditorArea::EditorArea()
 {
 	AttachBubbledEvent(ui::kEventAll, nbase::Bind(&EditorArea::Notify, this, std::placeholders::_1));
-	_area_window = new AreaWindow;
-	Add(_area_window);
 }
 
 

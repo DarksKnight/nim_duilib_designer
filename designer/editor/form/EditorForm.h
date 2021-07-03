@@ -25,7 +25,7 @@ private:
 	void OnSelect(const std::wstring & name);
 	void OnButtonUp();
 	void SaveFile();
-	void DoNewFile(EditorCreateForm::CreateType type);
+	void DoNewFile(const std::wstring & flag);
 	void OnOpenFile();
 	void DoOpenFile(const std::wstring& path);
 	void OnCreateFormClose(EditorCreateForm::OperationType type);
@@ -47,5 +47,5 @@ private:
 	bool _saved = false;
 	std::wstring _last_save_path = L"";
 	std::wstring _title = L"";
-	EditorCreateForm::CreateType _current_create_type = EditorCreateForm::CreateType::NONE;
+	std::wstring _templete_path = L"";
 };
