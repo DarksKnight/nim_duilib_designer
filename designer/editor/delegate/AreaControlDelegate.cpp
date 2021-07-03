@@ -6,8 +6,6 @@ AreaControlDelegate::AreaControlDelegate(ui::Control* control):_control(control)
 	_control->AttachButtonDown(nbase::Bind(&AreaControlDelegate::OnButtonDown, this, std::placeholders::_1));
 	_control->AttachButtonUp(nbase::Bind(&AreaControlDelegate::OnButtonUp, this, std::placeholders::_1));
 	_control->AttachAllEvents(nbase::Bind(&AreaControlDelegate::Notify, this, std::placeholders::_1));
-	_control->SetBorderColor(L"blue");
-	_control->SetBorderSize(1);
 	_basic_property.push_back(PropertyData(L"name", L"名称"));
 	_basic_property.push_back(PropertyData(L"width", L"宽度"));
 	_basic_property.push_back(PropertyData(L"height", L"高度"));
@@ -116,8 +114,10 @@ tinyxml2::XMLElement* AreaControlDelegate::GetElement(tinyxml2::XMLDocument* doc
 
 void AreaControlDelegate::Reset()
 {
+	if (_selected) {
+		_control->SetBorderSize(0);
+	}
 	_selected = false;
-	_control->SetBorderColor(L"blue");
 }
 
 void AreaControlDelegate::Remove()
@@ -129,7 +129,8 @@ bool AreaControlDelegate::OnButtonDown(ui::EventArgs* args)
 {
 	_is_button_down = true;
 	_control->GetWindow()->SendNotify(_control, ui::kEventNotify, CustomEventType::CONTROL_BUTTON_DOWN, 0);
-	args->pSender->SetBorderColor(L"red");
+	args->pSender->SetBorderSize(1);
+	args->pSender->SetBorderColor(L"blue");
 	_selected = true;
 	_control->GetWindow()->SendNotify(_control, ui::kEventNotify, CustomEventType::CONTROL_SELECTED, 0);
 	ui::UiRect controlRect = args->pSender->GetPos();
