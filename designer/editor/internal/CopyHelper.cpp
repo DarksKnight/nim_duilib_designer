@@ -73,51 +73,44 @@ void CopyHelper::Paste()
 		return;
 	}
 	std::wstring name = ControlHelper::GetInstance()->GetName(_copy_ctrl->GetControlName());
+	_copy_ctrl->GetDelegateData()->SetName(name);
 	_copy_ctrl->SetUIMargin(ui::UiRect());
 	std::wstring ctrlName = _copy_ctrl->GetControlName();
 	SIZE_T cchLen = ctrlName.length();
 	switch (cchLen) {
 	case 3:
 		if (ctrlName == DUI_CTR_BOX) {
-			((AreaBox*)_copy_ctrl)->SetName(name);
 			_copy_ctrl_parent->Add(new AreaBox(*(AreaBox*)_copy_ctrl));
 		}
 		break;
 	case 4:
 		if (ctrlName == DUI_CTR_HBOX) {
-			((AreaHBox*)_copy_ctrl)->SetName(name);
 			_copy_ctrl_parent->Add(new AreaHBox(*(AreaHBox*)_copy_ctrl));
 		}
 		else if (ctrlName == DUI_CTR_VBOX) {
-			((AreaVBox*)_copy_ctrl)->SetName(name);
 			_copy_ctrl_parent->Add(new AreaVBox(*(AreaVBox*)_copy_ctrl));
 		}
 		break;
 	case 5:
 		if (ctrlName == DUI_CTR_LABEL) {
-			((AreaLabel*)_copy_ctrl)->SetName(name);
 			_copy_ctrl_parent->Add(new AreaLabel(*(AreaLabel*)_copy_ctrl));
 		}
 		break;
 	case 6:
 		if (ctrlName == DUI_CTR_BUTTON) {
-			((AreaButton*)_copy_ctrl)->SetName(name);
 			_copy_ctrl_parent->Add(new AreaButton(*(AreaButton*)_copy_ctrl));
 		}
 		break;
 	case 7:
 		if (ctrlName == DUI_CTR_CONTROL) {
-			((AreaControl*)_copy_ctrl)->SetName(name);
 			_copy_ctrl_parent->Add(new AreaControl(*(AreaControl*)_copy_ctrl));
 		}
 		break;
 	case 8:
 		if (ctrlName == DUI_CTR_RICHEDIT) {
-			((AreaRichEdit*)_copy_ctrl)->SetName(name);
 			_copy_ctrl_parent->Add(new AreaRichEdit(*(AreaRichEdit*)_copy_ctrl));
 		}
 		else if (ctrlName == DUI_CTR_CHECKBOX) {
-			((AreaCheckBox*)_copy_ctrl)->SetName(name);
 			_copy_ctrl_parent->Add(new AreaCheckBox(*(AreaCheckBox*)_copy_ctrl));
 		}
 		break;

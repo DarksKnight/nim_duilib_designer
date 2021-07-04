@@ -38,11 +38,11 @@ void AreaControlDelegate::ParseElement(tinyxml2::XMLElement* element)
 			nbase::StringToInt(widthAttr, &width);
 		}
 		_control->SetFixedWidth(width);
+		data->SetWidth(_control->GetFixedWidth());
 	}
 	else {
 		_control->SetFixedWidth(DUI_LENGTH_STRETCH);
 	}
-	data->SetWidth(_control->GetFixedWidth());
 	if (attr = element->FindAttribute("height")) {
 		std::wstring heightAttr = nbase::UTF8ToUTF16(attr->Value());
 		int height = 0;
@@ -56,11 +56,11 @@ void AreaControlDelegate::ParseElement(tinyxml2::XMLElement* element)
 			nbase::StringToInt(heightAttr, &height);
 		}
 		_control->SetFixedHeight(height);
+		data->SetHeight(_control->GetFixedHeight());
 	}
 	else {
 		_control->SetFixedHeight(DUI_LENGTH_STRETCH);
 	}
-	data->SetHeight(_control->GetFixedHeight());
 	if (attr = element->FindAttribute("margin")) {
 		std::wstring marginAttr = nbase::UTF8ToUTF16(attr->Value());
 		ui::UiRect rcMargin;
@@ -121,9 +121,11 @@ tinyxml2::XMLElement* AreaControlDelegate::GetElement(tinyxml2::XMLDocument* doc
 {
 	tinyxml2::XMLElement* element = doc->NewElement(nbase::UTF16ToUTF8(GetControlName()).c_str());
 	DelegateData* data = ((DelegateData*)_control->GetUserDataBase());
-	std::wstring controlName = data->GetName();
-	if (!controlName.empty()) {
-		element->SetAttribute("name", nbase::UTF16ToUTF8(controlName).c_str());
+	if (!data->GetClass().empty()) {
+		element->SetAttribute("class", nbase::UTF16ToUTF8(data->GetClass()).c_str());
+	}
+	if (!data->GetName().empty()) {
+		element->SetAttribute("name", nbase::UTF16ToUTF8(data->GetName()).c_str());
 	}
 	if (CheckWidthAndHeight(data->GetWidth())) {
 		int width = data->GetWidth();
@@ -167,9 +169,6 @@ tinyxml2::XMLElement* AreaControlDelegate::GetElement(tinyxml2::XMLDocument* doc
 	}
 	if (!data->GetBkImage().empty()) {
 		element->SetAttribute("bkimage", nbase::UTF16ToUTF8(data->GetBkImage()).c_str());
-	}
-	if (!data->GetClass().empty()) {
-		element->SetAttribute("class", nbase::UTF16ToUTF8(data->GetClass()).c_str());
 	}
 	OnGetElement(doc, element);
 	return element;

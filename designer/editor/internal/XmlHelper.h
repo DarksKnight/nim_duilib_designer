@@ -9,7 +9,7 @@ public:
 	~XmlHelper();
 	SINGLETON_DEFINE(XmlHelper);
 public:
-	bool ConvertXml(EditorArea* area, const std::wstring & path, bool window = true);
+	bool ConvertXml(EditorArea* area, const std::wstring & path);
 	bool ParseXml(ui::Box* box, const std::wstring & path);
 	bool ParseXmlPreview(ui::Box* box, const std::wstring& path);
 private:

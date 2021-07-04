@@ -12,8 +12,9 @@ PropertyHelper::~PropertyHelper()
 
 void PropertyHelper::SetProperty(ui::Control* control, const std::wstring& name, const std::wstring& value)
 {
+	DelegateData* data = (DelegateData*)control->GetUserDataBase();
 	if (name == L"name") {
-		control->SetName(value);
+		data->SetName(value);
 	}
 	else if (name == L"width") {
 		int width = 0;
@@ -27,6 +28,7 @@ void PropertyHelper::SetProperty(ui::Control* control, const std::wstring& name,
 			nbase::StringToInt(value, &width);
 		}
 		control->SetFixedWidth(width);
+		data->SetWidth(width);
 	}
 	else if (name == L"height") {
 		int height = 0;
@@ -40,6 +42,7 @@ void PropertyHelper::SetProperty(ui::Control* control, const std::wstring& name,
 			nbase::StringToInt(value, &height);
 		}
 		control->SetFixedHeight(height);
+		data->SetHeight(height);
 	}
 	else if (name == L"margin") {
 		ui::UiRect rcMargin;
@@ -49,8 +52,10 @@ void PropertyHelper::SetProperty(ui::Control* control, const std::wstring& name,
 		rcMargin.right = _tcstol(pstr + 1, &pstr, 10);
 		rcMargin.bottom = _tcstol(pstr + 1, &pstr, 10);
 		control->SetMargin(rcMargin);
+		data->SetMargin(rcMargin);
 	}
 	else if (name == L"text") {
+		data->SetText(value);
 		ui::Label* label = dynamic_cast<ui::Label*>(control);
 		if (label) {
 			label->SetText(value);

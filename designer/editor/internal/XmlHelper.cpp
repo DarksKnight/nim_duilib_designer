@@ -17,18 +17,19 @@ XmlHelper::~XmlHelper()
 {
 }
 
-bool XmlHelper::ConvertXml(EditorArea* area, const std::wstring& path, bool window)
+bool XmlHelper::ConvertXml(EditorArea* area, const std::wstring& path)
 {
 	tinyxml2::XMLDocument doc;
 	doc.Parse(_xml_header.c_str());
-	tinyxml2::XMLElement* rootWindow = doc.NewElement("Window");
-	doc.InsertEndChild(rootWindow);
-	if (window) {
-		rootWindow->SetAttribute("size", nbase::StringPrintf("%d,%d", area->GetItemAt(0)->GetFixedWidth(), area->GetItemAt(0)->GetFixedHeight()).c_str());
-	}
-	if (((AreaBox*)area->GetItemAt(0))->GetCount() > 0) {
-		tinyxml2::XMLElement* element = GetElement(&doc, area->GetItemAt(0));
-		rootWindow->InsertEndChild(element);
+	tinyxml2::XMLElement* windowElement = doc.NewElement("Window");
+	doc.InsertEndChild(windowElement);
+	AreaWindow* window = (AreaWindow*)area->GetItemAt(0);
+	windowElement->SetAttribute("size", nbase::StringPrintf("%d,%d", window->GetDelegateData()->GetWidth(), window->GetDelegateData()->GetHeight()).c_str());
+	tinyxml2::XMLElement* boxElement = doc.NewElement("Box");
+	windowElement->InsertEndChild(boxElement);
+	if (window->GetCount() > 0) {
+		tinyxml2::XMLElement* element = GetElement(&doc, window->GetItemAt(0));
+		boxElement->InsertEndChild(element);
 	}
 	tinyxml2::XMLError result = doc.SaveFile(nbase::UTF16ToUTF8(path).c_str());
 	if (result == tinyxml2::XML_SUCCESS) {
@@ -55,10 +56,12 @@ bool XmlHelper::ParseXml(ui::Box* box, const std::wstring& path)
 	int width = 0;
 	nbase::StringToInt(sizeVector[0], &width);
 	areaWindow->SetFixedWidth(width);
+	areaWindow->GetDelegateData()->SetWidth(width);
 	int height = 0;
 	nbase::StringToInt(sizeVector[1], &height);
 	areaWindow->SetFixedHeight(height);
-	ParseElement(doc.RootElement(), areaWindow);
+	areaWindow->GetDelegateData()->SetHeight(height);
+	ParseElement(doc.RootElement()->FirstChildElement(), areaWindow);
 	return true;
 }
 

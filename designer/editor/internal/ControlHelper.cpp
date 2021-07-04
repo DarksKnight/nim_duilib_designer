@@ -270,7 +270,7 @@ bool ControlHelper::CheckDupliName(const std::wstring& name, ui::Box* box)
 	}
 	for (int i = 0; i < box->GetCount(); i++) {
 		ui::Control* control = box->GetItemAt(i);
-		if (control->GetName() == name) {
+		if (((DelegateData*)control->GetUserDataBase())->GetName() == name) {
 			return true;
 		}
 		ui::Box* container = dynamic_cast<ui::Box*>(control);
