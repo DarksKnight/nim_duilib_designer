@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Window>
   <Box>
-    <VBox>
-      <VListBox name="list_propery"/>
+    <VBox bordersize="1" bordercolor="dark_gray">
+      <EditorTreeControls height="200" bottombordersize="1" bordercolor="dark_gray"/>
+      <VListBox name="list_propery" padding="1,1,1,1"/>
     </VBox>
   </Box>
 </Window>

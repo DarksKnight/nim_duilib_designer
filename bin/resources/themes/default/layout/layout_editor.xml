@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Window size="1200,800" caption="0,0,0,35">
+<Window size="1500,800" caption="0,0,0,35">
   <Box name="box_container">
     <VBox bkcolor="white">
       <HBox width="stretch" height="35" bkcolor="bk_wnd_lightcolor">
@@ -17,7 +17,7 @@
       <HBox>
         <EditorControlsList name="ecl" bordersize="1" bordercolor="dark_gray" visible="false"/>
         <Box name="box_editor_area" />
-        <EditorProperty name="ep"/>
+        <EditorProperty name="ep" visible="false"/>
       </HBox>
     </VBox>
     <Box name="box_drag_pre" width="auto" height="auto" visible="false">

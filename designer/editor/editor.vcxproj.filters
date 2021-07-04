@@ -162,6 +162,9 @@
     <ClInclude Include="extern_ctrl\treectrl\treeview.h">
       <Filter>extern_ctrl\treectrl</Filter>
     </ClInclude>
+    <ClInclude Include="widget\EditorTreeControls.h">
+      <Filter>widget</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -271,6 +274,9 @@
     </ClCompile>
     <ClCompile Include="extern_ctrl\treectrl\treeview.cpp">
       <Filter>extern_ctrl\treectrl</Filter>
+    </ClCompile>
+    <ClCompile Include="widget\EditorTreeControls.cpp">
+      <Filter>widget</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

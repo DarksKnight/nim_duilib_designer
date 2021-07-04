@@ -21,6 +21,7 @@ protected:
 	LRESULT OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled) override;
 	LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam) override;
 private:
+	void OnInitForm();
 	bool Notify(ui::EventArgs* args);
 	void OnSelect(const std::wstring & name);
 	void OnButtonUp();

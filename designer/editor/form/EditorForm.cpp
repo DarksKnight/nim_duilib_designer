@@ -51,15 +51,9 @@ void EditorForm::InitWindow()
 	_editor_property = (EditorProperty*)FindControl(L"ep");
 	_box_drag_pre = (ui::Box*)FindControl(L"box_drag_pre");
 	_box_editor_area = (ui::Box*)FindControl(L"box_editor_area");
-	int width = GetPos().GetWidth();
-	_controls_list->SetFixedWidth(width / 6);
-	_editor_property->SetFixedWidth(width / 5);
 	_controls_list->SetSelectCallback(nbase::Bind(&EditorForm::OnSelect, this ,std::placeholders::_1));
 	_controls_list->SetButtonUpCallback(nbase::Bind(&EditorForm::OnButtonUp, this));
-	std::wstring value = SettingsHelper::GetInstance()->Get(CONFIG_TAG_CREATE, CONFIG_KEY_CREATE_SHOW, L"1");
-	if (value == L"1") {
-		nbase::ThreadManager::PostTask(kThreadUI, nbase::Bind(&EditorForm::OpenCreateForm, this));
-	}
+	nbase::ThreadManager::PostTask(kThreadUI, nbase::Bind(&EditorForm::OnInitForm, this));
 }
 
 LRESULT EditorForm::OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
@@ -114,6 +108,24 @@ LRESULT EditorForm::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		return 1;
 	}
 	return __super::HandleMessage(uMsg, wParam, lParam);
+}
+
+void EditorForm::OnInitForm()
+{
+	/*ui::Control* pMaxButton = (ui::Control*)FindControl(L"maxbtn");
+	ui::Control* pRestoreButton = (ui::Control*)FindControl(L"restorebtn");
+	if (pMaxButton && pRestoreButton) {
+		pMaxButton->SetVisible(false);
+		pRestoreButton->SetVisible(true);
+	}
+	SendMessage(WM_SYSCOMMAND, SC_MAXIMIZE, 0);*/
+	int width = GetPos().GetWidth();
+	_controls_list->SetFixedWidth(width / 7);
+	_editor_property->SetFixedWidth(width / 6);
+	std::wstring value = SettingsHelper::GetInstance()->Get(CONFIG_TAG_CREATE, CONFIG_KEY_CREATE_SHOW, L"1");
+	if (value == L"1") {
+		OpenCreateForm();
+	}
 }
 
 bool EditorForm::Notify(ui::EventArgs* args)
