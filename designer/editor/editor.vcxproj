@@ -218,7 +218,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
@@ -349,6 +349,11 @@
     <ClInclude Include="delegate\AreaRichEditDelegate.h" />
     <ClInclude Include="delegate\AreaVBoxDelegate.h" />
     <ClInclude Include="extern_ctrl\ExternCtrlManager.h" />
+    <ClInclude Include="extern_ctrl\treectrl\treectrl_interface.h" />
+    <ClInclude Include="extern_ctrl\treectrl\treedoc.h" />
+    <ClInclude Include="extern_ctrl\treectrl\treeitem.h" />
+    <ClInclude Include="extern_ctrl\treectrl\treeitem_uistyle.h" />
+    <ClInclude Include="extern_ctrl\treectrl\treeview.h" />
     <ClInclude Include="form\EditorCreateForm.h" />
     <ClInclude Include="form\EditorForm.h" />
     <ClInclude Include="internal\ControlHelper.h" />
@@ -387,6 +392,18 @@
     <ClCompile Include="delegate\AreaRichEditDelegate.cpp" />
     <ClCompile Include="delegate\AreaVBoxDelegate.cpp" />
     <ClCompile Include="extern_ctrl\ExternCtrlManager.cpp" />
+    <ClCompile Include="extern_ctrl\treectrl\treedoc.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../../stdafx.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="extern_ctrl\treectrl\treeitem.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../../stdafx.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="extern_ctrl\treectrl\treeitem_uistyle.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../../stdafx.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="extern_ctrl\treectrl\treeview.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../../stdafx.h</PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="form\EditorCreateForm.cpp" />
     <ClCompile Include="form\EditorForm.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
