@@ -25,9 +25,9 @@ void CopyHelper::Copy(ui::Control* ctrl)
 		return;
 	}
 	_copy_ctrl_parent = ctrl->GetParent();
-	AreaBox* box = dynamic_cast<AreaBox*>(ctrl);
-	if (box) {
-		_copy_ctrl = new AreaBox(*box);
+	AreaVBox* vBox = dynamic_cast<AreaVBox*>(ctrl);
+	if (vBox) {
+		_copy_ctrl = new AreaVBox(*vBox);
 		return;
 	}
 	AreaHBox* hBox = dynamic_cast<AreaHBox*>(ctrl);
@@ -35,19 +35,9 @@ void CopyHelper::Copy(ui::Control* ctrl)
 		_copy_ctrl = new AreaHBox(*hBox);
 		return;
 	}
-	AreaControl* control = dynamic_cast<AreaControl*>(ctrl);
-	if (control) {
-		_copy_ctrl = new AreaControl(*control);
-		return;
-	}
-	AreaVBox* vBox = dynamic_cast<AreaVBox*>(ctrl);
-	if (vBox) {
-		_copy_ctrl = new AreaVBox(*vBox);
-		return;
-	}
-	AreaLabel* label = dynamic_cast<AreaLabel*>(ctrl);
-	if (label) {
-		_copy_ctrl = new AreaLabel(*label);
+	AreaBox* box = dynamic_cast<AreaBox*>(ctrl);
+	if (box) {
+		_copy_ctrl = new AreaBox(*box);
 		return;
 	}
 	AreaRichEdit* richEdit = dynamic_cast<AreaRichEdit*>(ctrl);
@@ -65,6 +55,16 @@ void CopyHelper::Copy(ui::Control* ctrl)
 		_copy_ctrl = new AreaCheckBox(*checkbox);
 		return;
 	}
+	AreaLabel* label = dynamic_cast<AreaLabel*>(ctrl);
+	if (label) {
+		_copy_ctrl = new AreaLabel(*label);
+		return;
+	}
+	AreaControl* control = dynamic_cast<AreaControl*>(ctrl);
+	if (control) {
+		_copy_ctrl = new AreaControl(*control);
+		return;
+	}
 }
 
 void CopyHelper::Paste()
@@ -79,40 +79,24 @@ void CopyHelper::Paste()
 	SIZE_T cchLen = ctrlName.length();
 	switch (cchLen) {
 	case 3:
-		if (ctrlName == DUI_CTR_BOX) {
-			_copy_ctrl_parent->Add(new AreaBox(*(AreaBox*)_copy_ctrl));
-		}
+		if (ctrlName == DUI_CTR_BOX) _copy_ctrl_parent->Add(new AreaBox(*(AreaBox*)_copy_ctrl));
 		break;
 	case 4:
-		if (ctrlName == DUI_CTR_HBOX) {
-			_copy_ctrl_parent->Add(new AreaHBox(*(AreaHBox*)_copy_ctrl));
-		}
-		else if (ctrlName == DUI_CTR_VBOX) {
-			_copy_ctrl_parent->Add(new AreaVBox(*(AreaVBox*)_copy_ctrl));
-		}
+		if (ctrlName == DUI_CTR_HBOX) _copy_ctrl_parent->Add(new AreaHBox(*(AreaHBox*)_copy_ctrl));
+		else if (ctrlName == DUI_CTR_VBOX) _copy_ctrl_parent->Add(new AreaVBox(*(AreaVBox*)_copy_ctrl));
 		break;
 	case 5:
-		if (ctrlName == DUI_CTR_LABEL) {
-			_copy_ctrl_parent->Add(new AreaLabel(*(AreaLabel*)_copy_ctrl));
-		}
+		if (ctrlName == DUI_CTR_LABEL) _copy_ctrl_parent->Add(new AreaLabel(*(AreaLabel*)_copy_ctrl));
 		break;
 	case 6:
-		if (ctrlName == DUI_CTR_BUTTON) {
-			_copy_ctrl_parent->Add(new AreaButton(*(AreaButton*)_copy_ctrl));
-		}
+		if (ctrlName == DUI_CTR_BUTTON) _copy_ctrl_parent->Add(new AreaButton(*(AreaButton*)_copy_ctrl));
 		break;
 	case 7:
-		if (ctrlName == DUI_CTR_CONTROL) {
-			_copy_ctrl_parent->Add(new AreaControl(*(AreaControl*)_copy_ctrl));
-		}
+		if (ctrlName == DUI_CTR_CONTROL) _copy_ctrl_parent->Add(new AreaControl(*(AreaControl*)_copy_ctrl));
 		break;
 	case 8:
-		if (ctrlName == DUI_CTR_RICHEDIT) {
-			_copy_ctrl_parent->Add(new AreaRichEdit(*(AreaRichEdit*)_copy_ctrl));
-		}
-		else if (ctrlName == DUI_CTR_CHECKBOX) {
-			_copy_ctrl_parent->Add(new AreaCheckBox(*(AreaCheckBox*)_copy_ctrl));
-		}
+		if (ctrlName == DUI_CTR_RICHEDIT) _copy_ctrl_parent->Add(new AreaRichEdit(*(AreaRichEdit*)_copy_ctrl));
+		else if (ctrlName == DUI_CTR_CHECKBOX) _copy_ctrl_parent->Add(new AreaCheckBox(*(AreaCheckBox*)_copy_ctrl));
 		break;
 	default:
 		break;

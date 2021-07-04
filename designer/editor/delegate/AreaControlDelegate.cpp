@@ -262,11 +262,13 @@ bool AreaControlDelegate::Notify(ui::EventArgs* args)
 			width = 1;
 		}
 		args->pSender->SetFixedWidth(width);
+		GetDelegateData()->SetWidth(width);
 		break;
 	}
 	case Direction::RIGHT:
 	{
 		args->pSender->SetFixedWidth(args->pSender->GetFixedWidth() + left);
+		GetDelegateData()->SetWidth(args->pSender->GetFixedWidth() + left);
 		break;
 	}
 	case Direction::TOP:
@@ -277,11 +279,13 @@ bool AreaControlDelegate::Notify(ui::EventArgs* args)
 			height = 1;
 		}
 		args->pSender->SetFixedHeight(height);
+		GetDelegateData()->SetHeight(height);
 		break;
 	}
 	case Direction::BOTTOM:
 	{
 		args->pSender->SetFixedHeight(args->pSender->GetFixedHeight() + top);
+		GetDelegateData()->SetHeight(args->pSender->GetFixedHeight() + top);
 		break;
 	}
 	default:
@@ -291,6 +295,7 @@ bool AreaControlDelegate::Notify(ui::EventArgs* args)
 	}
 	if (_can_move) {
 		args->pSender->SetMargin(rect);
+		GetDelegateData()->SetMargin(rect);
 	}
 	_last_point = args->ptMouse;
 	return true;

@@ -236,16 +236,6 @@ void ControlHelper::Remove(ui::Control* control)
 		tempBox->Remove();
 		return;
 	}
-	AreaControlDelegate* tempControl = dynamic_cast<AreaControlDelegate*>(control);
-	if (tempControl) {
-		tempControl->Remove();
-		return;
-	}
-	AreaLabelDelegate* tempLabel = dynamic_cast<AreaLabelDelegate*>(control);
-	if (tempLabel) {
-		tempLabel->Remove();
-		return;
-	}
 	AreaRichEditDelegate* tempRichEdit = dynamic_cast<AreaRichEditDelegate*>(control);
 	if (tempRichEdit) {
 		tempRichEdit->Remove();
@@ -259,6 +249,16 @@ void ControlHelper::Remove(ui::Control* control)
 	AreaCheckBoxDelegate* tempCheckBox = dynamic_cast<AreaCheckBoxDelegate*>(control);
 	if (tempCheckBox) {
 		tempCheckBox->Remove();
+		return;
+	}
+	AreaLabelDelegate* tempLabel = dynamic_cast<AreaLabelDelegate*>(control);
+	if (tempLabel) {
+		tempLabel->Remove();
+		return;
+	}
+	AreaControlDelegate* tempControl = dynamic_cast<AreaControlDelegate*>(control);
+	if (tempControl) {
+		tempControl->Remove();
 		return;
 	}
 }

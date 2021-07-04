@@ -6,6 +6,9 @@
 #include "../controls/AreaWindow.h"
 #include "../controls/AreaVBox.h"
 #include "../controls/AreaLabel.h"
+#include "../controls/AreaButton.h"
+#include "../controls/AreaCheckBox.h"
+#include "../controls/AreaRichEdit.h"
 #include "ControlHelper.h"
 
 XmlHelper::XmlHelper()
@@ -106,14 +109,29 @@ tinyxml2::XMLElement* XmlHelper::GetElement(tinyxml2::XMLDocument* doc, ui::Cont
 		}
 	}
 	else {
-		AreaControlDelegate* areaControl = dynamic_cast<AreaControlDelegate*>(control);
-		if (areaControl) {
-			element = areaControl->GetElement(doc);
+		AreaButtonDelegate* button = dynamic_cast<AreaButtonDelegate*>(control);
+		if (button) {
+			element = button->GetElement(doc);
 			return element;
 		}
-		AreaLabelDelegate* areaLabel = dynamic_cast<AreaLabelDelegate*>(control);
-		if (areaLabel) {
-			element = areaLabel->GetElement(doc);
+		AreaCheckBoxDelegate* checkBox = dynamic_cast<AreaCheckBoxDelegate*>(control);
+		if (checkBox) {
+			element = checkBox->GetElement(doc);
+			return element;
+		}
+		AreaRichEditDelegate* richEdit = dynamic_cast<AreaRichEditDelegate*>(control);
+		if (richEdit) {
+			element = richEdit->GetElement(doc);
+			return element;
+		}
+		AreaLabelDelegate* label = dynamic_cast<AreaLabelDelegate*>(control);
+		if (label) {
+			element = label->GetElement(doc);
+			return element;
+		}
+		AreaControlDelegate* ctrl = dynamic_cast<AreaControlDelegate*>(control);
+		if (ctrl) {
+			element = ctrl->GetElement(doc);
 			return element;
 		}
 	}

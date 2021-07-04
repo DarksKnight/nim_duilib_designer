@@ -37,8 +37,9 @@ void EditorProperty::LoadProperty(const std::wstring& name, AreaControlDelegate*
 
 void EditorProperty::LoadControlProperty(ui::Control* control)
 {
-	SetProperty(L"name", control->GetName());
-	int width = control->GetFixedWidth();
+	DelegateData* data = (DelegateData*)control->GetUserDataBase();
+	SetProperty(L"name", data->GetName());
+	int width = data->GetWidth();
 	std::wstring widthValue = L"";
 	if (width == DUI_LENGTH_AUTO) {
 		widthValue = L"auto";
@@ -47,10 +48,10 @@ void EditorProperty::LoadControlProperty(ui::Control* control)
 		widthValue = L"stretch";
 	}
 	else {
-		widthValue = nbase::IntToString16(control->GetFixedWidth());
+		widthValue = nbase::IntToString16(width);
 	}
 	SetProperty(L"width", widthValue);
-	int height = control->GetFixedHeight();
+	int height = data->GetHeight();
 	std::wstring heightValue = L"";
 	if (height == DUI_LENGTH_AUTO) {
 		heightValue = L"auto";
@@ -59,17 +60,17 @@ void EditorProperty::LoadControlProperty(ui::Control* control)
 		heightValue = L"stretch";
 	}
 	else {
-		heightValue = nbase::IntToString16(control->GetFixedWidth());
+		heightValue = nbase::IntToString16(height);
 	}
 	SetProperty(L"height", heightValue);
-	ui::UiRect margin = control->GetMargin();
+	ui::UiRect margin = data->GetMargin();
 	SetProperty(L"margin", nbase::StringPrintf(L"%d,%d,%d,%d", margin.left, margin.top, margin.right, margin.bottom));
 	ui::Label* label = dynamic_cast<ui::Label*>(control);
-	if (label) SetProperty(L"text", label->GetText());
+	if (label) SetProperty(L"text", data->GetText());
 	ui::RichEdit* richEdit = dynamic_cast<ui::RichEdit*>(control);
-	if (richEdit) SetProperty(L"text", richEdit->GetText());
+	if (richEdit) SetProperty(L"text", data->GetText());
 	ui::Button* btn = dynamic_cast<ui::Button*>(control);
-	if (btn) SetProperty(L"text", btn->GetText());
+	if (btn) SetProperty(L"text", data->GetText());
 }
 
 void EditorProperty::SetProperty(const std::wstring& name, const std::wstring& value)
