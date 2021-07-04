@@ -34,15 +34,19 @@ public:
 	}
 	void SetUIMargin(ui::UiRect margin) {
 		_control->SetMargin(margin);
+		((DelegateData*)_control->GetUserDataBase())->SetMargin(margin);
 	}
 	void SetControlName(const std::wstring & name) {
-		_control->SetName(name);
+		((DelegateData*)_control->GetUserDataBase())->SetName(name);
 	}
 	ui::Control* GetCtonrol() {
 		return _control;
 	}
 	bool IsSelected() {
 		return _selected;
+	}
+	DelegateData* GetDelegateData() {
+		return ((DelegateData*)_control->GetUserDataBase());
 	}
 protected:
 	virtual void OnParseElement(tinyxml2::XMLElement* element) {}
@@ -53,7 +57,7 @@ protected:
 		return rect.left == 0 && rect.top == 0 && rect.right == 0 && rect.bottom == 0;
 	}
 	bool CheckWidthAndHeight(int value) {
-		return value < 0;
+		return value > -3;
 	}
 	std::vector<std::string> ConvertVector(std::list<std::string> list) {
 		std::vector<std::string> vector;

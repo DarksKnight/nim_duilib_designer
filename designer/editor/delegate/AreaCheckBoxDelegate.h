@@ -1,7 +1,7 @@
 ﻿#pragma once
-#include "AreaControlDelegate.h"
+#include "AreaLabelDelegate.h"
 
-class AreaCheckBoxDelegate : public AreaControlDelegate
+class AreaCheckBoxDelegate : public AreaLabelDelegate
 {
 public:
 	AreaCheckBoxDelegate(ui::Control* control);

@@ -5,6 +5,7 @@
 #include "../controls/AreaHBox.h"
 #include "../controls/AreaWindow.h"
 #include "../controls/AreaVBox.h"
+#include "../controls/AreaLabel.h"
 #include "ControlHelper.h"
 
 XmlHelper::XmlHelper()
@@ -46,10 +47,9 @@ bool XmlHelper::ParseXml(ui::Box* box, const std::wstring& path)
 		return false;
 	}
 	box->RemoveAll();
-	AreaControlDelegate* areaControl = new AreaWindow;
-	box->Add((AreaWindow*)areaControl);
-	areaControl->ParseElement(doc.RootElement());
-	AreaWindow* areaWindow = (AreaWindow*)areaControl;
+	AreaWindow* areaWindow = new AreaWindow;
+	box->Add((AreaWindow*)areaWindow);
+	areaWindow->ParseElement(doc.RootElement());
 	std::string sizeAttr = doc.RootElement()->Attribute("size");
 	std::vector<std::string> sizeVector = ConvertVector(nim_comp::StringHelper::Split(sizeAttr, ","));
 	int width = 0;
@@ -58,7 +58,7 @@ bool XmlHelper::ParseXml(ui::Box* box, const std::wstring& path)
 	int height = 0;
 	nbase::StringToInt(sizeVector[1], &height);
 	areaWindow->SetFixedHeight(height);
-	ParseElement(doc.RootElement(), box);
+	ParseElement(doc.RootElement(), areaWindow);
 	return true;
 }
 
@@ -84,8 +84,12 @@ tinyxml2::XMLElement* XmlHelper::GetElement(tinyxml2::XMLDocument* doc, ui::Cont
 	if (box) {
 		AreaBoxDelegate* areaBox = dynamic_cast<AreaBoxDelegate*>(control);
 		AreaHBoxDelegate* areaHBox = dynamic_cast<AreaHBoxDelegate*>(control);
+		AreaVBoxDelegate* areaVBox = dynamic_cast<AreaVBoxDelegate*>(control);
 		if (areaHBox) {
 			element = areaHBox->GetElement(doc);
+		}
+		else if (areaVBox) {
+			element = areaVBox->GetElement(doc);
 		}
 		else {
 			element = areaBox->GetElement(doc);
@@ -102,6 +106,12 @@ tinyxml2::XMLElement* XmlHelper::GetElement(tinyxml2::XMLDocument* doc, ui::Cont
 		AreaControlDelegate* areaControl = dynamic_cast<AreaControlDelegate*>(control);
 		if (areaControl) {
 			element = areaControl->GetElement(doc);
+			return element;
+		}
+		AreaLabelDelegate* areaLabel = dynamic_cast<AreaLabelDelegate*>(control);
+		if (areaLabel) {
+			element = areaLabel->GetElement(doc);
+			return element;
 		}
 	}
 	return element;

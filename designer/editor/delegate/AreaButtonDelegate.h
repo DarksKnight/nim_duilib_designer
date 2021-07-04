@@ -1,12 +1,10 @@
 ﻿#pragma once
-#include "AreaControlDelegate.h"
+#include "AreaLabelDelegate.h"
 
-class AreaButtonDelegate : public AreaControlDelegate
+class AreaButtonDelegate : public AreaLabelDelegate
 {
 public:
 	AreaButtonDelegate(ui::Control* control);
-protected:
-	void OnParseElement(tinyxml2::XMLElement* element) override;
 protected:
 	std::wstring GetControlName() {
 		return DUI_CTR_BUTTON;

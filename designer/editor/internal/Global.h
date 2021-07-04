@@ -5,6 +5,15 @@
 #define CONFIG_TAG_CREATE L"CreateForm"
 #define CONFIG_KEY_CREATE_SHOW L"Show"
 
+#define ATTRIBUTE_MEMBER_FUNC(argType, name, arg)\
+	public:\
+	void Set##name(const argType& v) {\
+	arg = v;\
+	}\
+	argType Get##name() {\
+	return arg;\
+	}
+
 enum ThreadId
 {
 	kThreadUI
@@ -60,4 +69,31 @@ struct PropertyData
 		this->desc = desc;
 		this->defaultValue = defaultValue;
 	}
+};
+
+class DelegateData : public ui::UserDataBase
+{
+	ATTRIBUTE_MEMBER_FUNC(std::wstring, Name, name);
+	ATTRIBUTE_MEMBER_FUNC(int, Width, width);
+	ATTRIBUTE_MEMBER_FUNC(int, Height, height);
+	ATTRIBUTE_MEMBER_FUNC(ui::UiRect, Margin, margin);
+	ATTRIBUTE_MEMBER_FUNC(std::wstring, Bkcolor, bkcolor);
+	ATTRIBUTE_MEMBER_FUNC(std::wstring, Valign, valign);
+	ATTRIBUTE_MEMBER_FUNC(std::wstring, Halign, halign);
+	ATTRIBUTE_MEMBER_FUNC(std::wstring, BkImage, bkimage);
+	ATTRIBUTE_MEMBER_FUNC(std::wstring, Class, className);
+	ATTRIBUTE_MEMBER_FUNC(std::wstring, Text, text);
+	ATTRIBUTE_MEMBER_FUNC(std::wstring, Font, font);
+private:
+	std::wstring name = L"";
+	int width = -3;
+	int height = -3;
+	ui::UiRect margin;
+	std::wstring bkcolor = L"";
+	std::wstring valign = L"";
+	std::wstring halign = L"";
+	std::wstring bkimage = L"";
+	std::wstring className = L"";
+	std::wstring text = L"";
+	std::wstring font = L"";
 };
