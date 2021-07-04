@@ -23,7 +23,7 @@ XmlHelper::~XmlHelper()
 bool XmlHelper::ConvertXml(EditorArea* area, const std::wstring& path)
 {
 	tinyxml2::XMLDocument doc;
-	doc.Parse(_xml_header.c_str());
+	doc.Parse(XML_HEADER);
 	tinyxml2::XMLElement* windowElement = doc.NewElement("Window");
 	doc.InsertEndChild(windowElement);
 	AreaWindow* window = (AreaWindow*)area->GetItemAt(0);
@@ -41,7 +41,7 @@ bool XmlHelper::ConvertXml(EditorArea* area, const std::wstring& path)
 	}
 }
 
-bool XmlHelper::ParseXml(ui::Box* box, const std::wstring& path)
+bool XmlHelper::ParseXml(ui::Box* box, const std::wstring& path, ParseControlCallback callback)
 {
 	tinyxml2::XMLDocument doc;
 	tinyxml2::XMLError result = doc.LoadFile(nbase::UTF16ToUTF8(path).c_str());
@@ -62,7 +62,10 @@ bool XmlHelper::ParseXml(ui::Box* box, const std::wstring& path)
 	nbase::StringToInt(sizeVector[1], &height);
 	areaWindow->SetFixedHeight(height);
 	areaWindow->GetDelegateData()->SetHeight(height);
-	ParseElement(doc.RootElement()->FirstChildElement(), areaWindow);
+	if (callback) {
+		callback(areaWindow);
+	}
+	ParseElement(doc.RootElement()->FirstChildElement(), areaWindow, callback);
 	return true;
 }
 
@@ -136,7 +139,7 @@ tinyxml2::XMLElement* XmlHelper::GetElement(tinyxml2::XMLDocument* doc, ui::Cont
 	return element;
 }
 
-void XmlHelper::ParseElement(tinyxml2::XMLElement* element, ui::Box* rootBox)
+void XmlHelper::ParseElement(tinyxml2::XMLElement* element, ui::Box* rootBox, ParseControlCallback callback)
 {
 	if (!rootBox) {
 		return;
@@ -145,6 +148,9 @@ void XmlHelper::ParseElement(tinyxml2::XMLElement* element, ui::Box* rootBox)
 		std::wstring value = nbase::UTF8ToUTF16(currentElement->Value());
 		AreaControlDelegate* areaControl = ControlHelper::GetInstance()->DropControl(rootBox, value);
 		areaControl->ParseElement(currentElement);
+		if (callback) {
+			callback(areaControl);
+		}
 		ui::Box* containerBox = dynamic_cast<ui::Box*>(areaControl);
 		if (!currentElement->NoChildren() && containerBox) {
 			ParseElement(currentElement, containerBox);

@@ -53,6 +53,12 @@ public:
 	void SetDelegateData(DelegateData* data) {
 		_control->SetUserDataBase(data);
 	}
+	void SetControlData(ControlData data) {
+		_control_data = data;
+	}
+	ControlData GetControlData() {
+		return _control_data;
+	}
 protected:
 	virtual void OnParseElement(tinyxml2::XMLElement* element) {}
 	virtual void OnGetElement(tinyxml2::XMLDocument* doc, tinyxml2::XMLElement* element) {}
@@ -116,4 +122,5 @@ private:
 	POINT _last_point;
 	bool _can_move = true;
 	bool _show_menu = true;
+	ControlData _control_data;
 };

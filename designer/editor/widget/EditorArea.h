@@ -16,6 +16,7 @@ public:
 	void DropControl(ui::Control* control);
 	void RemoveSelectItem();
 	ui::Control* FindSelectedItem(ui::Box* box);
+	ui::Control* FindControlById(ui::Box* box, int id);
 public:
 	void SetSelectItemCallback(SelectItemCallback callback) {
 		_select_item_callback = callback;

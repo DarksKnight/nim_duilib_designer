@@ -33,6 +33,7 @@ private:
 	void OnCreateFormClose(EditorCreateForm::OperationType type);
 	void OnSaveSelectPathCallback(BOOL ret, std::wstring path);
 	void OnOpenSelectPathCallback(BOOL ret, std::wstring path);
+	void OnParseControl(AreaControlDelegate* delegate);
 	void OpenCreateForm();
 	void UiChanged();
 	void ShowControlPropery();

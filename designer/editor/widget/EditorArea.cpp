@@ -74,6 +74,24 @@ ui::Control* EditorArea::FindSelectedItem(ui::Box* box)
 	return NULL;
 }
 
+ui::Control* EditorArea::FindControlById(ui::Box* box, int id)
+{
+	for (int i = 0; i < box->GetCount(); i++) {
+		DelegateData* data = (DelegateData*)box->GetItemAt(i)->GetUserDataBase();
+		if (data->GetId() == id) {
+			return box->GetItemAt(i);
+		}
+		ui::Box* subBox = dynamic_cast<ui::Box*>(box->GetItemAt(i));
+		if (!subBox) {
+			continue;
+		}
+		ui::Control* control = FindControlById(subBox, id);
+		if (control) {
+			return control;
+		}
+	}
+}
+
 bool EditorArea::Notify(ui::EventArgs* args)
 {
 	if (args->Type == ui::kEventNotify) {

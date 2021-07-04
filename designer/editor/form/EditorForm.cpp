@@ -279,7 +279,7 @@ void EditorForm::OnSaveSelectPathCallback(BOOL ret, std::wstring path)
 	_box_editor_area->RemoveAll();
 	_editor_area = new EditorArea;
 	_box_editor_area->Add(_editor_area);
-	if (!XmlHelper::GetInstance()->ParseXml(_editor_area, _templete_path)) {
+	if (!XmlHelper::GetInstance()->ParseXml(_editor_area, _templete_path, nbase::Bind(&EditorForm::OnParseControl, this, std::placeholders::_1))) {
 		nim_comp::ShowMsgBox(GetHWND(), NULL, L"STRID_CREATE_ERROR", true, L"STRID_HINT", true, L"STRING_OK", true);
 	}
 	SaveFile();
@@ -291,6 +291,10 @@ void EditorForm::OnOpenSelectPathCallback(BOOL ret, std::wstring path)
 		return;
 	}
 	DoOpenFile(path);
+}
+
+void EditorForm::OnParseControl(AreaControlDelegate* delegate)
+{
 }
 
 void EditorForm::OpenCreateForm()
