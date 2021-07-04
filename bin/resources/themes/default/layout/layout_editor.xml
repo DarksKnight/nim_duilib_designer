@@ -15,7 +15,7 @@
       </HBox>
       <EditorToolbar name="et" height="30" enabled="false"/>
       <HBox>
-        <EditorControlsList name="ecl" bordersize="1" bordercolor="black" visible="false"/>
+        <EditorControlsList name="ecl" bordersize="1" bordercolor="dark_gray" visible="false"/>
         <Box name="box_editor_area" />
         <EditorProperty name="ep"/>
       </HBox>
