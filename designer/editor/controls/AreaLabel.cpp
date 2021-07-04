@@ -5,8 +5,11 @@ AreaLabel::AreaLabel():AreaLabelDelegate(this)
 {
 	SetFixedWidth(80);
 	SetFixedHeight(30);
+	GetDelegateData()->SetWidth(80);
+	GetDelegateData()->SetHeight(30);
 	std::wstring text = L"文本";
 	SetText(text);
+	GetDelegateData()->SetText(text);
 	_ext_property.push_back(PropertyData(L"text", L"文本内容", text));
 }
 

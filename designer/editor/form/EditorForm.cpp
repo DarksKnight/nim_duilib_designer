@@ -162,6 +162,9 @@ void EditorForm::OnButtonUp()
 
 void EditorForm::SaveFile()
 {
+	if (_saved) {
+		return;
+	}
 	if (_last_save_path.empty()) {
 		nim_comp::ShowMsgBox(GetHWND(), NULL, L"STRID_UNSAVE_ERROR_NOT_FOUND_FILE", true, L"STRID_HINT", true, L"STRING_OK", true);
 		return;
@@ -174,6 +177,7 @@ void EditorForm::SaveFile()
 	nbase::FilePathApartFileName(_last_save_path, fileName);
 	_title = ui::MutiLanSupport::GetInstance()->GetStringViaID(L"STRID_EDITORFORM_TITLE") + L" - " + fileName;
 	_lb_title->SetText(_title);
+	_saved = true;
 }
 
 void EditorForm::DoNewFile(const std::wstring& flag)
@@ -239,7 +243,6 @@ void EditorForm::OnSaveSelectPathCallback(BOOL ret, std::wstring path)
 	if (!ret) {
 		return;
 	}
-	_saved = true;
 	_last_save_path = path;
 	_toolbar->SetEnabled(true);
 	_controls_list->SetVisible(true);

@@ -5,9 +5,12 @@ AreaRichEdit::AreaRichEdit():AreaRichEditDelegate(this)
 {
 	SetFixedWidth(100);
 	SetFixedHeight(30);
+	GetDelegateData()->SetWidth(100);
+	GetDelegateData()->SetHeight(30);
 	SetEnabled(false);
 	std::wstring text = L"请输入文字";
 	SetText(text);
+	GetDelegateData()->SetText(text);
 	_ext_property.push_back(PropertyData(L"text", L"请输入文字", text));
 }
 

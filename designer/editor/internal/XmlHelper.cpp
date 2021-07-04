@@ -28,11 +28,9 @@ bool XmlHelper::ConvertXml(EditorArea* area, const std::wstring& path)
 	doc.InsertEndChild(windowElement);
 	AreaWindow* window = (AreaWindow*)area->GetItemAt(0);
 	windowElement->SetAttribute("size", nbase::StringPrintf("%d,%d", window->GetDelegateData()->GetWidth(), window->GetDelegateData()->GetHeight()).c_str());
-	tinyxml2::XMLElement* boxElement = doc.NewElement("Box");
-	windowElement->InsertEndChild(boxElement);
 	if (window->GetCount() > 0) {
-		tinyxml2::XMLElement* element = GetElement(&doc, window->GetItemAt(0));
-		boxElement->InsertEndChild(element);
+		tinyxml2::XMLElement* element = GetElement(&doc, window);
+		windowElement->InsertEndChild(element);
 	}
 	tinyxml2::XMLError result = doc.SaveFile(nbase::UTF16ToUTF8(path).c_str());
 	if (result == tinyxml2::XML_SUCCESS) {
