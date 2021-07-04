@@ -35,6 +35,7 @@ private:
 	void OnOpenSelectPathCallback(BOOL ret, std::wstring path);
 	void OpenCreateForm();
 	void UiChanged();
+	void ShowControlPropery();
 private:
 	EditorToolbar* _toolbar;
 	EditorControlsList* _controls_list;

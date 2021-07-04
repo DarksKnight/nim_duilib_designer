@@ -133,8 +133,11 @@ void EditorForm::OnInitForm()
 bool EditorForm::Notify(ui::EventArgs* args)
 {
 	if (args->Type == ui::kEventNotify) {
-		if (args->wParam == CustomEventType::UI_CHANGED || args->wParam == CustomEventType::CONTROL_SELECTED) {
+		if (args->wParam == CustomEventType::UI_CHANGED) {
 			UiChanged();
+		}
+		else if (args->wParam == CustomEventType::CONTROL_SELECTED) {
+			ShowControlPropery();
 		}
 		else if (args->wParam == CustomEventType::CONTROL_SET_PROPERTY) {
 			ui::Control* item = _editor_area->FindSelectedItem(_editor_area->GetAreaWindow());
@@ -308,6 +311,10 @@ void EditorForm::UiChanged()
 {
 	_saved = false;
 	_lb_title->SetText(_title + L" *");
+}
+
+void EditorForm::ShowControlPropery()
+{
 	ui::Control* item = _editor_area->FindSelectedItem((ui::Box*)_editor_area->GetItemAt(0));
 	AreaControlDelegate* delegate = dynamic_cast<AreaControlDelegate*>(item);
 	if (item && delegate) {
