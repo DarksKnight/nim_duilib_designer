@@ -12,7 +12,7 @@ public:
 	EditorArea();
 	~EditorArea();
 public:
-	void DropControl(const std::wstring& name);
+	AreaControlDelegate* DropControl(const std::wstring& name);
 	void DropControl(ui::Control* control);
 	void RemoveSelectItem();
 	ui::Control* FindSelectedItem(ui::Box* box);

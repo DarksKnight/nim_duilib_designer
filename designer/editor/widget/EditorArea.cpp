@@ -17,13 +17,13 @@ EditorArea::~EditorArea()
 {
 }
 
-void EditorArea::DropControl(const std::wstring& name)
+AreaControlDelegate* EditorArea::DropControl(const std::wstring& name)
 {
 	POINT pt = { 0 };
 	::GetCursorPos(&pt);
 	::ScreenToClient(GetWindow()->GetHWND(), &pt);
 	ui::Box* container = FindParentBox(pt);
-	ControlHelper::GetInstance()->DropControl(container, pt, name);
+	return ControlHelper::GetInstance()->DropControl(container, pt, name);
 }
 
 void EditorArea::DropControl(ui::Control* control)

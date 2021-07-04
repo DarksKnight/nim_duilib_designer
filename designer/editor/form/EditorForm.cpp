@@ -150,11 +150,11 @@ bool EditorForm::Notify(ui::EventArgs* args)
 	return true;
 }
 
-void EditorForm::OnSelect(const std::wstring& name)
+void EditorForm::OnSelect(const ControlData& data)
 {
-	_select_name = name;
+	_select_data = data;
 	ui::Box* preBox = new ui::Box;
-	ui::CSize preSize = ControlHelper::GetInstance()->GetPreSize(_select_name);
+	ui::CSize preSize = ControlHelper::GetInstance()->GetPreSize(_select_data.name);
 	preBox->SetFixedWidth(preSize.cx);
 	preBox->SetFixedHeight(preSize.cy);
 	preBox->SetBkColor(L"bk_wnd_darkcolor");
@@ -173,7 +173,14 @@ void EditorForm::OnButtonUp()
 	if (!rect.IsPointIn(pt)) {
 		return;
 	}
-	_editor_area->DropControl(_select_name);
+	AreaControlDelegate* delegate = _editor_area->DropControl(_select_data.name);
+	ui::Box* parent = delegate->GetCtonrol()->GetParent();
+	if (parent) {
+		_editor_tree_controls->AddNode(_select_data, delegate->GetDelegateData(), (DelegateData*)parent->GetUserDataBase());
+	}
+	else {
+		_editor_tree_controls->AddNode(_select_data, delegate->GetDelegateData());
+	}
 	UiChanged();
 }
 

@@ -24,7 +24,7 @@ protected:
 private:
 	void OnInitForm();
 	bool Notify(ui::EventArgs* args);
-	void OnSelect(const std::wstring & name);
+	void OnSelect(const ControlData& data);
 	void OnButtonUp();
 	void SaveFile();
 	void DoNewFile(const std::wstring & flag);
@@ -48,7 +48,7 @@ private:
 	ui::Box* _box_editor_area;
 	ui::Box* _box_property;
 private:
-	std::wstring _select_name = L"";
+	ControlData _select_data;
 	bool _saved = false;
 	std::wstring _last_save_path = L"";
 	std::wstring _title = L"";

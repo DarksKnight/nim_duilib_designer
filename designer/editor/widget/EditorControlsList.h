@@ -5,7 +5,7 @@
 class EditorControlsList : public ui::Box, public ui::VirtualListInterface
 {
 public:
-	typedef std::function<void(const std::wstring & name)> SelectCallback;
+	typedef std::function<void(const ControlData & data)> SelectCallback;
 	typedef std::function<void()> ButtonUpCallback;
 public:
 	EditorControlsList();
