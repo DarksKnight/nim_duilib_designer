@@ -17,4 +17,5 @@ AreaLabel::AreaLabel():AreaLabelDelegate(this)
 AreaLabel::AreaLabel(const AreaLabel& label) :AreaLabelDelegate(this),ui::Label(label)
 {
 	_ext_property.push_back(PropertyData(L"text", L"文本内容", label.GetText()));
+	SetDelegateData(new DelegateData(*(DelegateData*)label.GetUserDataBase()));
 }

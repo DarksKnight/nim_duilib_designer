@@ -12,4 +12,5 @@ AreaControl::AreaControl():AreaControlDelegate(this)
 
 AreaControl::AreaControl(const AreaControl& control):AreaControlDelegate(this),ui::Control(control)
 {
+	SetDelegateData(new DelegateData(*(DelegateData*)control.GetUserDataBase()));
 }

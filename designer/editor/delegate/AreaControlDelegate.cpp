@@ -182,11 +182,6 @@ void AreaControlDelegate::Reset()
 	_selected = false;
 }
 
-void AreaControlDelegate::Remove()
-{
-	_control->GetParent()->Remove(_control);
-}
-
 bool AreaControlDelegate::OnButtonDown(ui::EventArgs* args)
 {
 	_is_button_down = true;

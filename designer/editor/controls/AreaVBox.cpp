@@ -11,4 +11,5 @@ AreaVBox::AreaVBox():AreaVBoxDelegate(this)
 
 AreaVBox::AreaVBox(const AreaVBox& box) :AreaVBoxDelegate(this), ui::VBox(box)
 {
+	SetDelegateData(new DelegateData(*(DelegateData*)box.GetUserDataBase()));
 }

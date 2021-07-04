@@ -16,12 +16,12 @@ AreaRichEdit::AreaRichEdit():AreaRichEditDelegate(this)
 
 AreaRichEdit::AreaRichEdit(const AreaRichEdit& richEdit): AreaRichEditDelegate(this)
 {
+	SetDelegateData(new DelegateData(*(DelegateData*)richEdit.GetUserDataBase()));
+	DelegateData* data = (DelegateData*)richEdit.GetUserDataBase();
 	SetEnabled(false);
-	SetName(richEdit.GetName());
-	SetFixedWidth(richEdit.GetFixedWidth());
-	SetFixedHeight(richEdit.GetFixedHeight());;
-	SetMargin(richEdit.GetMargin());
-	std::wstring text = L"请输入文字";
-	SetText(text);
-	_ext_property.push_back(PropertyData(L"text", L"请输入文字", L"请输入文字"));
+	SetFixedWidth(data->GetWidth());
+	SetFixedHeight(data->GetHeight());
+	SetMargin(data->GetMargin());
+	SetText(data->GetText());
+	_ext_property.push_back(PropertyData(L"text", L"请输入文字", data->GetText()));
 }

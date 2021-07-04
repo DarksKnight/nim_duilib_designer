@@ -11,4 +11,5 @@ AreaHBox::AreaHBox():AreaHBoxDelegate(this)
 
 AreaHBox::AreaHBox(const AreaHBox& box):AreaHBoxDelegate(this), ui::HBox(box)
 {
+	SetDelegateData(new DelegateData(*(DelegateData*)box.GetUserDataBase()));
 }

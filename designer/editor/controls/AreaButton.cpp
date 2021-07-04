@@ -16,4 +16,5 @@ AreaButton::AreaButton():AreaButtonDelegate(this)
 AreaButton::AreaButton(const AreaButton& button):AreaButtonDelegate(this),ui::Button(button)
 {
 	_ext_property.push_back(PropertyData(L"text", L"按钮内容", button.GetText()));
+	SetDelegateData(new DelegateData(*(DelegateData*)button.GetUserDataBase()));
 }

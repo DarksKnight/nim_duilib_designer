@@ -19,4 +19,5 @@ AreaCheckBox::AreaCheckBox():AreaCheckBoxDelegate(this)
 AreaCheckBox::AreaCheckBox(const AreaCheckBox& box):AreaCheckBoxDelegate(this),ui::CheckBox(box)
 {
 	_ext_property.push_back(PropertyData(L"text", L"复选框内容", box.GetText()));
+	SetDelegateData(new DelegateData(*(DelegateData*)box.GetUserDataBase()));
 }

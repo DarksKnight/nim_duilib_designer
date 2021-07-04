@@ -11,7 +11,6 @@ public:
 	void ParseElement(tinyxml2::XMLElement* element);
 	tinyxml2::XMLElement* GetElement(tinyxml2::XMLDocument* doc);
 	void Reset();
-	void Remove();
 public:
 	virtual std::wstring GetControlName() {
 		return DUI_CTR_CONTROL;
@@ -19,6 +18,9 @@ public:
 	virtual void SetDropUIMargin(POINT pt, AreaControlDelegate* target) {
 		ui::UiRect margin(pt.x - _control->GetPos().left, pt.y - _control->GetPos().top, 0, 0);
 		target->SetUIMargin(margin);
+	}
+	void Remove() {
+		_control->GetParent()->Remove(_control);
 	}
 	std::vector<PropertyData> GetBasicProperty() {
 		return _basic_property;
@@ -47,6 +49,9 @@ public:
 	}
 	DelegateData* GetDelegateData() {
 		return ((DelegateData*)_control->GetUserDataBase());
+	}
+	void SetDelegateData(DelegateData* data) {
+		_control->SetUserDataBase(data);
 	}
 protected:
 	virtual void OnParseElement(tinyxml2::XMLElement* element) {}

@@ -85,6 +85,21 @@ class DelegateData : public ui::UserDataBase
 	ATTRIBUTE_MEMBER_FUNC(std::wstring, Text, text);
 	ATTRIBUTE_MEMBER_FUNC(std::wstring, Font, font);
 	ATTRIBUTE_MEMBER_FUNC(std::wstring, Visible, visible);
+	DelegateData() {}
+	DelegateData(const DelegateData& data) {
+		this->name = data.name;
+		this->width = data.width;
+		this->height = data.height;
+		this->margin = data.margin;
+		this->bkcolor = data.bkcolor;
+		this->valign = data.valign;
+		this->halign = data.halign;
+		this->bkimage = data.bkimage;
+		this->className = data.className;
+		this->text = data.text;
+		this->font = data.font;
+		this->visible = data.visible;
+	}
 private:
 	std::wstring name = L"";
 	int width = -3;

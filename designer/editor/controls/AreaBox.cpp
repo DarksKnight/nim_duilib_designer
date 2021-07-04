@@ -11,5 +11,5 @@ AreaBox::AreaBox():AreaBoxDelegate(this)
 
 AreaBox::AreaBox(const AreaBox& box):AreaBoxDelegate(this),ui::Box(box)
 {
-
+	SetDelegateData(new DelegateData(*(DelegateData*)box.GetUserDataBase()));
 }
