@@ -1,12 +1,15 @@
 ﻿#include "../stdafx.h"
 #include "AreaControlDelegate.h"
+#include "../internal/ControlHelper.h"
 
 AreaControlDelegate::AreaControlDelegate(ui::Control* control):_control(control)
 {
 	_control->AttachButtonDown(nbase::Bind(&AreaControlDelegate::OnButtonDown, this, std::placeholders::_1));
 	_control->AttachButtonUp(nbase::Bind(&AreaControlDelegate::OnButtonUp, this, std::placeholders::_1));
 	_control->AttachAllEvents(nbase::Bind(&AreaControlDelegate::Notify, this, std::placeholders::_1));
-	_control->SetUserDataBase(new DelegateData);
+	DelegateData* data = new DelegateData;
+	data->SetId(ControlHelper::GetInstance()->CreateId());
+	_control->SetUserDataBase(data);
 	_basic_property.push_back(PropertyData(L"name", L"名称"));
 	_basic_property.push_back(PropertyData(L"width", L"宽度"));
 	_basic_property.push_back(PropertyData(L"height", L"高度"));

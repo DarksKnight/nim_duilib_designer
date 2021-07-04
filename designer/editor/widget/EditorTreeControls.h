@@ -24,7 +24,7 @@ public:
 	EditorTreeControls();
 	~EditorTreeControls();
 public:
-	void AddNode(const std::wstring & name);
+	void AddNode(const ControlData & ctrlData, DelegateData* targetData, DelegateData* parentData = NULL);
 	void RemoveNode(const std::wstring& name);
 private:
 	void Update();

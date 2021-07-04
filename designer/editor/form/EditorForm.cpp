@@ -171,7 +171,6 @@ void EditorForm::OnButtonUp()
 		return;
 	}
 	_editor_area->DropControl(_select_name);
-	_editor_tree_controls->AddNode(_select_name);
 	UiChanged();
 }
 

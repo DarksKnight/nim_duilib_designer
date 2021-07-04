@@ -25,27 +25,26 @@ EditorTreeControls::~EditorTreeControls()
 {
 }
 
-void EditorTreeControls::AddNode(const std::wstring& name)
+void EditorTreeControls::AddNode(const ControlData& ctrlData, DelegateData* targetData, DelegateData* parentData)
 {
 	auto doc = _tree->GetDoc();
 	auto item = std::make_shared<ControlChunk>();
 	item->SetTreeComponent(_tree);
-	item->name = name;
-	item->desc = name;
-	item->SetItemID("111");
-	doc->AddItem(item);
-	auto itema = std::make_shared<ControlChunk>();
-	itema->SetTreeComponent(_tree);
-	itema->name = name;
-	itema->desc = L"bbbbbb";
-	itema->SetItemID("222");
-	doc->AddItem(itema, item);
-	auto itemb = std::make_shared<ControlChunk>();
-	itemb->SetTreeComponent(_tree);
-	itemb->name = name;
-	itemb->desc = L"cccc";
-	itemb->SetItemID("333");
-	doc->AddItem(itemb, itema);
+	item->name = ctrlData.name;
+	item->desc = ctrlData.desc;
+	item->SetItemID(nbase::IntToString(targetData->GetId()));
+	if (!parentData) {
+		doc->AddItem(item);
+	}
+	else {
+		auto parentItem = doc->GetItem(nbase::IntToString(parentData->GetId()));
+		if (parentItem) {
+			doc->AddItem(item, parentItem);
+		}
+		else {
+			doc->AddItem(item);
+		}
+	}
 	_tree->Update(true);
 }
 

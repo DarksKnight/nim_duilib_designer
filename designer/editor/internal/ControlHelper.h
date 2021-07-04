@@ -20,6 +20,9 @@ public:
 	void SetContainerBox(ui::Box* box) {
 		_container_box = box;
 	}
+	int CreateId() {
+		return _id++;
+	}
 private:
 	ui::Box* _container_box = NULL;
 private:
@@ -32,4 +35,5 @@ private:
 	int _richedit_index = 0;
 	int _button_index = 0;
 	int _checkbox_index = 0;
+	int _id = 0;
 };

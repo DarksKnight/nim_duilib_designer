@@ -76,6 +76,7 @@ struct PropertyData
 
 class DelegateData : public ui::UserDataBase
 {
+	ATTRIBUTE_MEMBER_FUNC(int, Id, id);
 	ATTRIBUTE_MEMBER_FUNC(std::wstring, Name, name);
 	ATTRIBUTE_MEMBER_FUNC(int, Width, width);
 	ATTRIBUTE_MEMBER_FUNC(int, Height, height);
@@ -90,6 +91,7 @@ class DelegateData : public ui::UserDataBase
 	ATTRIBUTE_MEMBER_FUNC(std::wstring, Visible, visible);
 	DelegateData() {}
 	DelegateData(const DelegateData& data) {
+		this->id = data.id;
 		this->name = data.name;
 		this->width = data.width;
 		this->height = data.height;
@@ -104,6 +106,7 @@ class DelegateData : public ui::UserDataBase
 		this->visible = data.visible;
 	}
 private:
+	int id = 0;
 	std::wstring name = L"";
 	int width = -3;
 	int height = -3;
