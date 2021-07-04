@@ -3,6 +3,7 @@
 #include "../widget/EditorArea.h"
 #include "../widget/EditorToolbar.h"
 #include "../widget/EditorProperty.h"
+#include "../widget/EditorTreeControls.h"
 #include "EditorCreateForm.h"
 
 class EditorForm : public nim_comp::WindowEx
@@ -39,10 +40,12 @@ private:
 	EditorControlsList* _controls_list;
 	EditorArea* _editor_area;
 	EditorProperty* _editor_property;
+	EditorTreeControls* _editor_tree_controls;
 	ui::Label* _lb_title;
 	ui::Box* _box_container;
 	ui::Box* _box_drag_pre;
 	ui::Box* _box_editor_area;
+	ui::Box* _box_property;
 private:
 	std::wstring _select_name = L"";
 	bool _saved = false;

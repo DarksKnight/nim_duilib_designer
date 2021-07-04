@@ -26,6 +26,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 void MainThread::Init()
 {
 	nbase::ThreadManager::RegisterThread(kThreadUI);
+	nbase::ThreadManager::RegisterThread(kThreadGlobalMisc);
 
 	// 获取资源路径，初始化全局参数
 	std::wstring theme_dir = nbase::win32::GetCurrentModuleDirectory();

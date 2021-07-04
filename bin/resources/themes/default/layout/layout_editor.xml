@@ -17,7 +17,10 @@
       <HBox>
         <EditorControlsList name="ecl" bordersize="1" bordercolor="dark_gray" visible="false"/>
         <Box name="box_editor_area" />
-        <EditorProperty name="ep" visible="false"/>
+        <VBox name="box_property" visible="false" bordersize="1" bordercolor="dark_gray">
+          <EditorTreeControls name="etc" height="200" bottombordersize="1" bordercolor="dark_gray" padding="1,1,1,1"/>
+          <EditorProperty name="ep"/>
+        </VBox>
       </HBox>
     </VBox>
     <Box name="box_drag_pre" width="auto" height="auto" visible="false">

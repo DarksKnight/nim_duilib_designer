@@ -47,8 +47,10 @@ void EditorForm::InitWindow()
 	_toolbar->SetNewFileCallback(nbase::Bind(&EditorForm::OpenCreateForm, this));
 	_toolbar->SetOpenFileCallback(nbase::Bind(&EditorForm::OnOpenFile, this));
 	_box_container = (ui::Box*)FindControl(L"box_container");
+	_box_property = (ui::Box*)FindControl(L"box_property");
 	_controls_list = (EditorControlsList*)FindControl(L"ecl");
 	_editor_property = (EditorProperty*)FindControl(L"ep");
+	_editor_tree_controls = (EditorTreeControls*)FindControl(L"etc");
 	_box_drag_pre = (ui::Box*)FindControl(L"box_drag_pre");
 	_box_editor_area = (ui::Box*)FindControl(L"box_editor_area");
 	_controls_list->SetSelectCallback(nbase::Bind(&EditorForm::OnSelect, this ,std::placeholders::_1));
@@ -121,7 +123,7 @@ void EditorForm::OnInitForm()
 	SendMessage(WM_SYSCOMMAND, SC_MAXIMIZE, 0);*/
 	int width = GetPos().GetWidth();
 	_controls_list->SetFixedWidth(width / 7);
-	_editor_property->SetFixedWidth(width / 6);
+	_box_property->SetFixedWidth(width / 6);
 	std::wstring value = SettingsHelper::GetInstance()->Get(CONFIG_TAG_CREATE, CONFIG_KEY_CREATE_SHOW, L"1");
 	if (value == L"1") {
 		OpenCreateForm();
@@ -169,6 +171,7 @@ void EditorForm::OnButtonUp()
 		return;
 	}
 	_editor_area->DropControl(_select_name);
+	_editor_tree_controls->AddNode(_select_name);
 	UiChanged();
 }
 
@@ -234,7 +237,7 @@ void EditorForm::DoOpenFile(const std::wstring& path)
 	_last_save_path = path;
 	_toolbar->SetEnabled(true);
 	_controls_list->SetVisible(true);
-	_editor_property->SetVisible(true);
+	_box_property->SetVisible(true);
 	_editor_area = new EditorArea;
 	_box_editor_area->Add(_editor_area);
 	ControlHelper::GetInstance()->SetContainerBox(_editor_area);
@@ -258,7 +261,7 @@ void EditorForm::OnSaveSelectPathCallback(BOOL ret, std::wstring path)
 	_last_save_path = path;
 	_toolbar->SetEnabled(true);
 	_controls_list->SetVisible(true);
-	_editor_property->SetVisible(true);
+	_box_property->SetVisible(true);
 	std::wstring fileName;
 	nbase::FilePathApartFileName(_last_save_path, fileName);
 	_title = ui::MutiLanSupport::GetInstance()->GetStringViaID(L"STRID_EDITORFORM_TITLE") + L" - " + fileName;

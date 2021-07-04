@@ -16,7 +16,8 @@
 
 enum ThreadId
 {
-	kThreadUI
+	kThreadUI,
+	kThreadGlobalMisc
 };
 
 enum ControlType
@@ -51,6 +52,8 @@ struct ControlData
 {
 	std::wstring name = L"";
 	std::wstring desc = L"";
+
+	ControlData(){}
 
 	ControlData(std::wstring name, std::wstring desc) {
 		this->name = name;
