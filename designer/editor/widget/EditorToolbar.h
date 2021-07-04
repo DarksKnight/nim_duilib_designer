@@ -20,6 +20,7 @@ private:
 	bool OnMenuSaveFile(ui::EventArgs* args);
 	bool OnMenuNewFile(ui::EventArgs* args);
 	bool OnMenuOpenFile(ui::EventArgs* args);
+	bool OnMenuSettings(ui::EventArgs* args);
 private:
 	ui::Button* _btn_tool_file;
 	nim_comp::CMenuWnd* _tool_file_menu;

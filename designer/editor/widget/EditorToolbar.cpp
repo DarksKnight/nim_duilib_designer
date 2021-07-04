@@ -27,6 +27,8 @@ bool EditorToolbar::OnClickFile(ui::EventArgs* args)
 	menuNewFile->AttachSelect(nbase::Bind(&EditorToolbar::OnMenuNewFile, this, std::placeholders::_1));
 	nim_comp::CMenuElementUI* menuOpenFile = (nim_comp::CMenuElementUI*)toolFileMenu->FindControl(L"menu_open_file");
 	menuOpenFile->AttachSelect(nbase::Bind(&EditorToolbar::OnMenuOpenFile, this, std::placeholders::_1));
+	nim_comp::CMenuElementUI* menuSettings = (nim_comp::CMenuElementUI*)toolFileMenu->FindControl(L"menu_settings");
+	menuSettings->AttachSelect(nbase::Bind(&EditorToolbar::OnMenuSettings, this, std::placeholders::_1));
 	return true;
 }
 
@@ -51,5 +53,10 @@ bool EditorToolbar::OnMenuOpenFile(ui::EventArgs* args)
 	if (_open_file_callback) {
 		_open_file_callback();
 	}
+	return true;
+}
+
+bool EditorToolbar::OnMenuSettings(ui::EventArgs* args)
+{
 	return true;
 }
