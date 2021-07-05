@@ -33,12 +33,7 @@ bool XmlHelper::ConvertXml(EditorArea* area, const std::wstring& path)
 		windowElement->InsertEndChild(element);
 	}
 	tinyxml2::XMLError result = doc.SaveFile(nbase::UTF16ToUTF8(path).c_str());
-	if (result == tinyxml2::XML_SUCCESS) {
-		return true;
-	}
-	else {
-		return false;
-	}
+	return result == tinyxml2::XML_SUCCESS;
 }
 
 bool XmlHelper::ParseXml(ui::Box* box, const std::wstring& path, ParseControlCallback callback)
@@ -51,7 +46,7 @@ bool XmlHelper::ParseXml(ui::Box* box, const std::wstring& path, ParseControlCal
 	box->RemoveAll();
 	AreaWindow* areaWindow = new AreaWindow;
 	box->Add((AreaWindow*)areaWindow);
-	areaWindow->SetControlData(ControlHelper::GetInstance()->GetControlList()[0]);
+	areaWindow->SetControlData(ControlData(DUI_CTR_BOX, L"窗口"));
 	areaWindow->ParseElement(doc.RootElement());
 	std::string sizeAttr = doc.RootElement()->Attribute("size");
 	std::vector<std::string> sizeVector = ConvertVector(nim_comp::StringHelper::Split(sizeAttr, ","));

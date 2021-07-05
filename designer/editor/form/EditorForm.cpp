@@ -295,7 +295,13 @@ void EditorForm::OnOpenSelectPathCallback(BOOL ret, std::wstring path)
 
 void EditorForm::OnParseControl(AreaControlDelegate* delegate)
 {
-
+	ui::Box* box = delegate->GetCtonrol()->GetParent();
+	if (box) {
+		_editor_tree_controls->AddNode(delegate->GetControlData(), delegate->GetDelegateData(), (DelegateData*)box->GetUserDataBase());
+	}
+	else {
+		_editor_tree_controls->AddNode(delegate->GetControlData(), delegate->GetDelegateData());
+	}
 }
 
 void EditorForm::OpenCreateForm()
