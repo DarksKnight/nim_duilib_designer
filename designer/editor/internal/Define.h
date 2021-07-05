@@ -26,6 +26,11 @@ enum ControlType
 	HBox
 }; 
 
+enum PropertyInputType
+{
+	RICHEDIT, COMBO
+};
+
 enum CustomEventType
 {
 	UI_CHANGED = 0,
@@ -66,11 +71,21 @@ struct PropertyData
 	std::wstring name = L"";
 	std::wstring desc = L"";
 	std::wstring defaultValue = L"";
+	PropertyInputType inputType = RICHEDIT;
+	std::vector<std::wstring> inputDatas;
 
 	PropertyData(std::wstring name, std::wstring desc, std::wstring defaultValue = L"") {
 		this->name = name;
 		this->desc = desc;
 		this->defaultValue = defaultValue;
+	}
+
+	PropertyData(std::wstring name, std::wstring desc, PropertyInputType type, std::vector<std::wstring> inputDatas, std::wstring defaultValue = L"") {
+		this->name = name;
+		this->desc = desc;
+		this->defaultValue = defaultValue;
+		this->inputType = type;
+		this->inputDatas = inputDatas;
 	}
 };
 

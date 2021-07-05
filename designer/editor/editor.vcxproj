@@ -358,7 +358,7 @@
     <ClInclude Include="form\EditorForm.h" />
     <ClInclude Include="internal\ControlHelper.h" />
     <ClInclude Include="internal\CopyHelper.h" />
-    <ClInclude Include="internal\Global.h" />
+    <ClInclude Include="internal\Define.h" />
     <ClInclude Include="internal\PropertyHelper.h" />
     <ClInclude Include="internal\SettingsHelper.h" />
     <ClInclude Include="internal\XmlHelper.h" />

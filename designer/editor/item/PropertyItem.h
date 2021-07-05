@@ -7,15 +7,11 @@ public:
 	~PropertyItem();
 public:
 	void InitCtrls();
+	void SetValue(const std::wstring& value);
+	std::wstring GetValue();
 public:
 	std::wstring GetDataName() {
-		return _name;
-	}
-	void SetValue(const std::wstring& value) {
-		_re_value->SetText(value);
-	}
-	std::wstring GetValue() {
-		return _re_value->GetText();
+		return _data.name;
 	}
 private:
 	bool OnKillFocus(ui::EventArgs* args);
@@ -23,8 +19,10 @@ private:
 private:
 	void ChangeProperty();
 private:
+	ui::TabBox* _tb_input;
+	ui::Combo* _combo_value;
 	ui::Label* _lb_desc;
 	ui::RichEdit* _re_value;
 private:
-	std::wstring _name = L"";
+	PropertyData _data;
 };

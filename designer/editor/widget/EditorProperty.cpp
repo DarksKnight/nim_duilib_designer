@@ -38,6 +38,7 @@ void EditorProperty::LoadProperty(const std::wstring& name, AreaControlDelegate*
 void EditorProperty::LoadControlProperty(ui::Control* control)
 {
 	DelegateData* data = (DelegateData*)control->GetUserDataBase();
+	SetProperty(L"class", data->GetClass());
 	SetProperty(L"name", data->GetName());
 	int width = data->GetWidth();
 	std::wstring widthValue = L"";
@@ -65,12 +66,11 @@ void EditorProperty::LoadControlProperty(ui::Control* control)
 	SetProperty(L"height", heightValue);
 	ui::UiRect margin = data->GetMargin();
 	SetProperty(L"margin", nbase::StringPrintf(L"%d,%d,%d,%d", margin.left, margin.top, margin.right, margin.bottom));
-	ui::Label* label = dynamic_cast<ui::Label*>(control);
-	if (label) SetProperty(L"text", data->GetText());
-	ui::RichEdit* richEdit = dynamic_cast<ui::RichEdit*>(control);
-	if (richEdit) SetProperty(L"text", data->GetText());
-	ui::Button* btn = dynamic_cast<ui::Button*>(control);
-	if (btn) SetProperty(L"text", data->GetText());
+	SetProperty(L"bkcolor", data->GetBkcolor());
+	SetProperty(L"bkimage", data->GetBkImage());
+	SetProperty(L"valign", data->GetValign());
+	SetProperty(L"halign", data->GetHalign());
+	SetProperty(L"text", data->GetText());
 }
 
 void EditorProperty::SetProperty(const std::wstring& name, const std::wstring& value)

@@ -63,7 +63,7 @@
     <ClInclude Include="widget\EditorControlsList.h">
       <Filter>widget</Filter>
     </ClInclude>
-    <ClInclude Include="internal\Global.h">
+    <ClInclude Include="internal\Define.h">
       <Filter>internal</Filter>
     </ClInclude>
     <ClInclude Include="widget\EditorProperty.h">

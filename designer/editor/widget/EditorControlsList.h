@@ -1,5 +1,4 @@
 ﻿#pragma once
-#include "../internal/Global.h"
 #include "../internal/ControlHelper.h"
 
 class EditorControlsList : public ui::Box, public ui::VirtualListInterface

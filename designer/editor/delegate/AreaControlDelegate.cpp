@@ -10,10 +10,23 @@ AreaControlDelegate::AreaControlDelegate(ui::Control* control):_control(control)
 	DelegateData* data = new DelegateData;
 	data->SetId(ControlHelper::GetInstance()->CreateId());
 	_control->SetUserDataBase(data);
+	_basic_property.push_back(PropertyData(L"class", L"样式类型"));
 	_basic_property.push_back(PropertyData(L"name", L"名称"));
 	_basic_property.push_back(PropertyData(L"width", L"宽度"));
 	_basic_property.push_back(PropertyData(L"height", L"高度"));
 	_basic_property.push_back(PropertyData(L"margin", L"外边距"));
+	_basic_property.push_back(PropertyData(L"bkcolor", L"背景颜色"));
+	std::vector<std::wstring> valignDatas;
+	valignDatas.push_back(L"top");
+	valignDatas.push_back(L"center");
+	valignDatas.push_back(L"bottom");
+	_basic_property.push_back(PropertyData(L"valign", L"纵向位置", COMBO, valignDatas));
+	std::vector<std::wstring> halignDatas;
+	halignDatas.push_back(L"left");
+	halignDatas.push_back(L"center");
+	halignDatas.push_back(L"right");
+	_basic_property.push_back(PropertyData(L"halign", L"横向位置", COMBO, halignDatas));
+	_basic_property.push_back(PropertyData(L"bkimage", L"背景图片"));
 }
 
 AreaControlDelegate::~AreaControlDelegate()
@@ -116,6 +129,40 @@ void AreaControlDelegate::ParseElement(tinyxml2::XMLElement* element)
 	if (attr = element->FindAttribute("class")) {
 		_control->SetClass(nbase::UTF8ToUTF16(attr->Value()));
 		data->SetClass(nbase::UTF8ToUTF16(attr->Value()));
+	}
+	if (attr = element->FindAttribute("bkcolor")) {
+		_control->SetBkColor(nbase::UTF8ToUTF16(attr->Value()));
+		data->SetBkcolor(nbase::UTF8ToUTF16(attr->Value()));
+	}
+	if (attr = element->FindAttribute("bkimage")) {
+		_control->SetBkImage(nbase::UTF8ToUTF16(attr->Value()));
+		data->SetBkImage(nbase::UTF8ToUTF16(attr->Value()));
+	}
+	if (attr = element->FindAttribute("valign")) {
+		data->SetValign(nbase::UTF8ToUTF16(attr->Value()));
+		std::wstring valign = nbase::UTF8ToUTF16(attr->Value());
+		if (valign == L"top") {
+			_control->SetVerAlignType(ui::kVerAlignTop);
+		}
+		else if (valign == L"center") {
+			_control->SetVerAlignType(ui::kVerAlignCenter);
+		}
+		else {
+			_control->SetVerAlignType(ui::kVerAlignBottom);
+		}
+	}
+	if (attr = element->FindAttribute("halign")) {
+		data->SetHalign(nbase::UTF8ToUTF16(attr->Value()));
+		std::wstring halign = nbase::UTF8ToUTF16(attr->Value());
+		if (halign == L"left") {
+			_control->SetHorAlignType(ui::kHorAlignLeft);
+		}
+		else if (halign == L"center") {
+			_control->SetHorAlignType(ui::kHorAlignCenter);
+		}
+		else {
+			_control->SetHorAlignType(ui::kHorAlignRight);
+		}
 	}
 	OnParseElement(element);
 }
