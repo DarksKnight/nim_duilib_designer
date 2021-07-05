@@ -122,7 +122,7 @@ void AreaControlDelegate::ParseElement(tinyxml2::XMLElement* element)
 
 tinyxml2::XMLElement* AreaControlDelegate::GetElement(tinyxml2::XMLDocument* doc)
 {
-	tinyxml2::XMLElement* element = doc->NewElement(nbase::UTF16ToUTF8(GetControlName()).c_str());
+	tinyxml2::XMLElement* element = doc->NewElement(nbase::UTF16ToUTF8(_control_data.name).c_str());
 	DelegateData* data = ((DelegateData*)_control->GetUserDataBase());
 	if (!data->GetClass().empty()) {
 		element->SetAttribute("class", nbase::UTF16ToUTF8(data->GetClass()).c_str());

@@ -12,9 +12,6 @@ public:
 	tinyxml2::XMLElement* GetElement(tinyxml2::XMLDocument* doc);
 	void Reset();
 public:
-	virtual std::wstring GetControlName() {
-		return DUI_CTR_CONTROL;
-	}
 	virtual void SetDropUIMargin(POINT pt, AreaControlDelegate* target) {
 		ui::UiRect margin(pt.x - _control->GetPos().left, pt.y - _control->GetPos().top, 0, 0);
 		target->SetUIMargin(margin);

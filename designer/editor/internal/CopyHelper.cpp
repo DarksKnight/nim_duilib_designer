@@ -72,10 +72,10 @@ void CopyHelper::Paste()
 	if (!_copy_ctrl_parent || !_copy_ctrl) {
 		return;
 	}
-	std::wstring name = ControlHelper::GetInstance()->GetName(_copy_ctrl->GetControlName());
+	std::wstring name = ControlHelper::GetInstance()->GetName(_copy_ctrl->GetControlData().name);
 	_copy_ctrl->GetDelegateData()->SetName(name);
 	_copy_ctrl->SetUIMargin(ui::UiRect());
-	std::wstring ctrlName = _copy_ctrl->GetControlName();
+	std::wstring ctrlName = _copy_ctrl->GetControlData().name;
 	SIZE_T cchLen = ctrlName.length();
 	switch (cchLen) {
 	case 3:

@@ -94,50 +94,56 @@ AreaControlDelegate* ControlHelper::DropControl(ui::Box* box, POINT pt, const st
 	case 3:
 		if (name == DUI_CTR_BOX) {
 			delegate = new AreaBox;
+			delegate->SetControlData(_datas[0]);
 			box->Add((AreaBox*)delegate);
 		}
 		break;
 	case 4:
 		if (name == DUI_CTR_HBOX) {
 			delegate = new AreaHBox;
+			delegate->SetControlData(_datas[1]);
 			box->Add((AreaHBox*)delegate);
 		}
 		else if (name == DUI_CTR_VBOX) {
 			delegate = new AreaVBox;
+			delegate->SetControlData(_datas[2]);
 			box->Add((AreaVBox*)delegate);
 		}
 		break;
 	case 5:
 		if (name == DUI_CTR_LABEL) {
 			delegate = new AreaLabel;
+			delegate->SetControlData(_datas[4]);
 			box->Add((AreaLabel*)delegate);
 		}
 		break;
 	case 6:
 		if (name == DUI_CTR_BUTTON) {
 			delegate = new AreaButton;
+			delegate->SetControlData(_datas[6]);
 			box->Add((AreaButton*)delegate);
 		}
 		break;
 	case 7:
 		if (name == DUI_CTR_CONTROL) {
 			delegate = new AreaControl;
+			delegate->SetControlData(_datas[3]);
 			box->Add((AreaControl*)delegate);
 		}
 		break;
 	case 8:
 		if (name == DUI_CTR_RICHEDIT) {
 			delegate = new AreaRichEdit;
+			delegate->SetControlData(_datas[5]);
 			box->Add((AreaRichEdit*)delegate);
 		}
 		else if (name == DUI_CTR_CHECKBOX) {
 			delegate = new AreaCheckBox;
+			delegate->SetControlData(_datas[7]);
 			box->Add((AreaCheckBox*)delegate);
 		}
 		break;
 	default:
-		delegate = new AreaBox;
-		box->Add((AreaBox*)delegate);
 		break;
 	}
 	std::wstring controlName = GetName(name);
@@ -159,50 +165,56 @@ AreaControlDelegate* ControlHelper::DropControl(ui::Box* box, const std::wstring
 	case 3:
 		if (name == DUI_CTR_BOX) {
 			delegate = new AreaBox;
+			delegate->SetControlData(_datas[0]);
 			box->Add((AreaBox*)delegate);
 		}
 		break;
 	case 4:
 		if (name == DUI_CTR_HBOX) {
 			delegate = new AreaHBox;
+			delegate->SetControlData(_datas[1]);
 			box->Add((AreaHBox*)delegate);
 		}
 		else if (name == DUI_CTR_VBOX) {
 			delegate = new AreaVBox;
+			delegate->SetControlData(_datas[2]);
 			box->Add((AreaVBox*)delegate);
 		}
 		break;
 	case 5:
 		if (name == DUI_CTR_LABEL) {
 			delegate = new AreaLabel;
+			delegate->SetControlData(_datas[4]);
 			box->Add((AreaLabel*)delegate);
 		}
 		break;
 	case 6:
 		if (name == DUI_CTR_BUTTON) {
 			delegate = new AreaButton;
+			delegate->SetControlData(_datas[6]);
 			box->Add((AreaButton*)delegate);
 		}
 		break;
 	case 7:
 		if (name == DUI_CTR_CONTROL) {
 			delegate = new AreaControl;
+			delegate->SetControlData(_datas[3]);
 			box->Add((AreaControl*)delegate);
 		}
 		break;
 	case 8:
 		if (name == DUI_CTR_RICHEDIT) {
 			delegate = new AreaRichEdit;
+			delegate->SetControlData(_datas[5]);
 			box->Add((AreaRichEdit*)delegate);
 		}
 		else if (name == DUI_CTR_CHECKBOX) {
 			delegate = new AreaCheckBox;
+			delegate->SetControlData(_datas[7]);
 			box->Add((AreaCheckBox*)delegate);
 		}
 		break;
 	default:
-		delegate = new AreaBox;
-		box->Add((AreaBox*)delegate);
 		break;
 	}
 	return delegate;

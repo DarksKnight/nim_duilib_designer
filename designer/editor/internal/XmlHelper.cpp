@@ -51,6 +51,7 @@ bool XmlHelper::ParseXml(ui::Box* box, const std::wstring& path, ParseControlCal
 	box->RemoveAll();
 	AreaWindow* areaWindow = new AreaWindow;
 	box->Add((AreaWindow*)areaWindow);
+	areaWindow->SetControlData(ControlHelper::GetInstance()->GetControlList()[0]);
 	areaWindow->ParseElement(doc.RootElement());
 	std::string sizeAttr = doc.RootElement()->Attribute("size");
 	std::vector<std::string> sizeVector = ConvertVector(nim_comp::StringHelper::Split(sizeAttr, ","));

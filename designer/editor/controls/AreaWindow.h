@@ -11,7 +11,4 @@ protected:
 		element->DeleteAttribute("width");
 		element->DeleteAttribute("height");
 	}
-	std::wstring GetControlName() {
-		return L"Box";
-	}
 };
