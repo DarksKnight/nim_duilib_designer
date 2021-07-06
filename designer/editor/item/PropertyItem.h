@@ -16,13 +16,16 @@ public:
 private:
 	bool OnKillFocus(ui::EventArgs* args);
 	bool OnTapReturn(ui::EventArgs* args);
+	bool OnComboClick(ui::EventArgs* args);
+	bool OnComboItemClick(ui::EventArgs* args);
 private:
 	void ChangeProperty();
 private:
 	ui::TabBox* _tb_input;
-	ui::Combo* _combo_value;
+	ui::Label* _combo_value;
 	ui::Label* _lb_desc;
 	ui::RichEdit* _re_value;
+	nim_comp::CMenuWnd* _combo_menu;
 private:
 	PropertyData _data;
 };

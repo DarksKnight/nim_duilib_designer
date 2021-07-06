@@ -21,14 +21,8 @@ PropertyItem::PropertyItem(PropertyData data):_data(data)
 	case COMBO:
 	{
 		_tb_input->SelectItem(1);
-		_combo_value = (ui::Combo*)FindSubControl(L"combo_value");
-		for (auto it = data.inputDatas.begin(); it != data.inputDatas.end(); ++it) {
-			ui::ListContainerElement* label = new ui::ListContainerElement;
-			label->SetText(*it);
-			label->SetTextPadding(ui::UiRect(5, 0, 0, 0));
-			_combo_value->Add(label);
-		}
-		_combo_value->SelectItem(0);
+		_combo_value = (ui::Label*)FindSubControl(L"combo_value");
+		_combo_value->AttachButtonDown(nbase::Bind(&PropertyItem::OnComboClick, this, std::placeholders::_1));
 		break;
 	}
 	default:
@@ -60,14 +54,8 @@ void PropertyItem::SetValue(const std::wstring& value)
 		_re_value->SetText(value);
 		break;
 	case 1:
-	{
-		for (int i = 0; i < _data.inputDatas.size(); i++) {
-			if (_data.inputDatas[i] == value) {
-				_combo_value->SelectItem(i);
-			}
-		}
+		_combo_value->SetText(value);
 		break;
-	}
 	default:
 		break;
 	}
@@ -96,6 +84,45 @@ bool PropertyItem::OnKillFocus(ui::EventArgs* args)
 bool PropertyItem::OnTapReturn(ui::EventArgs* args)
 {
 	ChangeProperty();
+	return true;
+}
+
+bool PropertyItem::OnComboClick(ui::EventArgs* args)
+{
+	if (_combo_menu) {
+		_combo_menu->Close();
+		_combo_menu = NULL;
+		return true;
+	}
+	ui::UiRect rect = args->pSender->GetPos();
+	ui::CPoint point(rect.left, rect.bottom);
+	::ClientToScreen(GetWindow()->GetHWND(), &point);
+	_combo_menu = new nim_comp::CMenuWnd(GetWindow()->GetHWND());
+	ui::STRINGorID xml(L"../layout/menu_property_combo.xml");
+	_combo_menu->Init(xml, _T("xml"), point);
+	ui::ListBox* listMenu = (ui::ListBox*)_combo_menu->FindControl(L"listMenu");
+	listMenu->AttachSelect(nbase::Bind(&PropertyItem::OnComboItemClick, this, std::placeholders::_1));
+	for (auto it = _data.inputDatas.begin(); it != _data.inputDatas.end(); ++it) {
+		ui::MenuElement* element = new ui::MenuElement;
+		element->SetMouseChildEnabled(false);
+		element->SetClass(L"menu_element");
+		element->SetFixedWidth(args->pSender->GetWidth());
+		element->SetFixedHeight(25);
+		ui::Label* label = new ui::Label;
+		label->SetFixedHeight(DUI_LENGTH_AUTO);
+		label->SetVerAlignType(ui::kVerAlignCenter);
+		label->SetText(*it);
+		element->Add(label);
+		listMenu->Add(element);
+	}
+	return true;
+}
+
+bool PropertyItem::OnComboItemClick(ui::EventArgs* args)
+{
+	_combo_value->SetText(_data.inputDatas[args->wParam]);
+	_combo_menu->Close();
+	_combo_menu = NULL;
 	return true;
 }
 

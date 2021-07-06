@@ -4,9 +4,9 @@
     <HBox>
       <Label name="lb_desc" width="100" height="20" valign="center" margin="10,0,0,0"/>
       <Control width="1" bkcolor="bk_wnd_darkcolor"/>
-      <TabBox name="tb_input" height="20" valign="center" padding="5,0,10,0">
+      <TabBox name="tb_input" height="24" valign="center" padding="5,0,10,0">
         <RichEdit name="re_value" multiline="false" wantreturnmsg="true"/>
-        <Combo class="combo" name="combo_value" bkcolor="white" />
+        <Label class="combo" name="combo_value" bkcolor="white" width="stretch" align="vcenter"/>
       </TabBox>
     </HBox>
   </ListContainerElement>
