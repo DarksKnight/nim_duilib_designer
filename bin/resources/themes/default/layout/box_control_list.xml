@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Window>
+  <Box>
+    <VBox>
+      <RichEdit name="re_search" promptmode="true" promptcolor="dark_gray" prompttextid="STRID_CONTROL_LIST_SEARCH_PROMP" padding="5,5,5,5" height="30" bottombordersize="1" bordercolor="dark_gray"/>
+      <VirtualListBox name="list_control"/>
+    </VBox>
+  </Box>
+</Window>

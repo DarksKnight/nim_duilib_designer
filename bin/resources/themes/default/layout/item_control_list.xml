@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Window>
+  <ListContainerElement class="listitem" height="30" margin="1,1,1,1" mousechild="false">
+    <Label name="lb_desc" width="auto" height="auto" valign="center" margin="12,0,0,0"/>
+  </ListContainerElement>
+</Window>
