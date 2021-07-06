@@ -16,6 +16,13 @@ public:
 	bool ConvertXml(EditorArea* area, const std::wstring & path);
 	bool ParseXml(ui::Box* box, const std::wstring & path, ParseControlCallback callback = NULL);
 	bool ParseXmlPreview(ui::Box* box, const std::wstring& path);
+public:
+	void SetSavedXmlPath(const std::wstring & path) {
+		_saved_path = path;
+	}
+	std::wstring GetSavedXmlPath() {
+		return _saved_path;
+	}
 private:
 	tinyxml2::XMLElement* GetElement(tinyxml2::XMLDocument* doc, ui::Control* control);
 	void ParseElement(tinyxml2::XMLElement* element, ui::Box* rootBox, ParseControlCallback callback = NULL);
@@ -29,5 +36,6 @@ private:
 	}
 private:
 	ParseControlCallback _callback;
+	std::wstring _saved_path;
 };
 

@@ -232,7 +232,6 @@ void EditorForm::OnOpenFile()
 	std::map<LPCTSTR, LPCTSTR> filters;
 	filters[L"File Format(*.xml)"] = L"*.xml";
 	fileDlg->SetFilter(filters);
-	fileDlg->SetFileName(L"open");
 	fileDlg->SetDefExt(L".xml");
 	fileDlg->SetParentWnd(GetHWND());
 	nim_comp::CFileDialogEx::FileDialogCallback2 callback2 = nbase::Bind(&EditorForm::OnOpenSelectPathCallback, this, std::placeholders::_1, std::placeholders::_2);
@@ -244,6 +243,7 @@ void EditorForm::DoOpenFile(const std::wstring& path)
 	_box_editor_area->RemoveAll();
 	_saved = true;
 	_last_save_path = path;
+	XmlHelper::GetInstance()->SetSavedXmlPath(_last_save_path);
 	_toolbar->SetEnabled(true);
 	_controls_list->SetVisible(true);
 	_box_property->SetVisible(true);
@@ -268,6 +268,7 @@ void EditorForm::OnSaveSelectPathCallback(BOOL ret, std::wstring path)
 		return;
 	}
 	_last_save_path = path;
+	XmlHelper::GetInstance()->SetSavedXmlPath(_last_save_path);
 	_toolbar->SetEnabled(true);
 	_controls_list->SetVisible(true);
 	_box_property->SetVisible(true);
@@ -287,7 +288,7 @@ void EditorForm::OnSaveSelectPathCallback(BOOL ret, std::wstring path)
 
 void EditorForm::OnOpenSelectPathCallback(BOOL ret, std::wstring path)
 {
-	if (!ret) {
+	if (!ret || path.empty()) {
 		return;
 	}
 	DoOpenFile(path);

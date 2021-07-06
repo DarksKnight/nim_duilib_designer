@@ -1,5 +1,6 @@
 ﻿#include "../stdafx.h"
 #include "PropertyItem.h"
+#include "../internal/XmlHelper.h"
 
 PropertyItem::PropertyItem(PropertyData data):_data(data)
 {
@@ -141,10 +142,9 @@ bool PropertyItem::OnFileButtonClick(ui::EventArgs* args)
 {
 	nim_comp::CFileDialogEx* fileDlg = new nim_comp::CFileDialogEx;
 	std::map<LPCTSTR, LPCTSTR> filters;
-	filters[L"File Format(*.xml)"] = L"*.xml";
+	filters[L"File Format(*.png)"] = L"*.png";
 	fileDlg->SetFilter(filters);
-	fileDlg->SetFileName(L"open");
-	fileDlg->SetDefExt(L".xml");
+	fileDlg->SetDefExt(L".png");
 	fileDlg->SetParentWnd(GetWindow()->GetHWND());
 	nim_comp::CFileDialogEx::FileDialogCallback2 callback2 = nbase::Bind(&PropertyItem::OnSelectPath, this, std::placeholders::_1, std::placeholders::_2);
 	fileDlg->AyncShowOpenFileDlg(callback2);
@@ -153,8 +153,28 @@ bool PropertyItem::OnFileButtonClick(ui::EventArgs* args)
 
 void PropertyItem::OnSelectPath(BOOL ret, std::wstring path)
 {
-	_lb_path->SetText(path);
-	_lb_path->SetToolTipText(path);
+	if (!ret || path.empty()) {
+		return;
+	}
+	std::wstring xmlPath = XmlHelper::GetInstance()->GetSavedXmlPath();
+	std::wstring tempPath = L"";
+	std::wstring finalPath = L"";
+	for (int i = 0; i < xmlPath.length(); i++) {
+		if (xmlPath[i] == path[i]) {
+			continue;
+		}
+		tempPath = xmlPath.substr(i);
+		finalPath = path.substr(i);
+		break;
+	}
+	std::list<std::wstring> list = ui::StringHelper::Split(tempPath, L"\\");
+	for (int i = 0; i < list.size() - 1; i++) {
+		finalPath = L"../" + finalPath;
+	}
+	nbase::StringReplaceAll(L"\\", L"/", finalPath);
+	_lb_path->SetText(finalPath);
+	_lb_path->SetToolTipText(finalPath);
+	ChangeProperty();
 }
 
 void PropertyItem::ChangeProperty()
