@@ -250,7 +250,7 @@ void EditorForm::DoOpenFile(const std::wstring& path)
 	_editor_area = new EditorArea;
 	_box_editor_area->Add(_editor_area);
 	ControlHelper::GetInstance()->SetContainerBox(_editor_area);
-	XmlHelper::GetInstance()->ParseXml(_editor_area, path);
+	XmlHelper::GetInstance()->ParseXml(_editor_area, path, nbase::Bind(&EditorForm::OnParseControl, this, std::placeholders::_1));
 	std::wstring fileName = L"";
 	nbase::FilePathApartFileName(path, fileName);
 	_title = ui::MutiLanSupport::GetInstance()->GetStringViaID(L"STRID_EDITORFORM_TITLE") + L" - " + fileName;
