@@ -11,26 +11,28 @@ PropertyItem::PropertyItem(PropertyData data):_data(data)
 	switch (data.inputType)
 	{
 	case RICHEDIT:
-	{
 		_tb_input->SelectItem(0);
 		_re_value = (ui::RichEdit*)FindSubControl(L"re_value");
 		_re_value->AttachKillFocus(nbase::Bind(&PropertyItem::OnKillFocus, this, std::placeholders::_1));
 		_re_value->AttachReturn(nbase::Bind(&PropertyItem::OnTapReturn, this, std::placeholders::_1));
 		_re_value->SetText(data.defaultValue);
 		break;
-	}
 	case COMBO:
-	{
 		_tb_input->SelectItem(1);
 		_combo_value = (ui::Label*)FindSubControl(L"combo_value");
 		_combo_value->AttachButtonDown(nbase::Bind(&PropertyItem::OnComboClick, this, std::placeholders::_1));
 		break;
-	}
 	case FILEBUTTON:
 		_tb_input->SelectItem(2);
 		_lb_path = (ui::Label*)FindSubControl(L"lb_path");
 		_btn_file = (ui::Button*)FindSubControl(L"btn_file");
 		_btn_file->AttachClick(nbase::Bind(&PropertyItem::OnFileButtonClick, this, std::placeholders::_1));
+		break;
+	case COLOR_BUTTON:
+		_tb_input->SelectItem(3);
+		_ctrl_preview = FindSubControl(L"ctrl_preview");
+		_btn_choose = (ui::Button*)FindSubControl(L"btn_choose");
+		_btn_choose->AttachClick(nbase::Bind(&PropertyItem::OnColorButtonClick, this, std::placeholders::_1));
 		break;
 	default:
 		break;
@@ -175,6 +177,11 @@ void PropertyItem::OnSelectPath(BOOL ret, std::wstring path)
 	_lb_path->SetText(finalPath);
 	_lb_path->SetToolTipText(finalPath);
 	ChangeProperty();
+}
+
+bool PropertyItem::OnColorButtonClick(ui::EventArgs* args)
+{
+	return true;
 }
 
 void PropertyItem::ChangeProperty()

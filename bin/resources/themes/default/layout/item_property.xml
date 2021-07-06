@@ -11,6 +11,10 @@
           <Label name="lb_path" width="stretch" height="auto" valign="center"/>
           <Button name="btn_file" text="..." width="20" height="20" halign="right" bkcolor="white" bordersize="1" bordercolor="dark_gray"/>
         </HBox>
+        <HBox>
+          <Control name="ctrl_preview" width="20" height="20" bordersize="1" bordercolor="dark_gray" margin="0,0,5,0" valign="center"/>
+          <Button name="btn_choose" textid="STRID_CHOOSE" bkcolor="white" bordersize="1" bordercolor="dark_gray" width="80" height="20" valign="center"/>
+        </HBox>
       </TabBox>
     </HBox>
   </ListContainerElement>

@@ -28,7 +28,7 @@ enum ControlType
 
 enum PropertyInputType
 {
-	RICHEDIT, COMBO, FILEBUTTON
+	RICHEDIT, COMBO, FILEBUTTON, COLOR_BUTTON
 };
 
 enum CustomEventType

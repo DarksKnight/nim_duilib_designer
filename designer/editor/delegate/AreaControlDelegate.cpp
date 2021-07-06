@@ -15,7 +15,10 @@ AreaControlDelegate::AreaControlDelegate(ui::Control* control):_control(control)
 	_basic_property.push_back(PropertyData(L"width", L"宽度"));
 	_basic_property.push_back(PropertyData(L"height", L"高度"));
 	_basic_property.push_back(PropertyData(L"margin", L"外边距"));
-	_basic_property.push_back(PropertyData(L"bkcolor", L"背景颜色"));
+	_basic_property.push_back(PropertyData(L"padding", L"内边距"));
+	_basic_property.push_back(PropertyData(L"bkcolor", L"背景颜色", COLOR_BUTTON));
+	_basic_property.push_back(PropertyData(L"bordersize", L"边框宽度"));
+	_basic_property.push_back(PropertyData(L"bordercolor", L"边框颜色"));
 	std::vector<std::wstring> valignDatas;
 	valignDatas.push_back(L"top");
 	valignDatas.push_back(L"center");
