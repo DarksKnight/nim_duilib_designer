@@ -72,4 +72,40 @@ void PropertyHelper::SetProperty(ui::Control* control, const std::wstring& name,
 			return;
 		}
 	}
+	else if (name == L"class") {
+		control->SetClass(value);
+		data->SetClass(value);
+	}
+	else if (name == L"bkcolor") {
+		control->SetBkColor(value);
+		data->SetBkcolor(value);
+	}
+	else if (name == L"valign") {
+		if (value == L"top") {
+			control->SetVerAlignType(ui::kVerAlignTop);
+		}
+		else if (value == L"center") {
+			control->SetVerAlignType(ui::kVerAlignCenter);
+		}
+		else {
+			control->SetVerAlignType(ui::kVerAlignBottom);
+		}
+		data->SetValign(value);
+	}
+	else if (name == L"halign") {
+		if (value == L"left") {
+			control->SetHorAlignType(ui::kHorAlignLeft);
+		}
+		else if (value == L"center") {
+			control->SetHorAlignType(ui::kHorAlignCenter);
+		}
+		else {
+			control->SetHorAlignType(ui::kHorAlignRight);
+		}
+		data->SetHalign(value);
+	}
+	else if (name == L"bkimage") {
+		control->SetBkImage(value);
+		data->SetBkImage(value);
+	}
 }
