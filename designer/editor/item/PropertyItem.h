@@ -18,6 +18,8 @@ private:
 	bool OnTapReturn(ui::EventArgs* args);
 	bool OnComboClick(ui::EventArgs* args);
 	bool OnComboItemClick(ui::EventArgs* args);
+	bool OnFileButtonClick(ui::EventArgs* args);
+	void OnSelectPath(BOOL ret, std::wstring path);
 private:
 	void ChangeProperty();
 private:
@@ -25,6 +27,8 @@ private:
 	ui::Label* _combo_value;
 	ui::Label* _lb_desc;
 	ui::RichEdit* _re_value;
+	ui::Label* _lb_path;
+	ui::Button* _btn_file;
 	nim_comp::CMenuWnd* _combo_menu;
 private:
 	PropertyData _data;

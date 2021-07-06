@@ -26,7 +26,7 @@ AreaControlDelegate::AreaControlDelegate(ui::Control* control):_control(control)
 	halignDatas.push_back(L"center");
 	halignDatas.push_back(L"right");
 	_basic_property.push_back(PropertyData(L"halign", L"横向位置", COMBO, halignDatas));
-	_basic_property.push_back(PropertyData(L"bkimage", L"背景图片"));
+	_basic_property.push_back(PropertyData(L"bkimage", L"背景图片", FILEBUTTON));
 }
 
 AreaControlDelegate::~AreaControlDelegate()

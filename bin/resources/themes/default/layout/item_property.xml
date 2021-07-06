@@ -5,8 +5,12 @@
       <Label name="lb_desc" width="100" height="20" valign="center" margin="10,0,0,0"/>
       <Control width="1" bkcolor="bk_wnd_darkcolor"/>
       <TabBox name="tb_input" height="24" valign="center" padding="5,0,10,0">
-        <RichEdit name="re_value" multiline="false" wantreturnmsg="true"/>
+        <RichEdit name="re_value" multiline="false" wantreturnmsg="true" height="auto" valign="center"/>
         <Label class="combo" name="combo_value" bkcolor="white" width="stretch" align="vcenter"/>
+        <HBox>
+          <Label name="lb_path" width="stretch" height="auto" valign="center"/>
+          <Button name="btn_file" text="..." width="20" height="20" halign="right" bkcolor="white" bordersize="1" bordercolor="dark_gray"/>
+        </HBox>
       </TabBox>
     </HBox>
   </ListContainerElement>

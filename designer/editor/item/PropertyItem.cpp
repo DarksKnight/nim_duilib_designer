@@ -25,6 +25,12 @@ PropertyItem::PropertyItem(PropertyData data):_data(data)
 		_combo_value->AttachButtonDown(nbase::Bind(&PropertyItem::OnComboClick, this, std::placeholders::_1));
 		break;
 	}
+	case FILEBUTTON:
+		_tb_input->SelectItem(2);
+		_lb_path = (ui::Label*)FindSubControl(L"lb_path");
+		_btn_file = (ui::Button*)FindSubControl(L"btn_file");
+		_btn_file->AttachClick(nbase::Bind(&PropertyItem::OnFileButtonClick, this, std::placeholders::_1));
+		break;
 	default:
 		break;
 	}
@@ -56,6 +62,9 @@ void PropertyItem::SetValue(const std::wstring& value)
 	case 1:
 		_combo_value->SetText(value);
 		break;
+	case 2:
+		_lb_path->SetText(value);
+		break;
 	default:
 		break;
 	}
@@ -69,6 +78,8 @@ std::wstring PropertyItem::GetValue()
 		return _re_value->GetText();
 	case 1:
 		return _combo_value->GetText();
+	case 2:
+		return _lb_path->GetText();
 	default:
 		break;
 	}
@@ -124,6 +135,26 @@ bool PropertyItem::OnComboItemClick(ui::EventArgs* args)
 	_combo_menu->Close();
 	_combo_menu = NULL;
 	return true;
+}
+
+bool PropertyItem::OnFileButtonClick(ui::EventArgs* args)
+{
+	nim_comp::CFileDialogEx* fileDlg = new nim_comp::CFileDialogEx;
+	std::map<LPCTSTR, LPCTSTR> filters;
+	filters[L"File Format(*.xml)"] = L"*.xml";
+	fileDlg->SetFilter(filters);
+	fileDlg->SetFileName(L"open");
+	fileDlg->SetDefExt(L".xml");
+	fileDlg->SetParentWnd(GetWindow()->GetHWND());
+	nim_comp::CFileDialogEx::FileDialogCallback2 callback2 = nbase::Bind(&PropertyItem::OnSelectPath, this, std::placeholders::_1, std::placeholders::_2);
+	fileDlg->AyncShowOpenFileDlg(callback2);
+	return true;
+}
+
+void PropertyItem::OnSelectPath(BOOL ret, std::wstring path)
+{
+	_lb_path->SetText(path);
+	_lb_path->SetToolTipText(path);
 }
 
 void PropertyItem::ChangeProperty()

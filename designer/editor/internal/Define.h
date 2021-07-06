@@ -28,7 +28,7 @@ enum ControlType
 
 enum PropertyInputType
 {
-	RICHEDIT, COMBO
+	RICHEDIT, COMBO, FILEBUTTON
 };
 
 enum CustomEventType
@@ -78,6 +78,13 @@ struct PropertyData
 		this->name = name;
 		this->desc = desc;
 		this->defaultValue = defaultValue;
+	}
+
+	PropertyData(std::wstring name, std::wstring desc, PropertyInputType type) {
+		this->name = name;
+		this->desc = desc;
+		this->defaultValue = defaultValue;
+		this->inputType = type;
 	}
 
 	PropertyData(std::wstring name, std::wstring desc, PropertyInputType type, std::vector<std::wstring> inputDatas, std::wstring defaultValue = L"") {
