@@ -359,6 +359,7 @@
     <ClInclude Include="internal\ControlHelper.h" />
     <ClInclude Include="internal\CopyHelper.h" />
     <ClInclude Include="internal\Define.h" />
+    <ClInclude Include="internal\GlobalXmlHelper.h" />
     <ClInclude Include="internal\PropertyHelper.h" />
     <ClInclude Include="internal\SettingsHelper.h" />
     <ClInclude Include="internal\XmlHelper.h" />
@@ -411,6 +412,7 @@
     </ClCompile>
     <ClCompile Include="internal\ControlHelper.cpp" />
     <ClCompile Include="internal\CopyHelper.cpp" />
+    <ClCompile Include="internal\GlobalXmlHelper.cpp" />
     <ClCompile Include="internal\PropertyHelper.cpp" />
     <ClCompile Include="internal\SettingsHelper.cpp" />
     <ClCompile Include="internal\XmlHelper.cpp" />

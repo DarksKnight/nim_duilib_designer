@@ -13,6 +13,9 @@
         </Box>
         <Button class="btn_wnd_close" name="closebtn" margin="4,6,8,0"/>
       </HBox>
+      <Box name="box_warn" height="30" bkcolor="bk_editor_create_warn_top" mousechild="false" visible="false">
+        <Label height="auto" textid="STRID_EDITORFORM_WARN_TIP_NO_GLOBAL_XML" valign="center" halign="center"/>
+      </Box>
       <EditorToolbar name="et" height="30" enabled="false"/>
       <HBox>
         <EditorControlsList name="ecl" bordersize="1" bordercolor="dark_gray" visible="false"/>

@@ -22,8 +22,10 @@ protected:
 	LRESULT OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled) override;
 	LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam) override;
 private:
-	void OnInitForm();
 	bool Notify(ui::EventArgs* args);
+	bool OnClickWarn(ui::EventArgs* args);
+private:
+	void OnInitForm();
 	void OnSelect(const ControlData& data);
 	void OnButtonUp();
 	void SaveFile();
@@ -33,6 +35,7 @@ private:
 	void OnCreateFormClose(EditorCreateForm::OperationType type);
 	void OnSaveSelectPathCallback(BOOL ret, std::wstring path);
 	void OnOpenSelectPathCallback(BOOL ret, std::wstring path);
+	void OnChooseGlobalXmlPath(BOOL ret, std::wstring path);
 	void OnParseControl(AreaControlDelegate* delegate);
 	void OpenCreateForm();
 	void UiChanged();
@@ -48,6 +51,7 @@ private:
 	ui::Box* _box_drag_pre;
 	ui::Box* _box_editor_area;
 	ui::Box* _box_property;
+	ui::Box* _box_warn;
 private:
 	ControlData _select_data;
 	bool _saved = false;

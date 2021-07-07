@@ -179,6 +179,7 @@
 	<Class name="tooltip_content" font="system_bold_12" disabledtextcolor="popover_tooltip_color"/>
 
 	<TextColor name="bk_editor_create" value="#ffF0F0F0"/>
+	<TextColor name="bk_editor_create_warn_top" value="#ffFFFFBF"/>
 
 	<TextColor name="bk_property_item_light" value="#ffFFFFBF"/>
 	<TextColor name="bk_property_item_dark" value="#ffFFFFDE"/>

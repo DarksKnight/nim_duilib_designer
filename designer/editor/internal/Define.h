@@ -4,6 +4,7 @@
 
 #define CONFIG_TAG_CREATE L"CreateForm"
 #define CONFIG_KEY_CREATE_SHOW L"Show"
+#define CONFIG_KEY_GLOBAL_XML L"GlobalXmlPath"
 
 #define ATTRIBUTE_MEMBER_FUNC(argType, name, arg)\
 	public:\

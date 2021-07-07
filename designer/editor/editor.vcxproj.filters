@@ -165,6 +165,9 @@
     <ClInclude Include="widget\EditorTreeControls.h">
       <Filter>widget</Filter>
     </ClInclude>
+    <ClInclude Include="internal\GlobalXmlHelper.h">
+      <Filter>internal</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -277,6 +280,9 @@
     </ClCompile>
     <ClCompile Include="widget\EditorTreeControls.cpp">
       <Filter>widget</Filter>
+    </ClCompile>
+    <ClCompile Include="internal\GlobalXmlHelper.cpp">
+      <Filter>internal</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
