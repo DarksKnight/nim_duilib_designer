@@ -52,6 +52,7 @@ private:
 	ui::Box* _box_editor_area;
 	ui::Box* _box_property;
 	ui::Box* _box_warn;
+	ui::ListBox* _box_property_list;
 private:
 	ControlData _select_data;
 	bool _saved = false;

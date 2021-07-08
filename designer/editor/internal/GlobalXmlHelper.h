@@ -26,6 +26,9 @@ public:
 	std::wstring GetGlobalXmlPath() {
 		return _global_xml_path;
 	}
+	std::map<std::wstring, Class> GetClasses() {
+		return _classes;
+	}
 private:
 	std::wstring _global_xml_path;
 	std::map<std::wstring, Font> _fonts;

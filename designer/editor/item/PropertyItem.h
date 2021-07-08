@@ -14,6 +14,7 @@ public:
 		return _data.name;
 	}
 private:
+	bool OnFocus(ui::EventArgs* args);
 	bool OnKillFocus(ui::EventArgs* args);
 	bool OnTapReturn(ui::EventArgs* args);
 	bool OnComboClick(ui::EventArgs* args);

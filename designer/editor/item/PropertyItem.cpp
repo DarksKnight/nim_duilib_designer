@@ -1,6 +1,7 @@
 ﻿#include "../stdafx.h"
 #include "PropertyItem.h"
 #include "../internal/XmlHelper.h"
+#include "../internal/GlobalXmlHelper.h"
 
 PropertyItem::PropertyItem(PropertyData data):_data(data)
 {
@@ -13,6 +14,7 @@ PropertyItem::PropertyItem(PropertyData data):_data(data)
 	case RICHEDIT:
 		_tb_input->SelectItem(0);
 		_re_value = (ui::RichEdit*)FindSubControl(L"re_value");
+		_re_value->AttachSetFocus(nbase::Bind(&PropertyItem::OnFocus, this, std::placeholders::_1));
 		_re_value->AttachKillFocus(nbase::Bind(&PropertyItem::OnKillFocus, this, std::placeholders::_1));
 		_re_value->AttachReturn(nbase::Bind(&PropertyItem::OnTapReturn, this, std::placeholders::_1));
 		_re_value->SetText(data.defaultValue);
@@ -87,6 +89,15 @@ std::wstring PropertyItem::GetValue()
 		break;
 	}
 	return L"";
+}
+
+bool PropertyItem::OnFocus(ui::EventArgs* args)
+{
+	if (GlobalXmlHelper::GetInstance()->GetGlobalXmlPath().empty()) {
+		return true;
+	}
+	GetWindow()->SendNotify(this, ui::kEventNotify, CustomEventType::SHOW_PROPERTY_LIST);
+	return true;
 }
 
 bool PropertyItem::OnKillFocus(ui::EventArgs* args)

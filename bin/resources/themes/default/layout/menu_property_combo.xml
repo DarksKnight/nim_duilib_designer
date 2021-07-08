@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Window>
-  <VListBox class="menu" name="listMenu"/>
+  <VListBox class="menu" name="listMenu" maxheight="200"/>
 </Window>

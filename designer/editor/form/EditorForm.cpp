@@ -56,6 +56,7 @@ void EditorForm::InitWindow()
 	_editor_tree_controls = (EditorTreeControls*)FindControl(L"etc");
 	_box_drag_pre = (ui::Box*)FindControl(L"box_drag_pre");
 	_box_editor_area = (ui::Box*)FindControl(L"box_editor_area");
+	_box_property_list = (ui::ListBox*)FindControl(L"box_property_list");
 	_controls_list->SetSelectCallback(nbase::Bind(&EditorForm::OnSelect, this ,std::placeholders::_1));
 	_controls_list->SetButtonUpCallback(nbase::Bind(&EditorForm::OnButtonUp, this));
 	nbase::ThreadManager::PostTask(kThreadUI, nbase::Bind(&EditorForm::OnInitForm, this));
@@ -147,6 +148,24 @@ bool EditorForm::Notify(ui::EventArgs* args)
 			if (item) {
 				PropertyItem* pItem = (PropertyItem*)args->pSender;
 				PropertyHelper::GetInstance()->SetProperty(item, pItem->GetDataName(), pItem->GetValue());
+			}
+		}
+		else if (args->wParam == CustomEventType::SHOW_PROPERTY_LIST) {
+			_box_property_list->SetVisible(true);
+			PropertyItem* item = (PropertyItem*)args->pSender;
+			_box_property_list->SetFixedWidth(item->GetWidth() - 110);
+			_box_property_list->SetMargin(ui::UiRect(item->GetPos(false).left + 110, item->GetPos(false).top + item->GetHeight(), 0, 0));
+			if (item->GetDataName() == L"class") {
+				std::map<std::wstring, GlobalXmlHelper::Class> datas = GlobalXmlHelper::GetInstance()->GetClasses();
+				for (auto it = datas.begin(); it != datas.end(); ++it) {
+					ui::ListContainerElement* element = new ui::ListContainerElement;
+					element->SetClass(L"listitem");
+					element->SetFixedHeight(30);
+					ui::Label* label = new ui::Label;
+					element->Add(label);
+					label->SetText(it->second.name);
+					_box_property_list->Add(element);
+				}
 			}
 		}
 	}
