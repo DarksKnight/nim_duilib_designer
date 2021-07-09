@@ -168,6 +168,9 @@
     <ClInclude Include="internal\GlobalXmlHelper.h">
       <Filter>internal</Filter>
     </ClInclude>
+    <ClInclude Include="widget\MenuPropertyList.h">
+      <Filter>widget</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -283,6 +286,9 @@
     </ClCompile>
     <ClCompile Include="internal\GlobalXmlHelper.cpp">
       <Filter>internal</Filter>
+    </ClCompile>
+    <ClCompile Include="widget\MenuPropertyList.cpp">
+      <Filter>widget</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

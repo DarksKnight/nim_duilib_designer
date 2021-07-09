@@ -300,6 +300,9 @@ bool AreaControlDelegate::Notify(ui::EventArgs* args)
 	ui::UiRect rect = args->pSender->GetMargin();
 	int left = args->ptMouse.x - _last_point.x;
 	int top = args->ptMouse.y - _last_point.y;
+	if (top < 0) {
+		return true;
+	}
 	switch (_current_direction)
 	{
 	case Direction::LEFT:

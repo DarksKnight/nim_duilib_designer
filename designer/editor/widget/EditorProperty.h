@@ -9,7 +9,6 @@ public:
 public:
 	void LoadProperty(const std::wstring & name, AreaControlDelegate* delegate);
 	void LoadControlProperty(ui::Control* control);
-private:
 	void SetProperty(const std::wstring & name, const std::wstring & value);
 private:
 	ui::ListBox* _list_propery;

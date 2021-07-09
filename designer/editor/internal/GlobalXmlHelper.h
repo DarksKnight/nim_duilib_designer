@@ -4,19 +4,6 @@
 class GlobalXmlHelper
 {
 public:
-	struct Font
-	{
-		std::wstring id;
-		std::wstring name;
-		int size;
-		bool bold;
-		bool underline;
-	};
-	struct Class
-	{
-		std::wstring name;
-	};
-public:
 	GlobalXmlHelper();
 	~GlobalXmlHelper();
 	SINGLETON_DEFINE(GlobalXmlHelper);

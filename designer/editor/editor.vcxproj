@@ -374,6 +374,7 @@
     <ClInclude Include="widget\EditorProperty.h" />
     <ClInclude Include="widget\EditorToolbar.h" />
     <ClInclude Include="widget\EditorTreeControls.h" />
+    <ClInclude Include="widget\MenuPropertyList.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="controls\AreaBox.cpp" />
@@ -430,6 +431,7 @@
     <ClCompile Include="widget\EditorProperty.cpp" />
     <ClCompile Include="widget\EditorToolbar.cpp" />
     <ClCompile Include="widget\EditorTreeControls.cpp" />
+    <ClCompile Include="widget\MenuPropertyList.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="editor.rc" />

@@ -73,7 +73,6 @@ void PropertyHelper::SetProperty(ui::Control* control, const std::wstring& name,
 		}
 	}
 	else if (name == L"class") {
-		control->SetClass(value);
 		data->SetClass(value);
 	}
 	else if (name == L"bkcolor") {

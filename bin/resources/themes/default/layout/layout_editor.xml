@@ -28,7 +28,6 @@
     </VBox>
     <Box name="box_drag_pre" width="auto" height="auto" visible="false">
     </Box>
-    <VListBox name="box_property_list" maxheight="200" visible="false" bkcolor="white">
-    </VListBox>
+    <MenuPropertyList name="menu_property_list" maxheight="200" visible="false" />
   </Box>
 </Window>

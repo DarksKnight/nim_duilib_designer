@@ -79,6 +79,7 @@ void EditorProperty::SetProperty(const std::wstring& name, const std::wstring& v
 		PropertyItem* item = (PropertyItem*)_list_propery->GetItemAt(i);
 		if (item->GetDataName() == name) {
 			item->SetValue(value);
+			GetWindow()->SendNotify(this, ui::kEventNotify, CustomEventType::UI_CHANGED);
 			break;
 		}
 	}

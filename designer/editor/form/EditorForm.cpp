@@ -42,6 +42,8 @@ std::wstring EditorForm::GetWindowId() const
 void EditorForm::InitWindow()
 {
 	m_pRoot->AttachBubbledEvent(ui::kEventAll, nbase::Bind(&EditorForm::Notify, this, std::placeholders::_1));
+	_menu_property_list = (MenuPropertyList*)FindControl(L"menu_property_list");
+	_menu_property_list->SetSelectCallback(nbase::Bind(&EditorForm::OnMenuPropertyListSelect, this, std::placeholders::_1, std::placeholders::_2));
 	_box_warn = (ui::Box*)FindControl(L"box_warn");
 	_box_warn->AttachButtonDown(nbase::Bind(&EditorForm::OnClickWarn, this, std::placeholders::_1));
 	_lb_title = (ui::Label*)FindControl(L"lb_title");
@@ -56,7 +58,6 @@ void EditorForm::InitWindow()
 	_editor_tree_controls = (EditorTreeControls*)FindControl(L"etc");
 	_box_drag_pre = (ui::Box*)FindControl(L"box_drag_pre");
 	_box_editor_area = (ui::Box*)FindControl(L"box_editor_area");
-	_box_property_list = (ui::ListBox*)FindControl(L"box_property_list");
 	_controls_list->SetSelectCallback(nbase::Bind(&EditorForm::OnSelect, this ,std::placeholders::_1));
 	_controls_list->SetButtonUpCallback(nbase::Bind(&EditorForm::OnButtonUp, this));
 	nbase::ThreadManager::PostTask(kThreadUI, nbase::Bind(&EditorForm::OnInitForm, this));
@@ -151,21 +152,13 @@ bool EditorForm::Notify(ui::EventArgs* args)
 			}
 		}
 		else if (args->wParam == CustomEventType::SHOW_PROPERTY_LIST) {
-			_box_property_list->SetVisible(true);
+			_menu_property_list->SetVisible(true);
 			PropertyItem* item = (PropertyItem*)args->pSender;
-			_box_property_list->SetFixedWidth(item->GetWidth() - 110);
-			_box_property_list->SetMargin(ui::UiRect(item->GetPos(false).left + 110, item->GetPos(false).top + item->GetHeight(), 0, 0));
-			if (item->GetDataName() == L"class") {
-				std::map<std::wstring, GlobalXmlHelper::Class> datas = GlobalXmlHelper::GetInstance()->GetClasses();
-				for (auto it = datas.begin(); it != datas.end(); ++it) {
-					ui::ListContainerElement* element = new ui::ListContainerElement;
-					element->SetClass(L"listitem");
-					element->SetFixedHeight(30);
-					ui::Label* label = new ui::Label;
-					element->Add(label);
-					label->SetText(it->second.name);
-					_box_property_list->Add(element);
-				}
+			_menu_property_list->SetFixedWidth(item->GetWidth() - 110);
+			_menu_property_list->SetMargin(ui::UiRect(item->GetPos(false).left + 110, item->GetPos(false).top + item->GetHeight(), 0, 0));
+			std::wstring key = item->GetDataName();
+			if (key == L"class") {
+				_menu_property_list->LoadClassData(key, GlobalXmlHelper::GetInstance()->GetClasses());
 			}
 		}
 	}
@@ -395,4 +388,17 @@ void EditorForm::ShowControlPropery()
 		_editor_property->LoadProperty(delegate->GetControlData().name, delegate);
 		_editor_property->LoadControlProperty(item);
 	}
+}
+
+void EditorForm::OnMenuPropertyListSelect(const std::wstring& key, const std::wstring& value)
+{
+	_menu_property_list->SetVisible(false);
+	ui::Control* item = _editor_area->FindSelectedItem(_editor_area->GetAreaWindow());
+	if (!item) {
+		return;
+	}
+	if (key == L"class") {
+		PropertyHelper::GetInstance()->SetProperty(item, key, value);
+	}
+	_editor_property->SetProperty(key, value);
 }

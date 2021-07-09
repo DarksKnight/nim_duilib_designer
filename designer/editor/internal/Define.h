@@ -98,6 +98,20 @@ struct PropertyData
 	}
 };
 
+struct Font
+{
+	std::wstring id;
+	std::wstring name;
+	int size;
+	bool bold;
+	bool underline;
+};
+
+struct Class
+{
+	std::wstring name;
+};
+
 class DelegateData : public ui::UserDataBase
 {
 	ATTRIBUTE_MEMBER_FUNC(int, Id, id);
