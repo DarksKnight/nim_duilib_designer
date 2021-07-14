@@ -152,13 +152,24 @@ bool EditorForm::Notify(ui::EventArgs* args)
 			}
 		}
 		else if (args->wParam == CustomEventType::SHOW_PROPERTY_LIST) {
-			_menu_property_list->SetVisible(true);
 			PropertyItem* item = (PropertyItem*)args->pSender;
+			std::wstring type = item->GetDataName();
+			if (type != L"class" && type != L"font") {
+				return true;
+			}
+			_menu_property_list->Show(type);
 			_menu_property_list->SetFixedWidth(item->GetWidth() - 110);
 			_menu_property_list->SetMargin(ui::UiRect(item->GetPos(false).left + 110, item->GetPos(false).top + item->GetHeight(), 0, 0));
-			std::wstring key = item->GetDataName();
-			if (key == L"class") {
-				_menu_property_list->LoadClassData(key, GlobalXmlHelper::GetInstance()->GetClasses());
+			if (type == L"class") {
+				_menu_property_list->LoadClassData(GlobalXmlHelper::GetInstance()->GetClasses());
+			}
+			else if (type == L"font") {
+				_menu_property_list->LoadFontData(GlobalXmlHelper::GetInstance()->GetFonts());
+			}
+		}
+		else if (args->wParam == CustomEventType::HIDE_PROPERTY_LIST) {
+			if (!_menu_property_list->GetPos().IsPointIn(args->ptMouse)) {
+				_menu_property_list->Hide();
 			}
 		}
 	}
@@ -279,6 +290,11 @@ void EditorForm::DoOpenFile(const std::wstring& path)
 	if (GlobalXmlHelper::GetInstance()->GetGlobalXmlPath().empty()) {
 		_box_warn->SetVisible(true);
 	}
+	else {
+		ui::WindowBuilder dialog_builder;
+		ui::Window paint_manager;
+		dialog_builder.Create(L"E:\\work\\nim_duilib_designer\\bin\\resources\\themes\\default\\111.xml", ui::CreateControlCallback(), &paint_manager);
+	}
 	_editor_area = new EditorArea;
 	_box_editor_area->Add(_editor_area);
 	ControlHelper::GetInstance()->SetContainerBox(_editor_area);
@@ -397,8 +413,6 @@ void EditorForm::OnMenuPropertyListSelect(const std::wstring& key, const std::ws
 	if (!item) {
 		return;
 	}
-	if (key == L"class") {
-		PropertyHelper::GetInstance()->SetProperty(item, key, value);
-	}
+	PropertyHelper::GetInstance()->SetProperty(item, key, value);
 	_editor_property->SetProperty(key, value);
 }

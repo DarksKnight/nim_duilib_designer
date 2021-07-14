@@ -5,6 +5,7 @@
 #include "main.h"
 #include "form/EditorForm.h"
 #include "extern_ctrl/ExternCtrlManager.h"
+#include <ShlObj_core.h>
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -34,6 +35,20 @@ void MainThread::Init()
 	ui::GlobalManager::Startup(theme_dir + L"resources\\", ExternCtrlManager::CreateExternCtrl, false);
 
 	ui::GlobalManager::EnableAutomation();
+
+	TCHAR path[MAX_PATH] = { 0 };
+	BOOL result = SHGetSpecialFolderPath(NULL, path, CSIDL_APPDATA, false);
+	if (!result) {
+		return;
+	}
+	APPDATA_ROMAING = path;
+	APPDATA_ROMAING += L"\\NimDesigner\\";
+	nbase::CreateDirectory(APPDATA_ROMAING);
+
+	result = SHGetSpecialFolderPath(NULL, path, CSIDL_LOCAL_APPDATA, false);
+	APPDATA_LOCAL = path;
+	APPDATA_LOCAL += L"\\NimDesigner\\";
+	nbase::CreateDirectory(APPDATA_LOCAL);
 
 	// 创建一个默认带有阴影的居中窗口
 	EditorForm* window = new EditorForm();

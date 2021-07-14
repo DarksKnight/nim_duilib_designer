@@ -102,12 +102,14 @@ bool PropertyItem::OnFocus(ui::EventArgs* args)
 
 bool PropertyItem::OnKillFocus(ui::EventArgs* args)
 {
+	GetWindow()->SendNotify(this, ui::kEventNotify, CustomEventType::HIDE_PROPERTY_LIST);
 	ChangeProperty();
 	return true;
 }
 
 bool PropertyItem::OnTapReturn(ui::EventArgs* args)
 {
+	GetWindow()->SendNotify(this, ui::kEventNotify, CustomEventType::HIDE_PROPERTY_LIST);
 	ChangeProperty();
 	return true;
 }

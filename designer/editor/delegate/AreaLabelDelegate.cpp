@@ -3,6 +3,7 @@
 
 AreaLabelDelegate::AreaLabelDelegate(ui::Control* control):AreaControlDelegate(control)
 {
+
 }
 
 void AreaLabelDelegate::OnParseElement(tinyxml2::XMLElement* element)

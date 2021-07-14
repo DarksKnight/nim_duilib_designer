@@ -1,5 +1,6 @@
 ﻿#include "../stdafx.h"
 #include "PropertyHelper.h"
+#include "GlobalXmlHelper.h"
 
 PropertyHelper::PropertyHelper()
 {
@@ -12,6 +13,9 @@ PropertyHelper::~PropertyHelper()
 
 void PropertyHelper::SetProperty(ui::Control* control, const std::wstring& name, const std::wstring& value)
 {
+	if (value.empty()) {
+		return;
+	}
 	DelegateData* data = (DelegateData*)control->GetUserDataBase();
 	if (name == L"name") {
 		data->SetName(value);
@@ -106,5 +110,8 @@ void PropertyHelper::SetProperty(ui::Control* control, const std::wstring& name,
 	else if (name == L"bkimage") {
 		control->SetBkImage(value);
 		data->SetBkImage(value);
+	}
+	else if (name == L"font") {
+		Font fontData = GlobalXmlHelper::GetInstance()->GetFont(value);
 	}
 }

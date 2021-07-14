@@ -15,6 +15,9 @@
 	return arg;\
 	}
 
+std::wstring static APPDATA_ROMAING = L"";
+std::wstring static APPDATA_LOCAL = L"";
+
 enum ThreadId
 {
 	kThreadUI,
@@ -41,7 +44,8 @@ enum CustomEventType
 	CONTROL_PASTE,
 	CONTROL_SELECTED,
 	CONTROL_SET_PROPERTY,
-	SHOW_PROPERTY_LIST
+	SHOW_PROPERTY_LIST,
+	HIDE_PROPERTY_LIST
 };
 
 struct CreateDataInfo
@@ -100,16 +104,16 @@ struct PropertyData
 
 struct Font
 {
-	std::wstring id;
-	std::wstring name;
-	int size;
-	bool bold;
-	bool underline;
+	std::wstring id = L"";
+	std::wstring name = L"";
+	int size = 0;
+	bool bold = false;
+	bool underline = false;
 };
 
 struct Class
 {
-	std::wstring name;
+	std::wstring name = L"";
 };
 
 class DelegateData : public ui::UserDataBase

@@ -75,6 +75,9 @@ void EditorProperty::LoadControlProperty(ui::Control* control)
 
 void EditorProperty::SetProperty(const std::wstring& name, const std::wstring& value)
 {
+	if (value.empty()) {
+		return;
+	}
 	for (int i = 0; i < _list_propery->GetCount(); i++) {
 		PropertyItem* item = (PropertyItem*)_list_propery->GetItemAt(i);
 		if (item->GetDataName() == name) {

@@ -8,7 +8,10 @@ public:
 	MenuPropertyList();
 	~MenuPropertyList();
 public:
-	void LoadClassData(const std::wstring & key, std::map<std::wstring, Class> classes);
+	void Show(const std::wstring& type);
+	void Hide();
+	void LoadClassData(std::map<std::wstring, Class> classes);
+	void LoadFontData(std::map<std::wstring, Font> fonts);
 public:
 	void SetSelectCallback(SelectCallback callback) {
 		_select_callback = callback;
@@ -19,5 +22,5 @@ private:
 	ui::ListBox* _list_property;
 private:
 	SelectCallback _select_callback;
-	std::wstring _key = L"";
+	std::wstring _type = L"";
 };

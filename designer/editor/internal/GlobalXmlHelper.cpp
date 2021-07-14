@@ -71,3 +71,12 @@ bool GlobalXmlHelper::SetGlobalXmlPath(const std::wstring& path)
 	}
 	return true;
 }
+
+Font GlobalXmlHelper::GetFont(const std::wstring& id)
+{
+	auto it = _fonts.find(id);
+	if (it != _fonts.end()) {
+		return it->second;
+	}
+	return Font();
+}
