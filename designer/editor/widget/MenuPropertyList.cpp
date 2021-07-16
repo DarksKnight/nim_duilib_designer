@@ -25,34 +25,34 @@ void MenuPropertyList::Hide()
 	SetVisible(false);
 }
 
-void MenuPropertyList::LoadClassData(std::map<std::wstring, Class> classes)
+void MenuPropertyList::LoadClassData(std::vector<std::wstring> classes)
 {
 	for (auto it = classes.begin(); it != classes.end(); ++it) {
 		ui::ListContainerElement* element = new ui::ListContainerElement;
 		element->SetMouseChildEnabled(false);
-		element->SetDataID(it->second.name);
+		element->SetDataID(*it);
 		element->SetClass(L"listitem");
 		element->SetFixedHeight(30);
 		ui::Label* label = new ui::Label;
 		element->Add(label);
-		label->SetText(it->second.name);
+		label->SetText(*it);
 		label->SetVerAlignType(ui::kVerAlignCenter);
 		label->SetMargin(ui::UiRect(2, 0, 0, 0));
 		_list_property->Add(element);
 	}
 }
 
-void MenuPropertyList::LoadFontData(std::map<std::wstring, Font> fonts)
+void MenuPropertyList::LoadFontData(std::vector<std::wstring> fonts)
 {
 	for (auto it = fonts.begin(); it != fonts.end(); ++it) {
 		ui::ListContainerElement* element = new ui::ListContainerElement;
 		element->SetMouseChildEnabled(false);
-		element->SetDataID(it->second.id);
+		element->SetDataID(*it);
 		element->SetClass(L"listitem");
 		element->SetFixedHeight(30);
 		ui::Label* label = new ui::Label;
 		element->Add(label);
-		label->SetText(it->second.id);
+		label->SetText(*it);
 		label->SetVerAlignType(ui::kVerAlignCenter);
 		label->SetMargin(ui::UiRect(2, 0, 0, 0));
 		_list_property->Add(element);

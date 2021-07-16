@@ -1,6 +1,7 @@
 ﻿#include "../stdafx.h"
 #include "GlobalXmlHelper.h"
 #include "SettingsHelper.h"
+#include "../util/MD5.h"
 
 GlobalXmlHelper::GlobalXmlHelper()
 {
@@ -23,10 +24,16 @@ GlobalXmlHelper::~GlobalXmlHelper()
 
 bool GlobalXmlHelper::SetGlobalXmlPath(const std::wstring& path)
 {
+	std::wstring fn;
+	nbase::FilePathApartFileName(path, fn);
+	if (fn != L"global.xml") {
+		return false;
+	}
 	_global_xml_path = path;
 	SettingsHelper::GetInstance()->Set(CONFIG_TAG_CREATE, CONFIG_KEY_GLOBAL_XML, _global_xml_path);
+	_backup_global_xml_path = GlobalData::APPDATA_LOCAL + L"backup_global.xml";
 	tinyxml2::XMLDocument doc;
-	tinyxml2::XMLError result = doc.LoadFile(nbase::UTF16ToUTF8(path).c_str());
+	tinyxml2::XMLError result = doc.LoadFile(nbase::UTF16ToUTF8(nbase::win32::GetCurrentModuleDirectory() + L"resources\\themes\\default\\global.xml").c_str());
 	if (result != tinyxml2::XML_SUCCESS) {
 		return false;
 	}
@@ -34,49 +41,80 @@ bool GlobalXmlHelper::SetGlobalXmlPath(const std::wstring& path)
 		const tinyxml2::XMLAttribute* attr = NULL;
 		std::wstring name = nbase::UTF8ToUTF16(element->Value());
 		if (name == L"Font") {
-			Font font;
 			if (attr = element->FindAttribute("id")) {
-				font.id = nbase::UTF8ToUTF16(attr->Value());
+				_fonts.push_back(nbase::UTF8ToUTF16(attr->Value()));
 			}
-			if (attr = element->FindAttribute("name")) {
-				font.name = nbase::UTF8ToUTF16(attr->Value());
-			}
-			if (attr = element->FindAttribute("size")) {
-				int size = 0;
-				nbase::StringToInt(attr->Value(), &size);
-				font.size = size;
-			}
-			if (attr = element->FindAttribute("bold")) {
-				font.bold = attr->Value() == "true";
-			}
-			if (attr = element->FindAttribute("underline")) {
-				font.underline = attr->Value() == "true";
-			}
-			_fonts[font.id] = font;
 		}
 		else if (name == L"TextColor") {
-			attr = element->FindAttribute("name");
-			std::wstring name = nbase::UTF8ToUTF16(attr->Value());
-			attr = element->FindAttribute("value");
-			std::wstring value = nbase::UTF8ToUTF16(attr->Value());
-			_colors[name] = value;
+			if (attr = element->FindAttribute("name")) {
+				_colors.push_back(nbase::UTF8ToUTF16(attr->Value()));
+			}
 		}
 		else if (name == L"Class") {
-			Class clz;
 			if (attr = element->FindAttribute("name")) {
-				clz.name = nbase::UTF8ToUTF16(attr->Value());
+				_classes.push_back(nbase::UTF8ToUTF16(attr->Value()));
 			}
-			_classes[clz.name] = clz;
 		}
 	}
+	nbase::ThreadManager::PostRepeatedTask(kThreadGlobalXmlDiff, nbase::Bind(&GlobalXmlHelper::Diff, this), nbase::TimeDelta::FromMilliseconds(50));
 	return true;
 }
 
-Font GlobalXmlHelper::GetFont(const std::wstring& id)
+void GlobalXmlHelper::Diff()
 {
-	auto it = _fonts.find(id);
-	if (it != _fonts.end()) {
-		return it->second;
+	if (!nbase::FilePathIsExist(_global_xml_path, false)) {
+		return;
 	}
-	return Font();
+	int64_t fileSize = nbase::GetFileSize(_global_xml_path);
+	if (_original_xml_size == fileSize) {
+		return;
+	}
+	_original_xml_size = fileSize;
+	tinyxml2::XMLDocument doc;
+	tinyxml2::XMLError result = doc.LoadFile(nbase::UTF16ToUTF8(_global_xml_path).c_str());
+	if (result != tinyxml2::XML_SUCCESS) {
+		return;
+	}
+	std::vector<tinyxml2::XMLNode*> elements;
+	for (tinyxml2::XMLNode* node = doc.RootElement()->FirstChild(); node; node = node->NextSibling()) {
+		const tinyxml2::XMLElement* element = node->ToElement();
+		const tinyxml2::XMLAttribute* attr = NULL;
+		std::wstring name = nbase::UTF8ToUTF16(node->Value());
+		if (name == L"Font") {
+			if (attr = element->FindAttribute("id")) {
+				if (std::find(_fonts.begin(), _fonts.end(), nbase::UTF8ToUTF16(attr->Value())) == _fonts.end()) {
+					elements.push_back(node);
+					_fonts.push_back(nbase::UTF8ToUTF16(attr->Value()));
+				}
+			}
+		}
+		else if (name == L"TextColor") {
+			if (attr = element->FindAttribute("name")) {
+				if (std::find(_colors.begin(), _colors.end(), nbase::UTF8ToUTF16(attr->Value())) == _colors.end()) {
+					elements.push_back(node);
+					_colors.push_back(nbase::UTF8ToUTF16(attr->Value()));
+				}
+			}
+		}
+		else if (name == L"Class") {
+			if (attr = element->FindAttribute("name")) {
+				if (std::find(_classes.begin(), _classes.end(), nbase::UTF8ToUTF16(attr->Value())) == _classes.end()) {
+					elements.push_back(node);
+					_classes.push_back(nbase::UTF8ToUTF16(attr->Value()));
+				}
+			}
+		}
+	}
+	tinyxml2::XMLDocument saveDoc;
+	saveDoc.Parse(XML_HEADER);
+	tinyxml2::XMLElement* globalElement = saveDoc.NewElement("Global");
+	saveDoc.InsertEndChild(globalElement);
+	for (auto it = elements.begin(); it != elements.end(); ++it) {
+		tinyxml2::XMLNode* copy = (*it)->DeepClone(&saveDoc);
+		globalElement->InsertEndChild(copy);
+	}
+	saveDoc.SaveFile(nbase::UTF16ToUTF8(_backup_global_xml_path).c_str());
+	ui::WindowBuilder dialog_builder;
+	ui::Window paint_manager;
+	dialog_builder.Create(_backup_global_xml_path.c_str(), ui::CreateControlCallback(), &paint_manager);
 }

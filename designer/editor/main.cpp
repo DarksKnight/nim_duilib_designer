@@ -28,6 +28,7 @@ void MainThread::Init()
 {
 	nbase::ThreadManager::RegisterThread(kThreadUI);
 	nbase::ThreadManager::RegisterThread(kThreadGlobalMisc);
+	nbase::ThreadManager::RegisterThread(kThreadGlobalXmlDiff);
 
 	// 获取资源路径，初始化全局参数
 	std::wstring theme_dir = nbase::win32::GetCurrentModuleDirectory();
@@ -41,14 +42,14 @@ void MainThread::Init()
 	if (!result) {
 		return;
 	}
-	APPDATA_ROMAING = path;
-	APPDATA_ROMAING += L"\\NimDesigner\\";
-	nbase::CreateDirectory(APPDATA_ROMAING);
+	GlobalData::APPDATA_ROMAING = path;
+	GlobalData::APPDATA_ROMAING += L"\\NimDesigner\\";
+	nbase::CreateDirectory(GlobalData::APPDATA_ROMAING);
 
 	result = SHGetSpecialFolderPath(NULL, path, CSIDL_LOCAL_APPDATA, false);
-	APPDATA_LOCAL = path;
-	APPDATA_LOCAL += L"\\NimDesigner\\";
-	nbase::CreateDirectory(APPDATA_LOCAL);
+	GlobalData::APPDATA_LOCAL = path;
+	GlobalData::APPDATA_LOCAL += L"\\NimDesigner\\";
+	nbase::CreateDirectory(GlobalData::APPDATA_LOCAL);
 
 	// 创建一个默认带有阴影的居中窗口
 	EditorForm* window = new EditorForm();

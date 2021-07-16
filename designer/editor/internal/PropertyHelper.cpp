@@ -112,6 +112,21 @@ void PropertyHelper::SetProperty(ui::Control* control, const std::wstring& name,
 		data->SetBkImage(value);
 	}
 	else if (name == L"font") {
-		Font fontData = GlobalXmlHelper::GetInstance()->GetFont(value);
+		data->SetFont(value);
+		ui::Label* label = dynamic_cast<ui::Label*>(control);
+		if (label) {
+			label->SetFont(value);
+			return;
+		}
+		ui::RichEdit* richEdit = dynamic_cast<ui::RichEdit*>(control);
+		if (richEdit) {
+			richEdit->SetFont(value);
+			return;
+		}
+		ui::Button* btn = dynamic_cast<ui::Button*>(control);
+		if (btn) {
+			btn->SetFont(value);
+			return;
+		}
 	}
 }

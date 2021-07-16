@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "base/memory/singleton.h"
 
-class GlobalXmlHelper
+class GlobalXmlHelper : public nbase::SupportWeakCallback
 {
 public:
 	GlobalXmlHelper();
@@ -9,21 +9,23 @@ public:
 	SINGLETON_DEFINE(GlobalXmlHelper);
 public:
 	bool SetGlobalXmlPath(const std::wstring& path);
-	Font GetFont(const std::wstring& id);
 public:
 	std::wstring GetGlobalXmlPath() {
 		return _global_xml_path;
 	}
-	std::map<std::wstring, Class> GetClasses() {
+	std::vector<std::wstring> GetClasses() {
 		return _classes;
 	}
-	std::map<std::wstring, Font> GetFonts() {
+	std::vector<std::wstring> GetFonts() {
 		return _fonts;
 	}
 private:
-	std::wstring _global_xml_path;
-	std::wstring _backup_global_xml_path;
-	std::map<std::wstring, Font> _fonts;
-	std::map<std::wstring, std::wstring> _colors;
-	std::map<std::wstring, Class> _classes;
+	void Diff();
+private:
+	std::wstring _global_xml_path = L"";
+	std::wstring _backup_global_xml_path = L"";
+	std::vector<std::wstring> _fonts;
+	std::vector<std::wstring> _colors;
+	std::vector<std::wstring> _classes;
+	int64_t _original_xml_size = 0;
 };

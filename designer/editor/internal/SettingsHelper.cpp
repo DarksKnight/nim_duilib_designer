@@ -5,7 +5,7 @@
 
 SettingsHelper::SettingsHelper()
 {
-	_path = APPDATA_ROMAING + L"config.ini";
+	_path = GlobalData::APPDATA_ROMAING + L"config.ini";
 }
 
 

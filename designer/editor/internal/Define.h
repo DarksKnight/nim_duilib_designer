@@ -2,6 +2,8 @@
 #include "../stdafx.h"
 #include "base/memory/singleton.h"
 
+#define XML_HEADER "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+
 #define CONFIG_TAG_CREATE L"CreateForm"
 #define CONFIG_KEY_CREATE_SHOW L"Show"
 #define CONFIG_KEY_GLOBAL_XML L"GlobalXmlPath"
@@ -15,13 +17,11 @@
 	return arg;\
 	}
 
-std::wstring static APPDATA_ROMAING = L"";
-std::wstring static APPDATA_LOCAL = L"";
-
 enum ThreadId
 {
 	kThreadUI,
-	kThreadGlobalMisc
+	kThreadGlobalMisc,
+	kThreadGlobalXmlDiff
 };
 
 enum ControlType
@@ -102,18 +102,11 @@ struct PropertyData
 	}
 };
 
-struct Font
+class GlobalData
 {
-	std::wstring id = L"";
-	std::wstring name = L"";
-	int size = 0;
-	bool bold = false;
-	bool underline = false;
-};
-
-struct Class
-{
-	std::wstring name = L"";
+public:
+	std::wstring static APPDATA_ROMAING;
+	std::wstring static APPDATA_LOCAL;
 };
 
 class DelegateData : public ui::UserDataBase

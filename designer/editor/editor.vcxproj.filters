@@ -171,6 +171,9 @@
     <ClInclude Include="widget\MenuPropertyList.h">
       <Filter>widget</Filter>
     </ClInclude>
+    <ClInclude Include="util\MD5.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -289,6 +292,12 @@
     </ClCompile>
     <ClCompile Include="widget\MenuPropertyList.cpp">
       <Filter>widget</Filter>
+    </ClCompile>
+    <ClCompile Include="util\MD5.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="internal\Define.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

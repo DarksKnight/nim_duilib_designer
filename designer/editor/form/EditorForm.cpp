@@ -290,11 +290,6 @@ void EditorForm::DoOpenFile(const std::wstring& path)
 	if (GlobalXmlHelper::GetInstance()->GetGlobalXmlPath().empty()) {
 		_box_warn->SetVisible(true);
 	}
-	else {
-		ui::WindowBuilder dialog_builder;
-		ui::Window paint_manager;
-		dialog_builder.Create(L"E:\\work\\nim_duilib_designer\\bin\\resources\\themes\\default\\111.xml", ui::CreateControlCallback(), &paint_manager);
-	}
 	_editor_area = new EditorArea;
 	_box_editor_area->Add(_editor_area);
 	ControlHelper::GetInstance()->SetContainerBox(_editor_area);
