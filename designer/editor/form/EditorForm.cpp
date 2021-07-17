@@ -151,21 +151,29 @@ bool EditorForm::Notify(ui::EventArgs* args)
 				PropertyHelper::GetInstance()->SetProperty(item, pItem->GetDataName(), pItem->GetValue());
 			}
 		}
-		else if (args->wParam == CustomEventType::SHOW_PROPERTY_LIST) {
+		else if (args->wParam == CustomEventType::SHOW_CLASS_PROPERTY_LIST) {
 			PropertyItem* item = (PropertyItem*)args->pSender;
-			std::wstring type = item->GetDataName();
-			if (type != L"class" && type != L"font") {
-				return true;
-			}
-			_menu_property_list->Show(type);
+			_menu_property_list->Show(L"class");
 			_menu_property_list->SetFixedWidth(item->GetWidth() - 110);
 			_menu_property_list->SetMargin(ui::UiRect(item->GetPos(false).left + 110, item->GetPos(false).top + item->GetHeight(), 0, 0));
-			if (type == L"class") {
-				_menu_property_list->LoadClassData(GlobalXmlHelper::GetInstance()->GetClasses());
-			}
-			else if (type == L"font") {
-				_menu_property_list->LoadFontData(GlobalXmlHelper::GetInstance()->GetFonts());
-			}
+			_menu_property_list->LoadClassData(GlobalXmlHelper::GetInstance()->GetClasses());
+		}
+		else if (args->wParam == CustomEventType::SHOW_FONT_PROPERTY_LIST) {
+			PropertyItem* item = (PropertyItem*)args->pSender;
+			_menu_property_list->Show(L"font");
+			_menu_property_list->SetFixedWidth(item->GetWidth() - 110);
+			_menu_property_list->SetMargin(ui::UiRect(item->GetPos(false).left + 110, item->GetPos(false).top + item->GetHeight(), 0, 0));
+			_menu_property_list->LoadFontData(GlobalXmlHelper::GetInstance()->GetClasses());
+		}
+		else if (args->wParam == CustomEventType::PROPERTY_ITEM_CLASS_TEXT_CHANGE) {
+			ui::RichEdit* richEdit = (ui::RichEdit*)args->pSender;
+			std::wstring keyword = richEdit->GetText();
+			_menu_property_list->LoadClassData(GlobalXmlHelper::GetInstance()->GetClasses(), keyword);
+		}
+		else if (args->wParam == CustomEventType::PROPERTY_ITEM_FONT_TEXT_CHANGE) {
+			ui::RichEdit* richEdit = (ui::RichEdit*)args->pSender;
+			std::wstring keyword = richEdit->GetText();
+			_menu_property_list->LoadFontData(GlobalXmlHelper::GetInstance()->GetClasses(), keyword);
 		}
 		else if (args->wParam == CustomEventType::HIDE_PROPERTY_LIST) {
 			if (!_menu_property_list->GetPos().IsPointIn(args->ptMouse)) {

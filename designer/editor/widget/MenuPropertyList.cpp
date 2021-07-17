@@ -25,34 +25,43 @@ void MenuPropertyList::Hide()
 	SetVisible(false);
 }
 
-void MenuPropertyList::LoadClassData(std::vector<std::wstring> classes)
+void MenuPropertyList::LoadClassData(std::vector<std::wstring> classes, const std::wstring& keyword)
 {
+	_list_property->RemoveAll();
 	for (auto it = classes.begin(); it != classes.end(); ++it) {
+		std::wstring classStr = *it;
+		if (!keyword.empty() && classStr.find(keyword) == std::wstring::npos) {
+			continue;
+		}
 		ui::ListContainerElement* element = new ui::ListContainerElement;
 		element->SetMouseChildEnabled(false);
-		element->SetDataID(*it);
+		element->SetDataID(classStr);
 		element->SetClass(L"listitem");
 		element->SetFixedHeight(30);
 		ui::Label* label = new ui::Label;
 		element->Add(label);
-		label->SetText(*it);
+		label->SetText(classStr);
 		label->SetVerAlignType(ui::kVerAlignCenter);
 		label->SetMargin(ui::UiRect(2, 0, 0, 0));
 		_list_property->Add(element);
 	}
 }
 
-void MenuPropertyList::LoadFontData(std::vector<std::wstring> fonts)
+void MenuPropertyList::LoadFontData(std::vector<std::wstring> fonts, const std::wstring& keyword)
 {
 	for (auto it = fonts.begin(); it != fonts.end(); ++it) {
+		std::wstring fontStr = *it;
+		if (!keyword.empty() && fontStr.find(keyword) == std::wstring::npos) {
+			continue;
+		}
 		ui::ListContainerElement* element = new ui::ListContainerElement;
 		element->SetMouseChildEnabled(false);
-		element->SetDataID(*it);
+		element->SetDataID(fontStr);
 		element->SetClass(L"listitem");
 		element->SetFixedHeight(30);
 		ui::Label* label = new ui::Label;
 		element->Add(label);
-		label->SetText(*it);
+		label->SetText(fontStr);
 		label->SetVerAlignType(ui::kVerAlignCenter);
 		label->SetMargin(ui::UiRect(2, 0, 0, 0));
 		_list_property->Add(element);

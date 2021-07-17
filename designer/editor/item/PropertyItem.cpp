@@ -15,6 +15,7 @@ PropertyItem::PropertyItem(PropertyData data):_data(data)
 		_tb_input->SelectItem(0);
 		_re_value = (ui::RichEdit*)FindSubControl(L"re_value");
 		_re_value->AttachSetFocus(nbase::Bind(&PropertyItem::OnFocus, this, std::placeholders::_1));
+		_re_value->AttachTextChange(nbase::Bind(&PropertyItem::OnTextChanged, this, std::placeholders::_1));
 		_re_value->AttachKillFocus(nbase::Bind(&PropertyItem::OnKillFocus, this, std::placeholders::_1));
 		_re_value->AttachReturn(nbase::Bind(&PropertyItem::OnTapReturn, this, std::placeholders::_1));
 		_re_value->SetText(data.defaultValue);
@@ -96,7 +97,26 @@ bool PropertyItem::OnFocus(ui::EventArgs* args)
 	if (GlobalXmlHelper::GetInstance()->GetGlobalXmlPath().empty()) {
 		return true;
 	}
-	GetWindow()->SendNotify(this, ui::kEventNotify, CustomEventType::SHOW_PROPERTY_LIST);
+	if (_data.name == L"class") {
+		GetWindow()->SendNotify(this, ui::kEventNotify, CustomEventType::SHOW_CLASS_PROPERTY_LIST);
+	}
+	else if (_data.name == L"font") {
+		GetWindow()->SendNotify(this, ui::kEventNotify, CustomEventType::SHOW_FONT_PROPERTY_LIST);
+	}
+	return true;
+}
+
+bool PropertyItem::OnTextChanged(ui::EventArgs* args)
+{
+	if (GlobalXmlHelper::GetInstance()->GetGlobalXmlPath().empty()) {
+		return true;
+	}
+	if (_data.name == L"class") {
+		GetWindow()->SendNotify(args->pSender, ui::kEventNotify, CustomEventType::PROPERTY_ITEM_CLASS_TEXT_CHANGE);
+	}
+	else if (_data.name == L"font") {
+		GetWindow()->SendNotify(args->pSender, ui::kEventNotify, CustomEventType::PROPERTY_ITEM_FONT_TEXT_CHANGE);
+	}
 	return true;
 }
 

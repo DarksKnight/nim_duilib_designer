@@ -15,6 +15,7 @@ public:
 	}
 private:
 	bool OnFocus(ui::EventArgs* args);
+	bool OnTextChanged(ui::EventArgs* args);
 	bool OnKillFocus(ui::EventArgs* args);
 	bool OnTapReturn(ui::EventArgs* args);
 	bool OnComboClick(ui::EventArgs* args);

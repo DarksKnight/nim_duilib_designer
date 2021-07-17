@@ -10,8 +10,8 @@ public:
 public:
 	void Show(const std::wstring& type);
 	void Hide();
-	void LoadClassData(std::vector<std::wstring> classes);
-	void LoadFontData(std::vector<std::wstring> fonts);
+	void LoadClassData(std::vector<std::wstring> classes, const std::wstring & keyword = L"");
+	void LoadFontData(std::vector<std::wstring> fonts, const std::wstring& keyword = L"");
 public:
 	void SetSelectCallback(SelectCallback callback) {
 		_select_callback = callback;
