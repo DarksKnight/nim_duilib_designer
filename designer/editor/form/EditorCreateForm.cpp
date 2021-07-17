@@ -67,7 +67,7 @@ LRESULT EditorCreateForm::OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL&
 	if (_operation_type == OperationType::NEW_FILE && _new_file_callback) {
 		_new_file_callback(_create_flag);
 	}
-	else if (_operation_type == OperationType::OPEN_FILE && _open_file_callback) {
+	else if (_operation_type == OperationType::OPEN_FILE && _open_file_callback && !_path.empty()) {
 		_open_file_callback(_path);
 	}
 	if (_close_callback) {
@@ -106,7 +106,6 @@ bool EditorCreateForm::OnOpenFileClick(ui::EventArgs* args)
 	std::map<LPCTSTR, LPCTSTR> filters;
 	filters[L"File Format(*.xml)"] = L"*.xml";
 	fileDlg->SetFilter(filters);
-	fileDlg->SetFileName(L"newFile");
 	fileDlg->SetDefExt(L".xml");
 	fileDlg->SetParentWnd(GetHWND());
 	nim_comp::CFileDialogEx::FileDialogCallback2 callback2 = nbase::Bind(&EditorCreateForm::OnSelectPathCallback, this, std::placeholders::_1, std::placeholders::_2);
