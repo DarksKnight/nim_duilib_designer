@@ -2,6 +2,8 @@
 #include "PropertyItem.h"
 #include "../internal/XmlHelper.h"
 #include "../internal/GlobalXmlHelper.h"
+#include "commdlg.h"
+#include "../form/EditorInputForm.h"
 
 PropertyItem::PropertyItem(PropertyData data):_data(data)
 {
@@ -214,10 +216,30 @@ void PropertyItem::OnSelectPath(BOOL ret, std::wstring path)
 
 bool PropertyItem::OnColorButtonClick(ui::EventArgs* args)
 {
+	static CHOOSECOLOR stChooseColor;
+	static COLORREF dwCustColors[16];
+	stChooseColor.lStructSize = sizeof(CHOOSECOLOR);
+	stChooseColor.hwndOwner = GetWindow()->GetHWND();
+	stChooseColor.lpCustColors = (LPDWORD)dwCustColors;
+	stChooseColor.Flags = CC_FULLOPEN;
+	if (!ChooseColor(&stChooseColor)) {
+		return true;
+	}
+	std::string color = nbase::StringPrintf("#ff%02x%02x%02x", GetRValue(stChooseColor.rgbResult), GetGValue(stChooseColor.rgbResult), GetBValue(stChooseColor.rgbResult));
+	EditorInputForm* form = nim_comp::WindowsManager::GetInstance()->SingletonShow<EditorInputForm>(EditorInputForm::kClassName);
+	form->SetCallback(nbase::Bind(&PropertyItem::InputCallback, this, std::placeholders::_1));
 	return true;
 }
 
 void PropertyItem::ChangeProperty()
 {
 	GetWindow()->SendNotify(this, ui::kEventNotify, CustomEventType::CONTROL_SET_PROPERTY);
+}
+
+void PropertyItem::InputCallback(const std::wstring& text)
+{
+	if (text.empty()) {
+		return;
+	}
+
 }

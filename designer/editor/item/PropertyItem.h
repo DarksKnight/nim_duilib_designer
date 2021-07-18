@@ -25,6 +25,7 @@ private:
 	bool OnColorButtonClick(ui::EventArgs* args);
 private:
 	void ChangeProperty();
+	void InputCallback(const std::wstring & text);
 private:
 	ui::TabBox* _tb_input;
 	ui::Label* _combo_value;

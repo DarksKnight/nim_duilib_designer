@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Window size="300,150" mininfo="300,120" maxinfo="300,100" caption="0,0,0,35">
+  <Box>
+    <VBox bkcolor="white">
+      <HBox width="stretch" height="35" bkcolor="bk_wnd_lightcolor">
+        <Control width="25" height="25" margin="5,0,5,0" valign="center" bkimage="drawable/logo/icon_logo.png"/>
+        <Label textid="STRID_EDITOR_INPUT_TITLE" font="system_14" valign="center"/>
+        <Control />
+        <Button class="btn_wnd_close" name="closebtn" margin="4,6,8,0"/>
+      </HBox>
+      <Box height="80">
+        <HBox width="auto" height="auto" valign="center" halign="center">
+          <Label textid="STRID_EDITOR_INPUT_TITLE_TIP" width="auto" height="auto" valign="center"/>
+          <RichEdit class="input" name="re_input" width="100" height="30" align="vcenter" padding="5,0,5,0" multiline="false" autohscroll="true"/>
+        </HBox>
+      </Box>
+      <Box>
+        <HBox width="auto" height="auto" halign="center">
+          <Button class="popover_btn_ok" name="btn_ok" margin="0,0,20,0" textid="STRING_OK" />
+          <Button class="popover_btn_cancel" name="btn_cancel" textid="STRING_CANCEL" />
+        </HBox>
+      </Box>
+    </VBox>
+  </Box>
+</Window>

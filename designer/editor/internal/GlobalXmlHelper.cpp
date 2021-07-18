@@ -2,6 +2,7 @@
 #include "GlobalXmlHelper.h"
 #include "SettingsHelper.h"
 #include "../util/MD5.h"
+#include "XmlHelper.h"
 
 GlobalXmlHelper::GlobalXmlHelper()
 {
@@ -10,10 +11,11 @@ GlobalXmlHelper::GlobalXmlHelper()
 		_global_xml_path = L"";
 		return;
 	}
-	if (!_global_xml_path.empty()) {
-		if (!SetGlobalXmlPath(_global_xml_path)) {
-			_global_xml_path = L"";
-		}
+	if (_global_xml_path.empty()) {
+		return;
+	}
+	if (!SetGlobalXmlPath(_global_xml_path)) {
+		_global_xml_path = L"";
 	}
 }
 
