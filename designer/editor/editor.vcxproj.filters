@@ -177,6 +177,12 @@
     <ClInclude Include="form\EditorInputForm.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="internal\ProjectXmlHelper.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="form\EditorImportForm.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -303,6 +309,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="form\EditorInputForm.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="internal\ProjectXmlHelper.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="form\EditorImportForm.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

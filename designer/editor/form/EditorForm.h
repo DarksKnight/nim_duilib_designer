@@ -38,6 +38,7 @@ private:
 	void OnOpenSelectPathCallback(BOOL ret, std::wstring path);
 	void OnChooseGlobalXmlPath(BOOL ret, std::wstring path);
 	void OnParseControl(AreaControlDelegate* delegate);
+	void OpenImportForm();
 	void OpenCreateForm();
 	void UiChanged();
 	void ShowControlPropery();

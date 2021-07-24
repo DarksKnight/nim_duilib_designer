@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Window size="200,300" mininfo="500,500" maxinfo="500,500" caption="0,0,0,35">
+  <Box>
+    <VBox bkcolor="white">
+      <ListBox name="list_project" height="250"/>
+      <Button class="btn_global_blue_80x30" name="btn_import" textid="STRID_MENU_OPEN_FILE"/>
+    </VBox>
+  </Box>
+</Window>

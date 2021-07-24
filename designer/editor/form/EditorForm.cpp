@@ -7,6 +7,7 @@
 #include "../internal/CopyHelper.h"
 #include "../internal/SettingsHelper.h"
 #include "../internal/GlobalXmlHelper.h"
+#include "EditorImportForm.h"
 
 const LPCTSTR EditorForm::kClassName = L"EditorForm";
 
@@ -131,7 +132,7 @@ void EditorForm::OnInitForm()
 	_box_property->SetFixedWidth(width / 6);
 	std::wstring value = SettingsHelper::GetInstance()->Get(CONFIG_TAG_CREATE, CONFIG_KEY_CREATE_SHOW, L"1");
 	if (value == L"1") {
-		OpenCreateForm();
+		OpenImportForm();
 	}
 }
 
@@ -369,6 +370,20 @@ void EditorForm::OnParseControl(AreaControlDelegate* delegate)
 	}
 	else {
 		_editor_tree_controls->AddNode(delegate->GetControlData(), delegate->GetDelegateData());
+	}
+}
+
+void EditorForm::OpenImportForm()
+{
+	EditorImportForm* form = (EditorImportForm*)(nim_comp::WindowsManager::GetInstance()->GetWindow(EditorImportForm::kClassName, EditorImportForm::kClassName));
+	if (form) {
+		form->ActiveWindow();
+	}
+	else {
+		form = new EditorImportForm();
+		form->Create(GetHWND(), EditorCreateForm::kClassName, WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX, 0);
+		form->CenterWindow();
+		form->ShowWindow();
 	}
 }
 
