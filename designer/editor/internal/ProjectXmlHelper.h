@@ -7,5 +7,7 @@ public:
 	~ProjectXmlHelper();
 	SINGLETON_DEFINE(ProjectXmlHelper);
 public:
-	void CreateProjectXml(const std::wstring & folder);
+	void CreateProjectXml(const std::wstring & path);
+private:
+	const std::wstring _suffix = L".nd";
 };

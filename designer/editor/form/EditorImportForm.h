@@ -14,7 +14,7 @@ public:
 private:
 	bool OnClick(ui::EventArgs* args);
 private:
-	void OnChooseFolderCallback(BOOL ret, std::wstring path);
+	void OnChooseFileCallback(BOOL ret, std::wstring path);
 private:
 	ui::ListBox* _list_project;
 	ui::Button* _btn_import;

@@ -43,19 +43,26 @@ void EditorImportForm::InitWindow()
 bool EditorImportForm::OnClick(ui::EventArgs* args)
 {
 	nim_comp::CFileDialogEx* fileDlg = new nim_comp::CFileDialogEx;
+	std::map<LPCTSTR, LPCTSTR> filters;
+	filters[L"File Format(*.nd)"] = L"*.nd";
+	fileDlg->SetFilter(filters);
+	fileDlg->SetFileName(L"newProject");
+	fileDlg->SetDefExt(L".nd");
 	fileDlg->SetParentWnd(GetHWND());
-	nim_comp::CFileDialogEx::FileDialogCallback2 callback2 = nbase::Bind(&EditorImportForm::OnChooseFolderCallback, this, std::placeholders::_1, std::placeholders::_2);
-	fileDlg->AsyncShowSelectFolderDlg(callback2);
+	nim_comp::CFileDialogEx::FileDialogCallback2 callback2 = nbase::Bind(&EditorImportForm::OnChooseFileCallback, this, std::placeholders::_1, std::placeholders::_2);
+	fileDlg->AyncShowSaveFileDlg(callback2);
 	return true;
 }
 
-void EditorImportForm::OnChooseFolderCallback(BOOL ret, std::wstring path)
+void EditorImportForm::OnChooseFileCallback(BOOL ret, std::wstring path)
 {
 	if (!ret) {
 		return;
 	}
-	std::wstring langFolder = path + L"\\lang";
-	std::wstring themesFolder = path + L"\\themes";
+	std::wstring folder = L"";
+	nbase::FilePathApartDirectory(path, folder);
+	std::wstring langFolder = folder + L"\\lang";
+	std::wstring themesFolder = folder + L"\\themes";
 	if (!nbase::FilePathIsExist(langFolder, true) || !nbase::FilePathIsExist(themesFolder, true)) {
 		return;
 	}
