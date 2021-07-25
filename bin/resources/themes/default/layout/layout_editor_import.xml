@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Window size="200,300" mininfo="500,500" maxinfo="500,500" caption="0,0,0,35">
+<Window size="300,400" mininfo="300,400" maxinfo="300,400" caption="0,0,0,35">
   <Box>
     <VBox bkcolor="white">
-      <ListBox name="list_project" height="250"/>
-      <Button class="btn_global_blue_80x30" name="btn_import" textid="STRID_MENU_OPEN_FILE"/>
+      <HBox width="stretch" height="35" bkcolor="bk_wnd_lightcolor">
+        <Control width="25" height="25" margin="5,0,5,0" valign="center" bkimage="drawable/logo/icon_logo.png"/>
+        <Label textid="STRID_EDITOR_ND" font="system_14" valign="center"/>
+        <Control />
+        <Button class="btn_wnd_close" name="closebtn" margin="4,6,8,0"/>
+      </HBox>
+      <ListBox name="list_project" height="320"/>
+      <HBox width="auto" halign="center">
+        <Button class="btn_global_blue_80x30" name="btn_new" textid="STRID_MENU_OPEN_FILE" margin="0,0,5,0"/>
+        <Button class="btn_global_blue_80x30" name="btn_import" textid="STRID_MENU_IMPORT_ND" margin="0,0,5,0"/>
+        <Button class="btn_global_blue_80x30" name="btn_cancel" textid="STRING_CANCEL"/>
+      </HBox>
     </VBox>
   </Box>
 </Window>

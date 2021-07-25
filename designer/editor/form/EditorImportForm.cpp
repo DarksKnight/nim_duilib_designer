@@ -37,6 +37,8 @@ void EditorImportForm::InitWindow()
 {
 	_list_project = (ui::ListBox*)FindControl(L"list_project");
 	_btn_import = (ui::Button*)FindControl(L"btn_import");
+	_btn_new = (ui::Button*)FindControl(L"btn_new");
+	_btn_new->AttachClick(nbase::Bind(&EditorImportForm::OnClick, this, std::placeholders::_1));
 	_btn_import->AttachClick(nbase::Bind(&EditorImportForm::OnClick, this, std::placeholders::_1));
 }
 
@@ -49,12 +51,19 @@ bool EditorImportForm::OnClick(ui::EventArgs* args)
 	fileDlg->SetFileName(L"newProject");
 	fileDlg->SetDefExt(L".nd");
 	fileDlg->SetParentWnd(GetHWND());
-	nim_comp::CFileDialogEx::FileDialogCallback2 callback2 = nbase::Bind(&EditorImportForm::OnChooseFileCallback, this, std::placeholders::_1, std::placeholders::_2);
-	fileDlg->AyncShowSaveFileDlg(callback2);
+	std::wstring name = args->pSender->GetName();
+	if (name == L"btn_new") {
+		nim_comp::CFileDialogEx::FileDialogCallback2 callback2 = nbase::Bind(&EditorImportForm::OnNewFileCallback, this, std::placeholders::_1, std::placeholders::_2);
+		fileDlg->AyncShowSaveFileDlg(callback2);
+	}
+	else {
+		nim_comp::CFileDialogEx::FileDialogCallback2 callback2 = nbase::Bind(&EditorImportForm::OnImportFileCallback, this, std::placeholders::_1, std::placeholders::_2);
+		fileDlg->AyncShowOpenFileDlg(callback2);
+	}
 	return true;
 }
 
-void EditorImportForm::OnChooseFileCallback(BOOL ret, std::wstring path)
+void EditorImportForm::OnNewFileCallback(BOOL ret, std::wstring path)
 {
 	if (!ret) {
 		return;
@@ -66,5 +75,13 @@ void EditorImportForm::OnChooseFileCallback(BOOL ret, std::wstring path)
 	if (!nbase::FilePathIsExist(langFolder, true) || !nbase::FilePathIsExist(themesFolder, true)) {
 		return;
 	}
-	ProjectXmlHelper::GetInstance()->CreateProjectXml(path);
+	ProjectXmlHelper::GetInstance()->CreateNd(path);
+}
+
+void EditorImportForm::OnImportFileCallback(BOOL ret, std::wstring path)
+{
+	if (!ret) {
+		return;
+	}
+	ProjectXmlHelper::GetInstance()->ReadNd(path);
 }
