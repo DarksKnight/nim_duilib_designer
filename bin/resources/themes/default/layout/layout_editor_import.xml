@@ -8,7 +8,7 @@
         <Control />
         <Button class="btn_wnd_close" name="closebtn" margin="4,6,8,0"/>
       </HBox>
-      <ListBox name="list_project" height="320"/>
+      <VListBox name="list_project" height="320"/>
       <HBox width="auto" halign="center">
         <Button class="btn_global_blue_80x30" name="btn_new" textid="STRID_MENU_OPEN_FILE" margin="0,0,5,0"/>
         <Button class="btn_global_blue_80x30" name="btn_import" textid="STRID_MENU_IMPORT_ND" margin="0,0,5,0"/>

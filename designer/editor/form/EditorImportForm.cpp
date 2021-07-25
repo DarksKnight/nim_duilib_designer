@@ -1,6 +1,7 @@
 ﻿#include "../stdafx.h"
 #include "EditorImportForm.h"
 #include "../internal/ProjectXmlHelper.h"
+#include "../item/ImportItem.h"
 
 const LPCTSTR EditorImportForm::kClassName = L"EditorImportForm";
 
@@ -40,6 +41,11 @@ void EditorImportForm::InitWindow()
 	_btn_new = (ui::Button*)FindControl(L"btn_new");
 	_btn_new->AttachClick(nbase::Bind(&EditorImportForm::OnClick, this, std::placeholders::_1));
 	_btn_import->AttachClick(nbase::Bind(&EditorImportForm::OnClick, this, std::placeholders::_1));
+	std::vector<ProjectXmlHelper::ProjectInfo> projects = ProjectXmlHelper::GetInstance()->GetProjects();
+	for (auto it = projects.begin(); it != projects.end(); ++it) {
+		ImportItem* item = new ImportItem(it->name, it->path);
+		_list_project->Add(item);
+	}
 }
 
 bool EditorImportForm::OnClick(ui::EventArgs* args)

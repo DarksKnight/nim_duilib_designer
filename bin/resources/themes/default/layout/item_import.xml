@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Window>
+  <ListContainerElement class="listitem" height="45" margin="1,1,1,1" mousechild="false">
+    <VBox height="auto" valign="center">
+      <Label name="lb_name"/>
+      <Label name="lb_path"/>
+    </VBox>
+  </ListContainerElement>
+</Window>

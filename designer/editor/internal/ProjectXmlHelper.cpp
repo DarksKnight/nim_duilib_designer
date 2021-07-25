@@ -3,7 +3,23 @@
 
 ProjectXmlHelper::ProjectXmlHelper()
 {
-	_path = GlobalData::APPDATA_ROMAING + L"project.json";
+	_cache_path = GlobalData::APPDATA_ROMAING + L"project.json";
+	if (!nbase::FilePathIsExist(_cache_path, false)) {
+		return;
+	}
+	std::string content = "";
+	nbase::ReadFileToString(_cache_path, content);
+	Json::Reader reader;
+	Json::Value value;
+	bool result = reader.parse(content, value);
+	if (!result) {
+		return;
+	}
+	Json::Value projectArray = value["projects"];
+	for (int i = 0; i < projectArray.size(); i++) {
+		Json::Value obj = projectArray[i];
+		_projects.push_back(ProjectInfo(nbase::UTF8ToUTF16(obj["name"].asString()), nbase::UTF8ToUTF16(obj["path"].asString())));
+	}
 }
 
 
@@ -26,6 +42,10 @@ bool ProjectXmlHelper::CreateNd(const std::wstring& path)
 	projectElement->InsertEndChild(_layout_element);
 	ScanFolder(folder);
 	tinyxml2::XMLError result = _doc.SaveFile(nbase::UTF16ToUTF8(path).c_str());
+	if (result == tinyxml2::XML_SUCCESS) {
+		_nd_path = path;
+		SaveCache();
+	}
 	return result == tinyxml2::XML_SUCCESS;
 }
 
@@ -48,7 +68,8 @@ bool ProjectXmlHelper::ReadNd(const std::wstring& path)
 			_layout_element = element;
 		}
 	}
-
+	_nd_path = path;
+	SaveCache();
 	return true;
 }
 
@@ -85,4 +106,28 @@ void ProjectXmlHelper::ScanFolder(const std::wstring & folder)
 		}
 	} while (FindNextFile(hdnode, &wdfnode));
 	FindClose(hdnode);
+}
+
+void ProjectXmlHelper::SaveCache()
+{
+	Json::Value cacheValue;
+	Json::Value projectArray;
+	if (nbase::FilePathIsExist(_cache_path, false)) {
+		std::string content = "";
+		nbase::ReadFileToString(_cache_path, content);
+		Json::Reader reader;
+		bool result = reader.parse(content, cacheValue);
+		if (result) {
+			projectArray = cacheValue["projects"];
+		}
+	}
+	Json::Value projectValue;
+	std::wstring name = L"";
+	nbase::FilePathApartFileName(_nd_path, name);
+	projectValue["name"] = nbase::UTF16ToUTF8(name);
+	projectValue["path"] = nbase::UTF16ToUTF8(_nd_path);
+	projectArray.append(projectValue);
+	cacheValue["projects"] = projectArray;
+	Json::FastWriter writer;
+	nbase::WriteFile(_cache_path, writer.write(cacheValue));
 }

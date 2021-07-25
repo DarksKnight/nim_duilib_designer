@@ -24,3 +24,4 @@
 #include "internal/Define.h"
 
 #include <third_party/tinyxml2/include/tinyxml2.h>
+#include <third_party/jsoncpp/include/json.h>
