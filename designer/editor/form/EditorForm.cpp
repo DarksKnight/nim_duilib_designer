@@ -57,6 +57,7 @@ void EditorForm::InitWindow()
 	_controls_list = (EditorControlsList*)FindControl(L"ecl");
 	_editor_property = (EditorProperty*)FindControl(L"ep");
 	_editor_tree_controls = (EditorTreeControls*)FindControl(L"etc");
+	_editor_tree_project = (EditorTreeProject*)FindControl(L"etp");
 	_box_drag_pre = (ui::Box*)FindControl(L"box_drag_pre");
 	_box_editor_area = (ui::Box*)FindControl(L"box_editor_area");
 	_controls_list->SetSelectCallback(nbase::Bind(&EditorForm::OnSelect, this ,std::placeholders::_1));

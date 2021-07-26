@@ -6,6 +6,7 @@
 #include "../widget/EditorTreeControls.h"
 #include "../widget/MenuPropertyList.h"
 #include "EditorCreateForm.h"
+#include "../widget/EditorTreeProject.h"
 
 class EditorForm : public nim_comp::WindowEx
 {
@@ -49,6 +50,7 @@ private:
 	EditorArea* _editor_area;
 	EditorProperty* _editor_property;
 	EditorTreeControls* _editor_tree_controls;
+	EditorTreeProject* _editor_tree_project;
 	MenuPropertyList* _menu_property_list;
 	ui::Label* _lb_title;
 	ui::Box* _box_container;
