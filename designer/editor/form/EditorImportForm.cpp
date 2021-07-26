@@ -37,6 +37,7 @@ std::wstring EditorImportForm::GetWindowId() const
 void EditorImportForm::InitWindow()
 {
 	_list_project = (ui::ListBox*)FindControl(L"list_project");
+	_list_project->AttachSelect(nbase::Bind(&EditorImportForm::OnItemSelect, this, std::placeholders::_1));
 	_btn_import = (ui::Button*)FindControl(L"btn_import");
 	_btn_new = (ui::Button*)FindControl(L"btn_new");
 	_btn_new->AttachClick(nbase::Bind(&EditorImportForm::OnClick, this, std::placeholders::_1));
@@ -46,6 +47,14 @@ void EditorImportForm::InitWindow()
 		ImportItem* item = new ImportItem(it->name, it->path);
 		_list_project->Add(item);
 	}
+}
+
+LRESULT EditorImportForm::OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+	if (_callback) {
+		_callback(_select_path);
+	}
+	return __super::OnClose(uMsg, wParam, lParam, bHandled);
 }
 
 bool EditorImportForm::OnClick(ui::EventArgs* args)
@@ -69,6 +78,14 @@ bool EditorImportForm::OnClick(ui::EventArgs* args)
 	return true;
 }
 
+bool EditorImportForm::OnItemSelect(ui::EventArgs* args)
+{
+	ImportItem* item = (ImportItem*)(_list_project->GetItemAt(args->wParam));
+	_select_path = item->GetPath();
+	Close();
+	return true;
+}
+
 void EditorImportForm::OnNewFileCallback(BOOL ret, std::wstring path)
 {
 	if (!ret) {
@@ -89,5 +106,6 @@ void EditorImportForm::OnImportFileCallback(BOOL ret, std::wstring path)
 	if (!ret) {
 		return;
 	}
-	ProjectXmlHelper::GetInstance()->ReadNd(path);
+	_select_path = path;
+	Close();
 }
