@@ -8,6 +8,7 @@
 #include "../internal/SettingsHelper.h"
 #include "../internal/GlobalXmlHelper.h"
 #include "EditorImportForm.h"
+#include "../internal/ProjectXmlHelper.h"
 
 const LPCTSTR EditorForm::kClassName = L"EditorForm";
 
@@ -58,6 +59,7 @@ void EditorForm::InitWindow()
 	_editor_property = (EditorProperty*)FindControl(L"ep");
 	_editor_tree_controls = (EditorTreeControls*)FindControl(L"etc");
 	_editor_tree_project = (EditorTreeProject*)FindControl(L"etp");
+	_editor_tab_bar = (EditorTabBar*)FindControl(L"etb");
 	_box_drag_pre = (ui::Box*)FindControl(L"box_drag_pre");
 	_box_editor_area = (ui::Box*)FindControl(L"box_editor_area");
 	_controls_list->SetSelectCallback(nbase::Bind(&EditorForm::OnSelect, this ,std::placeholders::_1));
@@ -383,6 +385,7 @@ void EditorForm::OpenImportForm()
 	else {
 		form = new EditorImportForm();
 		form->Create(GetHWND(), EditorCreateForm::kClassName, WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX, 0);
+		form->SetSelectCallback(nbase::Bind(&EditorForm::ReadNd, this, std::placeholders::_1));
 		form->CenterWindow();
 		form->ShowWindow();
 	}
@@ -434,4 +437,19 @@ void EditorForm::OnMenuPropertyListSelect(const std::wstring& key, const std::ws
 	}
 	PropertyHelper::GetInstance()->SetProperty(item, key, value);
 	_editor_property->SetProperty(key, value);
+}
+
+void EditorForm::ReadNd(const std::wstring& rdPath)
+{
+	bool result = ProjectXmlHelper::GetInstance()->ReadNd(rdPath);
+	if (!result) {
+		return;
+	}
+	_toolbar->SetEnabled(true);
+	_controls_list->SetVisible(true);
+	_box_property->SetVisible(true);
+	if (GlobalXmlHelper::GetInstance()->GetGlobalXmlPath().empty()) {
+		_box_warn->SetVisible(true);
+	}
+	_editor_tab_bar->LoadProject();
 }

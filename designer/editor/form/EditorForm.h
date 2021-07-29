@@ -7,6 +7,7 @@
 #include "../widget/MenuPropertyList.h"
 #include "EditorCreateForm.h"
 #include "../widget/EditorTreeProject.h"
+#include "../widget/EditorTabBar.h"
 
 class EditorForm : public nim_comp::WindowEx
 {
@@ -44,6 +45,7 @@ private:
 	void UiChanged();
 	void ShowControlPropery();
 	void OnMenuPropertyListSelect(const std::wstring & key, const std::wstring & value);
+	void ReadNd(const std::wstring & rdPath);
 private:
 	EditorToolbar* _toolbar;
 	EditorControlsList* _controls_list;
@@ -52,6 +54,7 @@ private:
 	EditorTreeControls* _editor_tree_controls;
 	EditorTreeProject* _editor_tree_project;
 	MenuPropertyList* _menu_property_list;
+	EditorTabBar* _editor_tab_bar;
 	ui::Label* _lb_title;
 	ui::Box* _box_container;
 	ui::Box* _box_drag_pre;

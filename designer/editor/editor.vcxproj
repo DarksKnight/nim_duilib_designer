@@ -377,6 +377,7 @@
     <ClInclude Include="widget\EditorArea.h" />
     <ClInclude Include="widget\EditorControlsList.h" />
     <ClInclude Include="widget\EditorProperty.h" />
+    <ClInclude Include="widget\EditorTabBar.h" />
     <ClInclude Include="widget\EditorToolbar.h" />
     <ClInclude Include="widget\EditorTreeControls.h" />
     <ClInclude Include="widget\EditorTreeProject.h" />
@@ -441,6 +442,7 @@
     <ClCompile Include="widget\EditorArea.cpp" />
     <ClCompile Include="widget\EditorControlsList.cpp" />
     <ClCompile Include="widget\EditorProperty.cpp" />
+    <ClCompile Include="widget\EditorTabBar.cpp" />
     <ClCompile Include="widget\EditorToolbar.cpp" />
     <ClCompile Include="widget\EditorTreeControls.cpp" />
     <ClCompile Include="widget\EditorTreeProject.cpp" />

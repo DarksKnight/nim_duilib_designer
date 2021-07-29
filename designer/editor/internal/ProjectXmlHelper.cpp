@@ -121,6 +121,12 @@ void ProjectXmlHelper::SaveCache()
 			projectArray = cacheValue["projects"];
 		}
 	}
+	for (Json::ArrayIndex i = 0; i < projectArray.size(); i++) {
+		Json::Value value = projectArray[i];
+		if (value["path"] == nbase::UTF16ToUTF8(_nd_path)) {
+			return;
+		}
+	}
 	Json::Value projectValue;
 	std::wstring name = L"";
 	nbase::FilePathApartFileName(_nd_path, name);

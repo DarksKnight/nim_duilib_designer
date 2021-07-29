@@ -8,6 +8,7 @@
 #include "../widget/EditorTreeControls.h"
 #include "../widget/MenuPropertyList.h"
 #include "../widget/EditorTreeProject.h"
+#include "../widget/EditorTabBar.h"
 
 ui::Control* ExternCtrlManager::CreateExternCtrl(const std::wstring& name)
 {
@@ -26,5 +27,7 @@ ui::Control* ExternCtrlManager::CreateExternCtrl(const std::wstring& name)
 		ret = new EditorTreeProject;
 	else if (name.compare(L"MenuPropertyList") == 0)
 		ret = new MenuPropertyList;
+	else if (name.compare(L"EditorTabBar") == 0)
+		ret = new EditorTabBar;
 	return ret;
 }

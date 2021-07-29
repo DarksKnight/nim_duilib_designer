@@ -82,6 +82,10 @@ bool EditorImportForm::OnItemSelect(ui::EventArgs* args)
 {
 	ImportItem* item = (ImportItem*)(_list_project->GetItemAt(args->wParam));
 	_select_path = item->GetPath();
+	if (!nbase::FilePathIsExist(_select_path, false)) {
+		nim_comp::ShowMsgBox(GetHWND(), NULL, L"STRID_EDITOR_IMPORT_NOT_FOUND", true, L"STRID_HINT", true, L"STRING_OK", true);
+		return true;
+	}
 	Close();
 	return true;
 }

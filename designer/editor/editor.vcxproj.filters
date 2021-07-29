@@ -189,6 +189,9 @@
     <ClInclude Include="widget\EditorTreeProject.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="widget\EditorTabBar.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -327,6 +330,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="widget\EditorTreeProject.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="widget\EditorTabBar.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
