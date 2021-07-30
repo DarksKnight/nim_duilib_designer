@@ -30,10 +30,13 @@ ProjectXmlHelper::~ProjectXmlHelper()
 bool ProjectXmlHelper::CreateNd(const std::wstring& path)
 {
 	_doc.Parse(XML_HEADER);
-	tinyxml2::XMLElement* projectElement = _doc.NewElement("Window");
+	tinyxml2::XMLElement* projectElement = _doc.NewElement("Project");
 	_doc.InsertEndChild(projectElement);
 	std::wstring folder = L"";
 	nbase::FilePathApartDirectory(path, folder);
+	tinyxml2::XMLElement* rootElement = _doc.NewElement("RootPath");
+	rootElement->SetAttribute("path", nbase::UTF16ToUTF8(folder).c_str());
+	projectElement->InsertEndChild(rootElement);
 	_lang_element = _doc.NewElement("Language");
 	projectElement->InsertEndChild(_lang_element);
 	_resource_element = _doc.NewElement("Resource");
@@ -57,15 +60,18 @@ bool ProjectXmlHelper::ReadNd(const std::wstring& path)
 	}
 	tinyxml2::XMLElement* element = _doc.RootElement();
 	for (tinyxml2::XMLElement* currentElement = element->FirstChildElement(); currentElement; currentElement = currentElement->NextSiblingElement()) {
-		std::string value = element->Value();
-		if (value == "Language") {
-			_lang_element = element;
+		std::string value = currentElement->Value();
+		if (value == "RootPath") {
+			_root_path = nbase::UTF8ToUTF16(currentElement->Attribute("path"));
+		}
+		else if (value == "Language") {
+			_lang_element = currentElement;
 		}
 		else if (value == "Resource") {
-			_resource_element = element;
+			_resource_element = currentElement;
 		}
 		else if (value == "Layout") {
-			_layout_element = element;
+			_layout_element = currentElement;
 		}
 	}
 	_nd_path = path;

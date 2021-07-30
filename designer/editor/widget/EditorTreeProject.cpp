@@ -11,3 +11,8 @@ EditorTreeProject::EditorTreeProject()
 EditorTreeProject::~EditorTreeProject()
 {
 }
+
+void EditorTreeProject::LoadData(const std::wstring& path)
+{
+	
+}
