@@ -11,7 +11,9 @@ public:
 class ControlChunkUI : public ITreeItemUIStyle
 {
 public:
-	ControlChunkUI() = default;
+	ControlChunkUI() {
+		ui::GlobalManager::FillBoxWithCache(this, L"layout/item_tree_controls.xml");
+	}
 	virtual ~ControlChunkUI() = default;
 public:
 	virtual int GetHeight();
@@ -26,7 +28,6 @@ public:
 public:
 	void AddNode(const ControlData & ctrlData, DelegateData* targetData, DelegateData* parentData = NULL);
 	void RemoveNode(const std::wstring& name);
-private:
 	void Update();
 private:
 	ui::Box* _box_tree_controls;

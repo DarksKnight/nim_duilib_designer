@@ -40,6 +40,8 @@ private:
 	bool OnSelectSettings(ui::EventArgs* args);
 private:
 	void OnSelectPathCallback(BOOL ret, std::wstring path);
+	bool ParseXmlPreview(ui::Box* box, const std::wstring& path);
+	void ParseElement(tinyxml2::XMLElement* element, ui::Box* rootBox);
 private:
 	ui::ListBox* _list_create_type;
 	ui::Button* _btn_new_file;

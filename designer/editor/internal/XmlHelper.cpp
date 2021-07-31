@@ -36,7 +36,7 @@ bool XmlHelper::ConvertXml(EditorArea* area, const std::wstring& path)
 	return result == tinyxml2::XML_SUCCESS;
 }
 
-bool XmlHelper::ParseXml(ui::Box* box, const std::wstring& path, ParseControlCallback callback)
+bool XmlHelper::ParseXml(ui::Box* box, const std::wstring& path, ParseControlCallback parseCallback, StdClosure parseFinishCallback)
 {
 	tinyxml2::XMLDocument doc;
 	tinyxml2::XMLError result = doc.LoadFile(nbase::UTF16ToUTF8(path).c_str());
@@ -58,22 +58,11 @@ bool XmlHelper::ParseXml(ui::Box* box, const std::wstring& path, ParseControlCal
 	nbase::StringToInt(sizeVector[1], &height);
 	areaWindow->SetFixedHeight(height);
 	areaWindow->GetDelegateData()->SetHeight(height);
-	if (callback) {
-		callback(areaWindow);
+	if (parseCallback) {
+		parseCallback(areaWindow);
 	}
-	ParseElement(doc.RootElement()->FirstChildElement(), areaWindow, callback);
-	return true;
-}
-
-bool XmlHelper::ParseXmlPreview(ui::Box* box, const std::wstring& path)
-{
-	tinyxml2::XMLDocument doc;
-	tinyxml2::XMLError result = doc.LoadFile(nbase::UTF16ToUTF8(path).c_str());
-	if (result != tinyxml2::XML_SUCCESS) {
-		return false;
-	}
-	box->RemoveAll();
-	ParseElement(doc.RootElement(), box);
+	ParseElement(doc.RootElement()->FirstChildElement(), areaWindow, parseCallback);
+	parseFinishCallback();
 	return true;
 }
 
@@ -135,7 +124,7 @@ tinyxml2::XMLElement* XmlHelper::GetElement(tinyxml2::XMLDocument* doc, ui::Cont
 	return element;
 }
 
-void XmlHelper::ParseElement(tinyxml2::XMLElement* element, ui::Box* rootBox, ParseControlCallback callback)
+void XmlHelper::ParseElement(tinyxml2::XMLElement* element, ui::Box* rootBox, ParseControlCallback parseCallback)
 {
 	if (!rootBox) {
 		return;
@@ -144,12 +133,12 @@ void XmlHelper::ParseElement(tinyxml2::XMLElement* element, ui::Box* rootBox, Pa
 		std::wstring value = nbase::UTF8ToUTF16(currentElement->Value());
 		AreaControlDelegate* areaControl = ControlHelper::GetInstance()->DropControl(rootBox, value);
 		areaControl->ParseElement(currentElement);
-		if (callback) {
-			callback(areaControl);
+		if (parseCallback) {
+			parseCallback(areaControl);
 		}
 		ui::Box* containerBox = dynamic_cast<ui::Box*>(areaControl);
 		if (!currentElement->NoChildren() && containerBox) {
-			ParseElement(currentElement, containerBox);
+			ParseElement(currentElement, containerBox, parseCallback);
 		}
 	}
 }

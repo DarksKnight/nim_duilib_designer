@@ -28,6 +28,13 @@ private:
 	bool Notify(ui::EventArgs* args);
 	bool OnClickWarn(ui::EventArgs* args);
 private:
+	void OnCreateFormClose(EditorCreateForm::OperationType type);
+	void OnSaveSelectPathCallback(BOOL ret, std::wstring path);
+	void OnOpenSelectPathCallback(BOOL ret, std::wstring path);
+	void OnChooseGlobalXmlPath(BOOL ret, std::wstring path);
+	void OnParseControl(AreaControlDelegate* delegate);
+	void OnParseFinish();
+private:
 	void OnInitForm();
 	void OnSelect(const ControlData& data);
 	void OnButtonUp();
@@ -35,11 +42,6 @@ private:
 	void DoNewFile(const std::wstring & flag);
 	void OnOpenFile();
 	void DoOpenFile(const std::wstring& path);
-	void OnCreateFormClose(EditorCreateForm::OperationType type);
-	void OnSaveSelectPathCallback(BOOL ret, std::wstring path);
-	void OnOpenSelectPathCallback(BOOL ret, std::wstring path);
-	void OnChooseGlobalXmlPath(BOOL ret, std::wstring path);
-	void OnParseControl(AreaControlDelegate* delegate);
 	void OpenImportForm();
 	void OpenCreateForm();
 	void UiChanged();
@@ -54,13 +56,13 @@ private:
 	EditorTreeControls* _editor_tree_controls;
 	EditorTreeProject* _editor_tree_project;
 	MenuPropertyList* _menu_property_list;
-	EditorTabBar* _editor_tab_bar;
 	ui::Label* _lb_title;
 	ui::Box* _box_container;
 	ui::Box* _box_drag_pre;
 	ui::Box* _box_editor_area;
 	ui::Box* _box_property;
 	ui::Box* _box_warn;
+	ui::TabBox* _tb_tree;
 private:
 	ControlData _select_data;
 	bool _saved = false;

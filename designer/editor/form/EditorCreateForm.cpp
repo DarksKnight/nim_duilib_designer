@@ -3,6 +3,7 @@
 #include "../internal/SettingsHelper.h"
 #include "../item/CreateDataItem.h"
 #include "../internal/XmlHelper.h"
+#include "../internal/ControlHelper.h"
 
 const LPCTSTR EditorCreateForm::kClassName = L"EditorCreateForm";
 
@@ -89,7 +90,7 @@ bool EditorCreateForm::OnCreateTypeSelect(ui::EventArgs* args)
 	CreateDataItem* item = (CreateDataItem*)(_list_create_type->GetItemAt(args->wParam));
 	_create_flag = item->GetDataName();
 	std::wstring templeteXml = ui::GlobalManager::GetResourcePath() + L"templete\\templete_" + _create_flag + L".xml";
-	XmlHelper::GetInstance()->ParseXmlPreview(_box_preview, templeteXml);
+	ParseXmlPreview(_box_preview, templeteXml);
 	return true;
 }
 
@@ -135,4 +136,32 @@ void EditorCreateForm::OnSelectPathCallback(BOOL ret, std::wstring path)
 	_operation_type = OperationType::OPEN_FILE;
 	_path = path;
 	Close();
+}
+
+bool EditorCreateForm::ParseXmlPreview(ui::Box* box, const std::wstring& path)
+{
+	tinyxml2::XMLDocument doc;
+	tinyxml2::XMLError result = doc.LoadFile(nbase::UTF16ToUTF8(path).c_str());
+	if (result != tinyxml2::XML_SUCCESS) {
+		return false;
+	}
+	box->RemoveAll();
+	ParseElement(doc.RootElement(), box);
+	return true;
+}
+
+void EditorCreateForm::ParseElement(tinyxml2::XMLElement* element, ui::Box* rootBox)
+{
+	if (!rootBox) {
+		return;
+	}
+	for (tinyxml2::XMLElement* currentElement = element->FirstChildElement(); currentElement; currentElement = currentElement->NextSiblingElement()) {
+		std::wstring value = nbase::UTF8ToUTF16(currentElement->Value());
+		AreaControlDelegate* areaControl = ControlHelper::GetInstance()->DropControl(rootBox, value);
+		areaControl->ParseElement(currentElement);
+		ui::Box* containerBox = dynamic_cast<ui::Box*>(areaControl);
+		if (!currentElement->NoChildren() && containerBox) {
+			ParseElement(currentElement, containerBox);
+		}
+	}
 }

@@ -14,5 +14,5 @@ EditorTabBar::~EditorTabBar()
 
 void EditorTabBar::LoadProject()
 {
-	_editor_tree_project->LoadData(ProjectXmlHelper::GetInstance()->GetRootPath());
+	_editor_tree_project->LoadData();
 }

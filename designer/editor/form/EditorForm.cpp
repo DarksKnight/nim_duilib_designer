@@ -59,9 +59,10 @@ void EditorForm::InitWindow()
 	_editor_property = (EditorProperty*)FindControl(L"ep");
 	_editor_tree_controls = (EditorTreeControls*)FindControl(L"etc");
 	_editor_tree_project = (EditorTreeProject*)FindControl(L"etp");
-	_editor_tab_bar = (EditorTabBar*)FindControl(L"etb");
 	_box_drag_pre = (ui::Box*)FindControl(L"box_drag_pre");
 	_box_editor_area = (ui::Box*)FindControl(L"box_editor_area");
+	_tb_tree = (ui::TabBox*)FindControl(L"tb_tree");
+	_tb_tree->SelectItem(0);
 	_controls_list->SetSelectCallback(nbase::Bind(&EditorForm::OnSelect, this ,std::placeholders::_1));
 	_controls_list->SetButtonUpCallback(nbase::Bind(&EditorForm::OnButtonUp, this));
 	nbase::ThreadManager::PostTask(kThreadUI, nbase::Bind(&EditorForm::OnInitForm, this));
@@ -305,7 +306,7 @@ void EditorForm::DoOpenFile(const std::wstring& path)
 	_editor_area = new EditorArea;
 	_box_editor_area->Add(_editor_area);
 	ControlHelper::GetInstance()->SetContainerBox(_editor_area);
-	XmlHelper::GetInstance()->ParseXml(_editor_area, path, nbase::Bind(&EditorForm::OnParseControl, this, std::placeholders::_1));
+	XmlHelper::GetInstance()-> ParseXml(_editor_area, path, nbase::Bind(&EditorForm::OnParseControl, this, std::placeholders::_1), nbase::Bind(&EditorForm::OnParseFinish, this));
 	std::wstring fileName = L"";
 	nbase::FilePathApartFileName(path, fileName);
 	_title = ui::MutiLanSupport::GetInstance()->GetStringViaID(L"STRID_EDITORFORM_TITLE") + L" - " + fileName;
@@ -338,7 +339,7 @@ void EditorForm::OnSaveSelectPathCallback(BOOL ret, std::wstring path)
 	_box_editor_area->RemoveAll();
 	_editor_area = new EditorArea;
 	_box_editor_area->Add(_editor_area);
-	if (!XmlHelper::GetInstance()->ParseXml(_editor_area, _templete_path, nbase::Bind(&EditorForm::OnParseControl, this, std::placeholders::_1))) {
+	if (!XmlHelper::GetInstance()->ParseXml(_editor_area, _templete_path, nbase::Bind(&EditorForm::OnParseControl, this, std::placeholders::_1), nbase::Bind(&EditorForm::OnParseFinish, this))) {
 		nim_comp::ShowMsgBox(GetHWND(), NULL, L"STRID_CREATE_ERROR", true, L"STRID_HINT", true, L"STRING_OK", true);
 	}
 	SaveFile();
@@ -374,6 +375,11 @@ void EditorForm::OnParseControl(AreaControlDelegate* delegate)
 	else {
 		_editor_tree_controls->AddNode(delegate->GetControlData(), delegate->GetDelegateData());
 	}
+}
+
+void EditorForm::OnParseFinish()
+{
+	_editor_tree_controls->Update();
 }
 
 void EditorForm::OpenImportForm()
@@ -451,5 +457,5 @@ void EditorForm::ReadNd(const std::wstring& rdPath)
 	if (GlobalXmlHelper::GetInstance()->GetGlobalXmlPath().empty()) {
 		_box_warn->SetVisible(true);
 	}
-	_editor_tab_bar->LoadProject();
+	_editor_tree_project->LoadData();
 }

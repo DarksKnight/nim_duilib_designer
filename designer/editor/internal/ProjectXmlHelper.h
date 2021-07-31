@@ -30,6 +30,12 @@ public:
 	std::wstring GetRootPath() {
 		return _root_path;
 	}
+	tinyxml2::XMLElement* GetLangElement() {
+		return _lang_element;
+	}
+	tinyxml2::XMLElement* GetResourcesElement() {
+		return _resource_element;
+	}
 private:
 	void ScanFolder(const std::wstring& folder);
 	void SaveCache();

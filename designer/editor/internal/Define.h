@@ -69,9 +69,22 @@ struct ControlData
 
 	ControlData(){}
 
-	ControlData(std::wstring name, std::wstring desc) {
+	ControlData(const std::wstring & name, const std::wstring & desc) {
 		this->name = name;
 		this->desc = desc;
+	}
+};
+
+struct DirData
+{
+	std::wstring name = L"";
+	std::wstring path = L"";
+
+	DirData() {}
+
+	DirData(const std::wstring& name, const std::wstring& path) {
+		this->name = name;
+		this->path = path;
 	}
 };
 
