@@ -11,9 +11,7 @@ public:
 class ControlChunkUI : public ITreeItemUIStyle
 {
 public:
-	ControlChunkUI() {
-		ui::GlobalManager::FillBoxWithCache(this, L"layout/item_tree_controls.xml");
-	}
+	ControlChunkUI() = default;
 	virtual ~ControlChunkUI() = default;
 public:
 	virtual int GetHeight();

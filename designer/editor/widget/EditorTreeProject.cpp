@@ -9,17 +9,27 @@ std::string DirChunk::OnGetIUIStyleName() const
 
 int DirChunkUI::GetHeight()
 {
-	return 30;
+	return 20;
 }
 
 void DirChunkUI::OnFill()
 {
+	AttachDoubleClick(nbase::Bind(&DirChunkUI::OnDoubleClick, this, std::placeholders::_1));
 	auto&& data = std::dynamic_pointer_cast<DirData>(doc_item_);
 	if (!data) {
 		return;
 	}
 	ui::Label* lbDesc = (ui::Label*)FindSubControl(L"lb_desc");
 	lbDesc->SetText(data->name);
+}
+
+bool DirChunkUI::OnDoubleClick(ui::EventArgs* args)
+{
+	if (_selected_callback) {
+		auto&& data = std::dynamic_pointer_cast<DirData>(doc_item_);
+		_selected_callback(data->path);
+	}
+	return true;
 }
 
 EditorTreeProject::EditorTreeProject()
@@ -29,13 +39,19 @@ EditorTreeProject::EditorTreeProject()
 	nbase::ThreadManager::PostTask(ThreadId::kThreadGlobalMisc, ToWeakCallback([this]() {
 		_tree = new TreeComponent;
 		_box_tree_project->Add(_tree);
-		_tree->SetWindow(GetWindow(), NULL, false);
+		_tree->SetVerScrollUnitPixels(120);
+		_tree->SetHorScrollUnitPixels(120);
+		_tree->SetWindow(GetWindow(), this, false);
 		_tree->RegisterStyleUI("DirChunkUI", [this]() {
 			DirChunkUI* item = new DirChunkUI;
 			item->SetVirtualParent(_tree);
 			ui::GlobalManager::FillBoxWithCache(item, L"layout/item_tree_dir.xml");
 			item->SetWindow(_tree->GetWindow(), NULL);
 			item->SetOwner(_tree);
+			item->SetSelectedCallback(ToWeakCallback([=](const std::wstring& path) {
+				_selected_path = path;
+				GetWindow()->SendNotify(this, ui::kEventNotify, TREE_PROJECT_SELECTED);
+				}));
 			return std::shared_ptr<DirChunkUI>(item);
 			});
 		}));
@@ -49,7 +65,8 @@ void EditorTreeProject::LoadData()
 {
 	nbase::ThreadManager::PostTask(ThreadId::kThreadGlobalMisc, ToWeakCallback([this]() {
 		InitFolder(ProjectXmlHelper::GetInstance()->GetLangElement());
-		//InitFolder(ProjectXmlHelper::GetInstance()->GetResourcesElement());
+		InitFolder(ProjectXmlHelper::GetInstance()->GetResourcesElement());
+		InitFolder(ProjectXmlHelper::GetInstance()->GetLayoutElement());
 		nbase::ThreadManager::PostTask(ThreadId::kThreadUI, ToWeakCallback([=]() {
 			_tree->Update(true);
 			}));

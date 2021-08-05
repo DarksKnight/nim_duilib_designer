@@ -27,6 +27,7 @@ protected:
 private:
 	bool Notify(ui::EventArgs* args);
 	bool OnClickWarn(ui::EventArgs* args);
+	bool OnClickTab(ui::EventArgs* args);
 private:
 	void OnCreateFormClose(EditorCreateForm::OperationType type);
 	void OnSaveSelectPathCallback(BOOL ret, std::wstring path);
@@ -63,6 +64,8 @@ private:
 	ui::Box* _box_property;
 	ui::Box* _box_warn;
 	ui::TabBox* _tb_tree;
+	ui::Button* _btn_tree_project;
+	ui::Button* _btn_tree_controls;
 private:
 	ControlData _select_data;
 	bool _saved = false;

@@ -28,9 +28,10 @@ EditorTreeControls::EditorTreeControls()
 	nbase::ThreadManager::PostTask(ThreadId::kThreadGlobalMisc, ToWeakCallback([this]() {
 		_tree = new TreeComponent;
 		_box_tree_controls->Add(_tree);
-		_tree->SetWindow(GetWindow(), NULL, false);
+		_tree->SetWindow(GetWindow(), this, false);
 		_tree->RegisterStyleUI("ControlChunkUI", [this]() {
 			ControlChunkUI* item = new ControlChunkUI;
+			ui::GlobalManager::FillBoxWithCache(item, L"layout/item_tree_controls.xml");
 			item->SetVirtualParent(_tree);
 			item->SetWindow(_tree->GetWindow(), NULL);
 			item->SetOwner(_tree);

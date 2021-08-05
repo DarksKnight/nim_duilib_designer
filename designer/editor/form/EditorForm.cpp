@@ -62,7 +62,10 @@ void EditorForm::InitWindow()
 	_box_drag_pre = (ui::Box*)FindControl(L"box_drag_pre");
 	_box_editor_area = (ui::Box*)FindControl(L"box_editor_area");
 	_tb_tree = (ui::TabBox*)FindControl(L"tb_tree");
-	_tb_tree->SelectItem(0);
+	_btn_tree_project = (ui::Button*)FindControl(L"btn_tree_project");
+	_btn_tree_project->AttachClick(nbase::Bind(&EditorForm::OnClickTab, this, std::placeholders::_1));
+	_btn_tree_controls = (ui::Button*)FindControl(L"btn_tree_controls");
+	_btn_tree_controls->AttachClick(nbase::Bind(&EditorForm::OnClickTab, this, std::placeholders::_1));
 	_controls_list->SetSelectCallback(nbase::Bind(&EditorForm::OnSelect, this ,std::placeholders::_1));
 	_controls_list->SetButtonUpCallback(nbase::Bind(&EditorForm::OnButtonUp, this));
 	nbase::ThreadManager::PostTask(kThreadUI, nbase::Bind(&EditorForm::OnInitForm, this));
@@ -142,49 +145,73 @@ void EditorForm::OnInitForm()
 
 bool EditorForm::Notify(ui::EventArgs* args)
 {
-	if (args->Type == ui::kEventNotify) {
-		if (args->wParam == CustomEventType::UI_CHANGED) {
-			UiChanged();
+	if (args->Type != ui::kEventNotify) {
+		return true;
+	}
+	switch (args->wParam)
+	{
+	case CustomEventType::UI_CHANGED:
+		UiChanged();
+		break;
+	case CustomEventType::CONTROL_SELECTED:
+		ShowControlPropery();
+		break;
+	case CustomEventType::CONTROL_SET_PROPERTY:
+	{
+		ui::Control* item = _editor_area->FindSelectedItem(_editor_area->GetAreaWindow());
+		if (item) {
+			PropertyItem* pItem = (PropertyItem*)args->pSender;
+			PropertyHelper::GetInstance()->SetProperty(item, pItem->GetDataName(), pItem->GetValue());
 		}
-		else if (args->wParam == CustomEventType::CONTROL_SELECTED) {
-			ShowControlPropery();
+		break;
+	}
+	case CustomEventType::SHOW_CLASS_PROPERTY_LIST:
+	{
+		PropertyItem* item = (PropertyItem*)args->pSender;
+		_menu_property_list->Show(L"class");
+		_menu_property_list->SetFixedWidth(item->GetWidth() - 110);
+		_menu_property_list->SetMargin(ui::UiRect(item->GetPos(false).left + 110, item->GetPos(false).top + item->GetHeight(), 0, 0));
+		_menu_property_list->LoadClassData(GlobalXmlHelper::GetInstance()->GetClasses());
+		break;
+	}
+	case CustomEventType::SHOW_FONT_PROPERTY_LIST:
+	{
+		PropertyItem* item = (PropertyItem*)args->pSender;
+		_menu_property_list->Show(L"font");
+		_menu_property_list->SetFixedWidth(item->GetWidth() - 110);
+		_menu_property_list->SetMargin(ui::UiRect(item->GetPos(false).left + 110, item->GetPos(false).top + item->GetHeight(), 0, 0));
+		_menu_property_list->LoadFontData(GlobalXmlHelper::GetInstance()->GetClasses());
+		break;
+	}
+	case CustomEventType::PROPERTY_ITEM_CLASS_TEXT_CHANGE:
+	{
+		ui::RichEdit* richEdit = (ui::RichEdit*)args->pSender;
+		std::wstring keyword = richEdit->GetText();
+		_menu_property_list->LoadClassData(GlobalXmlHelper::GetInstance()->GetClasses(), keyword);
+		break;
+	}
+	case CustomEventType::PROPERTY_ITEM_FONT_TEXT_CHANGE:
+	{
+		ui::RichEdit* richEdit = (ui::RichEdit*)args->pSender;
+		std::wstring keyword = richEdit->GetText();
+		_menu_property_list->LoadFontData(GlobalXmlHelper::GetInstance()->GetClasses(), keyword);
+		break;
+	}
+	case CustomEventType::HIDE_PROPERTY_LIST:
+	{
+		if (!_menu_property_list->GetPos().IsPointIn(args->ptMouse)) {
+			_menu_property_list->Hide();
 		}
-		else if (args->wParam == CustomEventType::CONTROL_SET_PROPERTY) {
-			ui::Control* item = _editor_area->FindSelectedItem(_editor_area->GetAreaWindow());
-			if (item) {
-				PropertyItem* pItem = (PropertyItem*)args->pSender;
-				PropertyHelper::GetInstance()->SetProperty(item, pItem->GetDataName(), pItem->GetValue());
-			}
-		}
-		else if (args->wParam == CustomEventType::SHOW_CLASS_PROPERTY_LIST) {
-			PropertyItem* item = (PropertyItem*)args->pSender;
-			_menu_property_list->Show(L"class");
-			_menu_property_list->SetFixedWidth(item->GetWidth() - 110);
-			_menu_property_list->SetMargin(ui::UiRect(item->GetPos(false).left + 110, item->GetPos(false).top + item->GetHeight(), 0, 0));
-			_menu_property_list->LoadClassData(GlobalXmlHelper::GetInstance()->GetClasses());
-		}
-		else if (args->wParam == CustomEventType::SHOW_FONT_PROPERTY_LIST) {
-			PropertyItem* item = (PropertyItem*)args->pSender;
-			_menu_property_list->Show(L"font");
-			_menu_property_list->SetFixedWidth(item->GetWidth() - 110);
-			_menu_property_list->SetMargin(ui::UiRect(item->GetPos(false).left + 110, item->GetPos(false).top + item->GetHeight(), 0, 0));
-			_menu_property_list->LoadFontData(GlobalXmlHelper::GetInstance()->GetClasses());
-		}
-		else if (args->wParam == CustomEventType::PROPERTY_ITEM_CLASS_TEXT_CHANGE) {
-			ui::RichEdit* richEdit = (ui::RichEdit*)args->pSender;
-			std::wstring keyword = richEdit->GetText();
-			_menu_property_list->LoadClassData(GlobalXmlHelper::GetInstance()->GetClasses(), keyword);
-		}
-		else if (args->wParam == CustomEventType::PROPERTY_ITEM_FONT_TEXT_CHANGE) {
-			ui::RichEdit* richEdit = (ui::RichEdit*)args->pSender;
-			std::wstring keyword = richEdit->GetText();
-			_menu_property_list->LoadFontData(GlobalXmlHelper::GetInstance()->GetClasses(), keyword);
-		}
-		else if (args->wParam == CustomEventType::HIDE_PROPERTY_LIST) {
-			if (!_menu_property_list->GetPos().IsPointIn(args->ptMouse)) {
-				_menu_property_list->Hide();
-			}
-		}
+		break;
+	}
+	case CustomEventType::TREE_PROJECT_SELECTED:
+	{
+		std::wstring selectedPath = _editor_tree_project->GetSelectedPath();
+		DoOpenFile(selectedPath);
+		break;
+	}
+	default:
+		break;
 	}
 	return true;
 }
@@ -200,6 +227,18 @@ bool EditorForm::OnClickWarn(ui::EventArgs* args)
 	fileDlg->SetParentWnd(GetHWND());
 	nim_comp::CFileDialogEx::FileDialogCallback2 callback2 = nbase::Bind(&EditorForm::OnChooseGlobalXmlPath, this, std::placeholders::_1, std::placeholders::_2);
 	fileDlg->AyncShowOpenFileDlg(callback2);
+	return true;
+}
+
+bool EditorForm::OnClickTab(ui::EventArgs* args)
+{
+	std::wstring name = args->pSender->GetName();
+	if (name == L"btn_tree_project") {
+		_tb_tree->SelectItem(L"etp");
+	}
+	else {
+		_tb_tree->SelectItem(L"etc");
+	}
 	return true;
 }
 

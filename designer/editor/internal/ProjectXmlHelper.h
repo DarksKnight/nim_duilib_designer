@@ -36,6 +36,9 @@ public:
 	tinyxml2::XMLElement* GetResourcesElement() {
 		return _resource_element;
 	}
+	tinyxml2::XMLElement* GetLayoutElement() {
+		return _layout_element;
+	}
 private:
 	void ScanFolder(const std::wstring& folder);
 	void SaveCache();

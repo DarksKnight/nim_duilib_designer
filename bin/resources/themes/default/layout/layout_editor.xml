@@ -21,10 +21,16 @@
         <EditorControlsList name="ecl" bordersize="1" bordercolor="dark_gray" visible="false"/>
         <Box name="box_editor_area" />
         <VBox name="box_property" visible="false" bordersize="1" bordercolor="dark_gray">
-          <TabBox name="tb_tree" height="200" bottombordersize="1" bordercolor="dark_gray" padding="1,1,1,1">
-            <EditorTreeProject name="etp" />
-            <EditorTreeControls name="etc" />
-          </TabBox>
+          <VBox height="400" bottombordersize="1" bordercolor="dark_gray" padding="1,1,1,1">
+            <TabBox name="tb_tree">
+              <EditorTreeProject name="etp" />
+              <EditorTreeControls name="etc" />
+            </TabBox>
+            <HBox height="20">
+              <Button name="btn_tree_project" textid="STRID_EDITORFORM_TAB_PROJECT" cursortype="hand"/>
+              <Button name="btn_tree_controls" textid="STRID_EDITORFORM_TAB_CONTROLS" cursortype="hand"/>
+            </HBox>
+          </VBox>
           <EditorProperty name="ep"/>
         </VBox>
       </HBox>
