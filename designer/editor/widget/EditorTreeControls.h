@@ -5,16 +5,22 @@
 class ControlChunk : virtual public TreeItem<ControlData>
 {
 public:
-	virtual std::string OnGetIUIStyleName() const override;
+	std::string OnGetIUIStyleName() const {
+		return "ControlChunkUI";
+	}
 };
 
 class ControlChunkUI : public ITreeItemUIStyle
 {
 public:
-	ControlChunkUI() = default;
+	ControlChunkUI() {
+		ui::GlobalManager::FillBoxWithCache(this, L"layout/item_tree_controls.xml");
+	}
 	virtual ~ControlChunkUI() = default;
 public:
-	virtual int GetHeight();
+	int GetHeight() {
+		return 20;
+	}
 	virtual void OnFill() override;
 };
 

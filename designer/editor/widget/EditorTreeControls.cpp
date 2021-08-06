@@ -1,16 +1,6 @@
 ﻿#include "../stdafx.h"
 #include "EditorTreeControls.h"
 
-std::string ControlChunk::OnGetIUIStyleName() const
-{
-	return "ControlChunkUI";
-}
-
-int ControlChunkUI::GetHeight()
-{
-	return 30;
-}
-
 void ControlChunkUI::OnFill()
 {
 	auto&& data = std::dynamic_pointer_cast<ControlData>(doc_item_);
@@ -31,7 +21,6 @@ EditorTreeControls::EditorTreeControls()
 		_tree->SetWindow(GetWindow(), this, false);
 		_tree->RegisterStyleUI("ControlChunkUI", [this]() {
 			ControlChunkUI* item = new ControlChunkUI;
-			ui::GlobalManager::FillBoxWithCache(item, L"layout/item_tree_controls.xml");
 			item->SetVirtualParent(_tree);
 			item->SetWindow(_tree->GetWindow(), NULL);
 			item->SetOwner(_tree);

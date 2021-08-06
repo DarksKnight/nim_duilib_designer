@@ -5,7 +5,9 @@
 class DirChunk : virtual public TreeItem<DirData>
 {
 public:
-	virtual std::string OnGetIUIStyleName() const override;
+	std::string OnGetIUIStyleName() const {
+		return "DirChunkUI";
+	}
 };
 
 class DirChunkUI : public ITreeItemUIStyle
@@ -13,10 +15,14 @@ class DirChunkUI : public ITreeItemUIStyle
 public:
 	typedef std::function<void(const std::wstring& path)> SelectedCallback;
 public:
-	DirChunkUI() = default;
+	DirChunkUI() {
+		ui::GlobalManager::FillBoxWithCache(this, L"layout/item_tree_dir.xml");
+	}
 	virtual ~DirChunkUI() = default;
 public:
-	virtual int GetHeight();
+	int GetHeight() {
+		return 20;
+	}
 	virtual void OnFill() override;
 public:
 	void SetSelectedCallback(SelectedCallback callback) {

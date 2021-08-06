@@ -2,16 +2,6 @@
 #include "EditorTreeProject.h"
 #include "../internal/ProjectXmlHelper.h"
 
-std::string DirChunk::OnGetIUIStyleName() const
-{
-	return "DirChunkUI";
-}
-
-int DirChunkUI::GetHeight()
-{
-	return 20;
-}
-
 void DirChunkUI::OnFill()
 {
 	AttachDoubleClick(nbase::Bind(&DirChunkUI::OnDoubleClick, this, std::placeholders::_1));
@@ -45,7 +35,6 @@ EditorTreeProject::EditorTreeProject()
 		_tree->RegisterStyleUI("DirChunkUI", [this]() {
 			DirChunkUI* item = new DirChunkUI;
 			item->SetVirtualParent(_tree);
-			ui::GlobalManager::FillBoxWithCache(item, L"layout/item_tree_dir.xml");
 			item->SetWindow(_tree->GetWindow(), NULL);
 			item->SetOwner(_tree);
 			item->SetSelectedCallback(ToWeakCallback([=](const std::wstring& path) {
@@ -93,6 +82,7 @@ void EditorTreeProject::InitFolder(tinyxml2::XMLElement* element)
 				item->name = *it;
 				item->path = prePath + *it + L"\\";
 				item->SetItemID(nbase::UTF16ToUTF8(prePath + *it + L"\\"));
+				item->GetUI()->Collapse();
 				auto findItem = doc->GetItem(nbase::UTF16ToUTF8(prePath + *it + L"\\"));
 				if (findItem) {
 					prePath += *it + L"\\";
