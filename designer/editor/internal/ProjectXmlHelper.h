@@ -20,12 +20,13 @@ public:
 public:
 	bool CreateNd(const std::wstring& path);
 	bool ReadNd(const std::wstring& path);
+	void RemoveProject(const std::wstring & path);
 public:
-	std::vector<ProjectInfo> GetProjects() {
+	std::list<ProjectInfo> GetProjects() {
 		return _projects;
 	}
 	std::wstring GetNdPath() {
-		return _nd_path;
+		return (*_projects.begin()).path;
 	}
 	std::wstring GetRootPath() {
 		return _root_path;
@@ -48,8 +49,8 @@ private:
 	tinyxml2::XMLElement* _lang_element;
 	tinyxml2::XMLElement* _resource_element;
 	tinyxml2::XMLElement* _layout_element;
+	tinyxml2::XMLElement* _global_xml_element;
 	std::wstring _cache_path = L"";
-	std::wstring _nd_path = L"";
 	std::wstring _root_path = L"";
-	std::vector<ProjectInfo> _projects;
+	std::list<ProjectInfo> _projects;
 };

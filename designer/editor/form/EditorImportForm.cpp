@@ -42,11 +42,7 @@ void EditorImportForm::InitWindow()
 	_btn_new = (ui::Button*)FindControl(L"btn_new");
 	_btn_new->AttachClick(nbase::Bind(&EditorImportForm::OnClick, this, std::placeholders::_1));
 	_btn_import->AttachClick(nbase::Bind(&EditorImportForm::OnClick, this, std::placeholders::_1));
-	std::vector<ProjectXmlHelper::ProjectInfo> projects = ProjectXmlHelper::GetInstance()->GetProjects();
-	for (auto it = projects.begin(); it != projects.end(); ++it) {
-		ImportItem* item = new ImportItem(it->name, it->path);
-		_list_project->Add(item);
-	}
+	LoadDataItems();
 }
 
 LRESULT EditorImportForm::OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
@@ -84,6 +80,8 @@ bool EditorImportForm::OnItemSelect(ui::EventArgs* args)
 	_select_path = item->GetPath();
 	if (!nbase::FilePathIsExist(_select_path, false)) {
 		nim_comp::ShowMsgBox(GetHWND(), NULL, L"STRID_EDITOR_IMPORT_NOT_FOUND", true, L"STRID_HINT", true, L"STRING_OK", true);
+		ProjectXmlHelper::GetInstance()->RemoveProject(_select_path);
+		_list_project->Remove(item);
 		return true;
 	}
 	Close();
@@ -102,7 +100,11 @@ void EditorImportForm::OnNewFileCallback(BOOL ret, std::wstring path)
 	if (!nbase::FilePathIsExist(langFolder, true) || !nbase::FilePathIsExist(themesFolder, true)) {
 		return;
 	}
-	ProjectXmlHelper::GetInstance()->CreateNd(path);
+	bool result = ProjectXmlHelper::GetInstance()->CreateNd(path);
+	if (!result) {
+		return;
+	}
+	LoadDataItems();
 }
 
 void EditorImportForm::OnImportFileCallback(BOOL ret, std::wstring path)
@@ -112,4 +114,14 @@ void EditorImportForm::OnImportFileCallback(BOOL ret, std::wstring path)
 	}
 	_select_path = path;
 	Close();
+}
+
+void EditorImportForm::LoadDataItems()
+{
+	_list_project->RemoveAll();
+	std::list<ProjectXmlHelper::ProjectInfo> projects = ProjectXmlHelper::GetInstance()->GetProjects();
+	for (auto it = projects.begin(); it != projects.end(); ++it) {
+		ImportItem* item = new ImportItem(it->name, it->path);
+		_list_project->Add(item);
+	}
 }

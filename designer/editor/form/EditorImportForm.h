@@ -25,6 +25,8 @@ private:
 	void OnNewFileCallback(BOOL ret, std::wstring path);
 	void OnImportFileCallback(BOOL ret, std::wstring path);
 private:
+	void LoadDataItems();
+private:
 	ui::ListBox* _list_project;
 	ui::Button* _btn_import;
 	ui::Button* _btn_new;

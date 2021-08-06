@@ -34,9 +34,11 @@ bool ProjectXmlHelper::CreateNd(const std::wstring& path)
 	_doc.InsertEndChild(projectElement);
 	std::wstring folder = L"";
 	nbase::FilePathApartDirectory(path, folder);
-	tinyxml2::XMLElement* rootElement = _doc.NewElement("RootPath");
-	rootElement->SetAttribute("path", nbase::UTF16ToUTF8(folder).c_str());
-	projectElement->InsertEndChild(rootElement);
+	tinyxml2::XMLElement* rootPathElement = _doc.NewElement("RootPath");
+	rootPathElement->SetAttribute("path", nbase::UTF16ToUTF8(folder).c_str());
+	projectElement->InsertEndChild(rootPathElement);
+	_global_xml_element = _doc.NewElement("GlobalXml");
+	projectElement->InsertEndChild(_global_xml_element);
 	_lang_element = _doc.NewElement("Language");
 	projectElement->InsertEndChild(_lang_element);
 	_resource_element = _doc.NewElement("Resource");
@@ -46,7 +48,9 @@ bool ProjectXmlHelper::CreateNd(const std::wstring& path)
 	ScanFolder(folder);
 	tinyxml2::XMLError result = _doc.SaveFile(nbase::UTF16ToUTF8(path).c_str());
 	if (result == tinyxml2::XML_SUCCESS) {
-		_nd_path = path;
+		std::wstring name = L"";
+		nbase::FilePathApartFileName(path, name);
+		_projects.push_front(ProjectInfo(name, path));
 		SaveCache();
 	}
 	return result == tinyxml2::XML_SUCCESS;
@@ -74,9 +78,23 @@ bool ProjectXmlHelper::ReadNd(const std::wstring& path)
 			_layout_element = currentElement;
 		}
 	}
-	_nd_path = path;
+	RemoveProject(path);
+	std::wstring name = L"";
+	nbase::FilePathApartFileName(path, name);
+	_projects.push_front(ProjectInfo(name, path));
 	SaveCache();
 	return true;
+}
+
+void ProjectXmlHelper::RemoveProject(const std::wstring& path)
+{
+	for (auto it = _projects.begin(); it != _projects.end(); ++it) {
+		if (it->path == path) {
+			_projects.erase(it);
+			break;
+		}
+	}
+	SaveCache();
 }
 
 void ProjectXmlHelper::ScanFolder(const std::wstring & folder)
@@ -89,21 +107,25 @@ void ProjectXmlHelper::ScanFolder(const std::wstring & folder)
 		return;
 	}
 	do {
+		std::wstring fileName = wdfnode.cFileName;
 		if (wdfnode.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
-			if (!strcmp(".", nbase::UTF16ToUTF8(wdfnode.cFileName).c_str()) || !strcmp("..", nbase::UTF16ToUTF8(wdfnode.cFileName).c_str())) {
+			if (!strcmp(".", nbase::UTF16ToUTF8(fileName).c_str()) || !strcmp("..", nbase::UTF16ToUTF8(fileName).c_str())) {
 				continue;
 			}
-			ScanFolder(folder + wdfnode.cFileName + L"\\");
+			ScanFolder(folder + fileName + L"\\");
 		}
 		else {
 			tinyxml2::XMLElement* element = _doc.NewElement("Item");
-			element->SetAttribute("path", nbase::UTF16ToUTF8(folder + wdfnode.cFileName).c_str());
+			element->SetAttribute("path", nbase::UTF16ToUTF8(folder + fileName).c_str());
 			std::wstring suffix = L"";
-			nbase::FilePathExtension(wdfnode.cFileName, suffix);
+			nbase::FilePathExtension(fileName, suffix);
 			if (suffix == L".ini") {
 				_lang_element->InsertEndChild(element);
 			}
 			else if (suffix == L".xml") {
+				if (fileName == L"global.xml") {
+					_global_xml_element->SetAttribute("path", nbase::UTF16ToUTF8(folder + fileName).c_str());
+				}
 				_layout_element->InsertEndChild(element);
 			}
 			else {
@@ -118,27 +140,12 @@ void ProjectXmlHelper::SaveCache()
 {
 	Json::Value cacheValue;
 	Json::Value projectArray;
-	if (nbase::FilePathIsExist(_cache_path, false)) {
-		std::string content = "";
-		nbase::ReadFileToString(_cache_path, content);
-		Json::Reader reader;
-		bool result = reader.parse(content, cacheValue);
-		if (result) {
-			projectArray = cacheValue["projects"];
-		}
+	for (auto it = _projects.begin(); it != _projects.end(); ++it) {
+		Json::Value projectValue;
+		projectValue["name"] = nbase::UTF16ToUTF8(it->name);
+		projectValue["path"] = nbase::UTF16ToUTF8(it->path);
+		projectArray.append(projectValue);
 	}
-	for (Json::ArrayIndex i = 0; i < projectArray.size(); i++) {
-		Json::Value value = projectArray[i];
-		if (value["path"] == nbase::UTF16ToUTF8(_nd_path)) {
-			return;
-		}
-	}
-	Json::Value projectValue;
-	std::wstring name = L"";
-	nbase::FilePathApartFileName(_nd_path, name);
-	projectValue["name"] = nbase::UTF16ToUTF8(name);
-	projectValue["path"] = nbase::UTF16ToUTF8(_nd_path);
-	projectArray.append(projectValue);
 	cacheValue["projects"] = projectArray;
 	Json::FastWriter writer;
 	nbase::WriteFile(_cache_path, writer.write(cacheValue));
