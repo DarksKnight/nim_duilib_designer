@@ -26,13 +26,11 @@ protected:
 	LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam) override;
 private:
 	bool Notify(ui::EventArgs* args);
-	bool OnClickWarn(ui::EventArgs* args);
 	bool OnClickTab(ui::EventArgs* args);
 private:
 	void OnCreateFormClose(EditorCreateForm::OperationType type);
 	void OnSaveSelectPathCallback(BOOL ret, std::wstring path);
 	void OnOpenSelectPathCallback(BOOL ret, std::wstring path);
-	void OnChooseGlobalXmlPath(BOOL ret, std::wstring path);
 	void OnParseControl(AreaControlDelegate* delegate);
 	void OnParseFinish();
 private:
@@ -62,7 +60,6 @@ private:
 	ui::Box* _box_drag_pre;
 	ui::Box* _box_editor_area;
 	ui::Box* _box_property;
-	ui::Box* _box_warn;
 	ui::TabBox* _tb_tree;
 	ui::Button* _btn_tree_project;
 	ui::Button* _btn_tree_controls;

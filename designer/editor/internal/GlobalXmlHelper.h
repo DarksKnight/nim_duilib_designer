@@ -10,9 +10,6 @@ public:
 public:
 	bool SetGlobalXmlPath(const std::wstring& path);
 public:
-	std::wstring GetGlobalXmlPath() {
-		return _global_xml_path;
-	}
 	std::vector<std::wstring> GetClasses() {
 		return _classes;
 	}

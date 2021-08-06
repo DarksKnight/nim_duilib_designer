@@ -1,5 +1,6 @@
 ﻿#include "../stdafx.h"
 #include "ProjectXmlHelper.h"
+#include "GlobalXmlHelper.h"
 
 ProjectXmlHelper::ProjectXmlHelper()
 {
@@ -68,6 +69,10 @@ bool ProjectXmlHelper::ReadNd(const std::wstring& path)
 		if (value == "RootPath") {
 			_root_path = nbase::UTF8ToUTF16(currentElement->Attribute("path"));
 		}
+		else if (value == "GlobalXml") {
+			std::wstring path = nbase::UTF8ToUTF16(currentElement->Attribute("path"));
+			GlobalXmlHelper::GetInstance()->SetGlobalXmlPath(path);
+		}
 		else if (value == "Language") {
 			_lang_element = currentElement;
 		}
@@ -124,7 +129,9 @@ void ProjectXmlHelper::ScanFolder(const std::wstring & folder)
 			}
 			else if (suffix == L".xml") {
 				if (fileName == L"global.xml") {
-					_global_xml_element->SetAttribute("path", nbase::UTF16ToUTF8(folder + fileName).c_str());
+					std::wstring path = folder + fileName;
+					_global_xml_element->SetAttribute("path", nbase::UTF16ToUTF8(path).c_str());
+					GlobalXmlHelper::GetInstance()->SetGlobalXmlPath(path);
 				}
 				_layout_element->InsertEndChild(element);
 			}

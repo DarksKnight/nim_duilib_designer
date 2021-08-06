@@ -96,9 +96,6 @@ std::wstring PropertyItem::GetValue()
 
 bool PropertyItem::OnFocus(ui::EventArgs* args)
 {
-	if (GlobalXmlHelper::GetInstance()->GetGlobalXmlPath().empty()) {
-		return true;
-	}
 	if (_data.name == L"class") {
 		GetWindow()->SendNotify(this, ui::kEventNotify, CustomEventType::SHOW_CLASS_PROPERTY_LIST);
 	}
@@ -110,9 +107,6 @@ bool PropertyItem::OnFocus(ui::EventArgs* args)
 
 bool PropertyItem::OnTextChanged(ui::EventArgs* args)
 {
-	if (GlobalXmlHelper::GetInstance()->GetGlobalXmlPath().empty()) {
-		return true;
-	}
 	if (_data.name == L"class") {
 		GetWindow()->SendNotify(args->pSender, ui::kEventNotify, CustomEventType::PROPERTY_ITEM_CLASS_TEXT_CHANGE);
 	}

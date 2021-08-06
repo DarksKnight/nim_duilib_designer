@@ -46,8 +46,6 @@ void EditorForm::InitWindow()
 	m_pRoot->AttachBubbledEvent(ui::kEventAll, nbase::Bind(&EditorForm::Notify, this, std::placeholders::_1));
 	_menu_property_list = (MenuPropertyList*)FindControl(L"menu_property_list");
 	_menu_property_list->SetSelectCallback(nbase::Bind(&EditorForm::OnMenuPropertyListSelect, this, std::placeholders::_1, std::placeholders::_2));
-	_box_warn = (ui::Box*)FindControl(L"box_warn");
-	_box_warn->AttachButtonDown(nbase::Bind(&EditorForm::OnClickWarn, this, std::placeholders::_1));
 	_lb_title = (ui::Label*)FindControl(L"lb_title");
 	_toolbar = (EditorToolbar*)FindControl(L"et");
 	_toolbar->SetSaveCallback(nbase::Bind(&EditorForm::SaveFile, this));
@@ -216,20 +214,6 @@ bool EditorForm::Notify(ui::EventArgs* args)
 	return true;
 }
 
-bool EditorForm::OnClickWarn(ui::EventArgs* args)
-{
-	nim_comp::CFileDialogEx* fileDlg = new nim_comp::CFileDialogEx;
-	std::map<LPCTSTR, LPCTSTR> filters;
-	filters[L"File Format(*.xml)"] = L"*.xml";
-	fileDlg->SetFilter(filters);
-	fileDlg->SetFileName(L"global");
-	fileDlg->SetDefExt(L".xml");
-	fileDlg->SetParentWnd(GetHWND());
-	nim_comp::CFileDialogEx::FileDialogCallback2 callback2 = nbase::Bind(&EditorForm::OnChooseGlobalXmlPath, this, std::placeholders::_1, std::placeholders::_2);
-	fileDlg->AyncShowOpenFileDlg(callback2);
-	return true;
-}
-
 bool EditorForm::OnClickTab(ui::EventArgs* args)
 {
 	std::wstring name = args->pSender->GetName();
@@ -339,9 +323,6 @@ void EditorForm::DoOpenFile(const std::wstring& path)
 	_toolbar->SetEnabled(true);
 	_controls_list->SetVisible(true);
 	_box_property->SetVisible(true);
-	if (GlobalXmlHelper::GetInstance()->GetGlobalXmlPath().empty()) {
-		_box_warn->SetVisible(true);
-	}
 	_editor_area = new EditorArea;
 	_box_editor_area->Add(_editor_area);
 	ControlHelper::GetInstance()->SetContainerBox(_editor_area);
@@ -367,9 +348,6 @@ void EditorForm::OnSaveSelectPathCallback(BOOL ret, std::wstring path)
 	_toolbar->SetEnabled(true);
 	_controls_list->SetVisible(true);
 	_box_property->SetVisible(true);
-	if (GlobalXmlHelper::GetInstance()->GetGlobalXmlPath().empty()) {
-		_box_warn->SetVisible(true);
-	}
 	std::wstring fileName;
 	nbase::FilePathApartFileName(_last_save_path, fileName);
 	_title = ui::MutiLanSupport::GetInstance()->GetStringViaID(L"STRID_EDITORFORM_TITLE") + L" - " + fileName;
@@ -390,19 +368,6 @@ void EditorForm::OnOpenSelectPathCallback(BOOL ret, std::wstring path)
 		return;
 	}
 	DoOpenFile(path);
-}
-
-void EditorForm::OnChooseGlobalXmlPath(BOOL ret, std::wstring path)
-{
-	if (!ret) {
-		return;
-	}
-	std::wstring fn;
-	nbase::FilePathApartFileName(path, fn);
-	if (fn != L"global.xml") {
-		return;
-	}
-	GlobalXmlHelper::GetInstance()->SetGlobalXmlPath(path);
 }
 
 void EditorForm::OnParseControl(AreaControlDelegate* delegate)
@@ -493,8 +458,5 @@ void EditorForm::ReadNd(const std::wstring& rdPath)
 	_toolbar->SetEnabled(true);
 	_controls_list->SetVisible(true);
 	_box_property->SetVisible(true);
-	if (GlobalXmlHelper::GetInstance()->GetGlobalXmlPath().empty()) {
-		_box_warn->SetVisible(true);
-	}
 	_editor_tree_project->LoadData();
 }

@@ -104,7 +104,8 @@ void EditorImportForm::OnNewFileCallback(BOOL ret, std::wstring path)
 	if (!result) {
 		return;
 	}
-	LoadDataItems();
+	_select_path = path;
+	Close();
 }
 
 void EditorImportForm::OnImportFileCallback(BOOL ret, std::wstring path)
