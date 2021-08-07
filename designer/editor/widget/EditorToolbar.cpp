@@ -19,7 +19,7 @@ bool EditorToolbar::OnClickFile(ui::EventArgs* args)
 	ui::CPoint point(rect.left, rect.bottom);
 	::ClientToScreen(GetWindow()->GetHWND(), &point);
 	nim_comp::CMenuWnd* toolFileMenu = new nim_comp::CMenuWnd(GetWindow()->GetHWND());
-	ui::STRINGorID xml(L"../layout/menu_file.xml");
+	ui::STRINGorID xml(L"../layout/menu_tool_bar_file.xml");
 	toolFileMenu->Init(xml, _T("xml"), point);
 	nim_comp::CMenuElementUI* menuFileSave = (nim_comp::CMenuElementUI*)toolFileMenu->FindControl(L"menu_save_file");
 	menuFileSave->AttachSelect(nbase::Bind(&EditorToolbar::OnMenuSaveFile, this, std::placeholders::_1));

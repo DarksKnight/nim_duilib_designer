@@ -15,10 +15,9 @@ void DirChunkUI::OnFill()
 
 bool DirChunkUI::OnDoubleClick(ui::EventArgs* args)
 {
-	if (_selected_callback) {
-		auto&& data = std::dynamic_pointer_cast<DirData>(doc_item_);
-		_selected_callback(data->path);
-	}
+	auto&& data = std::dynamic_pointer_cast<DirData>(doc_item_);
+	_selected_path = data->path;
+	GetWindow()->SendNotify(this, ui::kEventNotify, TREE_PROJECT_SELECTED);
 	return true;
 }
 
@@ -37,10 +36,6 @@ EditorTreeProject::EditorTreeProject()
 			item->SetVirtualParent(_tree);
 			item->SetWindow(_tree->GetWindow(), NULL);
 			item->SetOwner(_tree);
-			item->SetSelectedCallback(ToWeakCallback([=](const std::wstring& path) {
-				_selected_path = path;
-				GetWindow()->SendNotify(this, ui::kEventNotify, TREE_PROJECT_SELECTED);
-				}));
 			return std::shared_ptr<DirChunkUI>(item);
 			});
 		}));
@@ -111,4 +106,10 @@ void EditorTreeProject::InitFolder(tinyxml2::XMLElement* element)
 			doc->AddItem(item, parentItem);
 		}
 	}));
+}
+
+bool EditorTreeProject::OnItemMenu(ui::EventArgs* args)
+{
+	int a = 0;
+	return true;
 }

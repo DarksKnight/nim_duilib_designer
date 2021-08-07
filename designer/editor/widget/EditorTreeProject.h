@@ -23,15 +23,15 @@ public:
 	int GetHeight() {
 		return 20;
 	}
-	virtual void OnFill() override;
-public:
-	void SetSelectedCallback(SelectedCallback callback) {
-		_selected_callback = callback;
+	std::wstring GetSelectedPath() {
+		return _selected_path;
 	}
+public:
+	virtual void OnFill() override;
 private:
 	bool OnDoubleClick(ui::EventArgs* args);
 private:
-	SelectedCallback _selected_callback;
+	std::wstring _selected_path = L"";
 };
 
 class EditorTreeProject : public ui::Box
@@ -41,15 +41,11 @@ public:
 	~EditorTreeProject();
 public:
 	void LoadData();
-public:
-	std::wstring GetSelectedPath() {
-		return _selected_path;
-	}
+private:
+	bool OnItemMenu(ui::EventArgs* args);
 private:
 	void InitFolder(tinyxml2::XMLElement* element);
 private:
 	ui::Box* _box_tree_project;
 	TreeComponent* _tree;
-private:
-	std::wstring _selected_path = L"";
 };

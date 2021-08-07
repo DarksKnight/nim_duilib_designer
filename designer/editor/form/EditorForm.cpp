@@ -204,8 +204,8 @@ bool EditorForm::Notify(ui::EventArgs* args)
 	}
 	case CustomEventType::TREE_PROJECT_SELECTED:
 	{
-		std::wstring selectedPath = _editor_tree_project->GetSelectedPath();
-		DoOpenFile(selectedPath);
+		DirChunkUI* item = (DirChunkUI*)args->pSender;
+		DoOpenFile(item->GetSelectedPath());
 		break;
 	}
 	default:
