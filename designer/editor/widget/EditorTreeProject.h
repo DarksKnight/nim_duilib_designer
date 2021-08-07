@@ -51,6 +51,7 @@ private:
 	bool OnMenuDel(ui::EventArgs* args, bool isDir, const std::wstring& path);
 private:
 	void InitFolder(tinyxml2::XMLElement* element);
+	void DeleteDirectory(const std::wstring& folder);
 private:
 	ui::Box* _box_tree_project;
 	TreeComponent* _tree;

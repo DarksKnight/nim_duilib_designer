@@ -11,9 +11,7 @@ void DirChunkUI::OnFill()
 		return;
 	}
 	_path = data->path;
-	std::wstring suffix = L"";
-	nbase::FilePathExtension(data->path, suffix);
-	_is_dir = suffix.empty();
+	_is_dir = nbase::IsDirectoryComponent(_path);
 	ui::Label* lbDesc = (ui::Label*)FindSubControl(L"lb_desc");
 	lbDesc->SetText(data->name);
 }
@@ -60,6 +58,54 @@ void EditorTreeProject::LoadData()
 			_tree->Update(true);
 			}));
 		}));
+}
+
+bool EditorTreeProject::OnItemMenu(ui::EventArgs* args)
+{
+	nim_comp::CMenuWnd* menu = new nim_comp::CMenuWnd(GetWindow()->GetHWND());
+	ui::STRINGorID xml(L"");
+	DirChunkUI* item = (DirChunkUI*)args->pSender;
+	ui::UiRect rect = args->pSender->GetPos();
+	ui::CPoint point(rect.left, rect.bottom);
+	::ClientToScreen(GetWindow()->GetHWND(), &point);
+	bool isDir = item->IsDir();
+	if (isDir) {
+		xml.m_lpstr = L"../layout/menu_tree_project_dir.xml";
+	}
+	else {
+		xml.m_lpstr = L"../layout/menu_tree_project_file.xml";
+	}
+	menu->Init(xml, _T("xml"), point);
+	nim_comp::CMenuElementUI* menuOpenDir = (nim_comp::CMenuElementUI*)menu->FindControl(L"menu_open_dir");
+	menuOpenDir->AttachClick(nbase::Bind(&EditorTreeProject::OnMenuOpenDir, this, std::placeholders::_1, isDir, item->GetPath()));
+	nim_comp::CMenuElementUI* menuDel = (nim_comp::CMenuElementUI*)menu->FindControl(L"menu_del");
+	menuDel->AttachClick(nbase::Bind(&EditorTreeProject::OnMenuDel, this, std::placeholders::_1, isDir, item->GetPath()));
+	return true;
+}
+
+bool EditorTreeProject::OnMenuOpenDir(ui::EventArgs* args, bool isDir, const std::wstring& path)
+{
+	if (isDir) {
+		ShellExecute(NULL, L"open", L"explorer.exe", path.c_str(), NULL, SW_SHOWNORMAL);
+	}
+	else {
+		ShellExecute(NULL, L"open", L"explorer.exe", (L"/select," + path).c_str(), NULL, SW_SHOWNORMAL);
+	}
+	return true;
+}
+
+bool EditorTreeProject::OnMenuDel(ui::EventArgs* args, bool isDir, const std::wstring& path)
+{
+	if (isDir) {
+		DeleteDirectory(path);
+	}
+	else {
+		nbase::DeleteFileW(path);
+		ProjectXmlHelper::GetInstance()->RemoveItem(path);
+	}
+	_tree->GetDoc()->RemoveItem(nbase::UTF16ToUTF8(path));
+	_tree->Update(true);
+	return true;
 }
 
 void EditorTreeProject::InitFolder(tinyxml2::XMLElement* element)
@@ -110,57 +156,32 @@ void EditorTreeProject::InitFolder(tinyxml2::XMLElement* element)
 			auto parentItem = doc->GetItem(nbase::UTF16ToUTF8(folderPath));
 			doc->AddItem(item, parentItem);
 		}
-	}));
+		}));
 }
 
-bool EditorTreeProject::OnItemMenu(ui::EventArgs* args)
+void EditorTreeProject::DeleteDirectory(const std::wstring & folder)
 {
-	nim_comp::CMenuWnd* menu = new nim_comp::CMenuWnd(GetWindow()->GetHWND());
-	ui::STRINGorID xml(L"");
-	DirChunkUI* item = (DirChunkUI*)args->pSender;
-	ui::UiRect rect = args->pSender->GetPos();
-	ui::CPoint point(rect.left, rect.bottom);
-	::ClientToScreen(GetWindow()->GetHWND(), &point);
-	bool isDir = item->IsDir();
-	if (isDir) {
-		xml.m_lpstr = L"../layout/menu_tree_project_dir.xml";
+	HANDLE hdnode;
+	WIN32_FIND_DATA wdfnode;
+	std::wstring path = folder + L"*.*";
+	hdnode = FindFirstFile(path.c_str(), &wdfnode);
+	if (INVALID_HANDLE_VALUE == hdnode) {
+		return;
 	}
-	else {
-		xml.m_lpstr = L"../layout/menu_tree_project_file.xml";
-	}
-	menu->Init(xml, _T("xml"), point);
-	nim_comp::CMenuElementUI* menuOpenDir = (nim_comp::CMenuElementUI*)menu->FindControl(L"menu_open_dir");
-	menuOpenDir->AttachClick(nbase::Bind(&EditorTreeProject::OnMenuOpenDir, this, std::placeholders::_1, isDir, item->GetPath()));
-	nim_comp::CMenuElementUI* menuDel = (nim_comp::CMenuElementUI*)menu->FindControl(L"menu_del");
-	menuDel->AttachClick(nbase::Bind(&EditorTreeProject::OnMenuDel, this, std::placeholders::_1, isDir, item->GetPath()));
-	return true;
-}
-
-bool EditorTreeProject::OnMenuOpenDir(ui::EventArgs* args, bool isDir, const std::wstring& path)
-{
-	if (isDir) {
-		ShellExecute(NULL, L"open", L"explorer.exe", path.c_str(), NULL, SW_SHOWNORMAL);
-	}
-	else {
-		ShellExecute(NULL, L"open", L"explorer.exe", (L"/select," + path).c_str(), NULL, SW_SHOWNORMAL);
-	}
-	return true;
-}
-
-bool EditorTreeProject::OnMenuDel(ui::EventArgs* args, bool isDir, const std::wstring& path)
-{
-	bool result = true;
-	if (isDir) {
-
-	}
-	else {
-		result = nbase::DeleteFileW(path) == TRUE;
-	}
-	if (!result) {
-		return true;
-	}
-	_tree->GetDoc()->RemoveItem(nbase::UTF16ToUTF8(path));
-	ProjectXmlHelper::GetInstance()->RemoveItem(path);
-	_tree->Update(true);
-	return true;
+	do {
+		std::wstring fileName = wdfnode.cFileName;
+		if (wdfnode.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+			if (!strcmp(".", nbase::UTF16ToUTF8(fileName).c_str()) || !strcmp("..", nbase::UTF16ToUTF8(fileName).c_str())) {
+				continue;
+			}
+			DeleteDirectory(folder + fileName + L"\\");
+		}
+		else {
+			std::wstring path = folder + fileName;
+			nbase::DeleteFileW(path);
+			ProjectXmlHelper::GetInstance()->RemoveItem(path);
+		}
+	} while (FindNextFile(hdnode, &wdfnode));
+	FindClose(hdnode);
+	RemoveDirectory(folder.c_str());
 }
