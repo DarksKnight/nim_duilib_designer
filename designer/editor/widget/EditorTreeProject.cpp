@@ -2,6 +2,7 @@
 #include "EditorTreeProject.h"
 #include "../internal/ProjectXmlHelper.h"
 #include <shellapi.h>
+#include "../form/EditorInputForm.h"
 
 void DirChunkUI::OnFill()
 {
@@ -81,8 +82,8 @@ bool EditorTreeProject::OnItemMenu(ui::EventArgs* args)
 	nim_comp::CMenuElementUI* menuDel = (nim_comp::CMenuElementUI*)menu->FindControl(L"menu_del");
 	menuDel->AttachClick(nbase::Bind(&EditorTreeProject::OnMenuDel, this, std::placeholders::_1, isDir, item->GetPath()));
 	if (isDir) {
-		nim_comp::CMenuElementUI* menuAddFile = (nim_comp::CMenuElementUI*)menu->FindControl(L"menu_add_file");
-		menuAddFile->AttachClick(nbase::Bind(&EditorTreeProject::OnMenuAddFile, this, std::placeholders::_1, item->GetPath()));
+		nim_comp::CMenuElementUI* menuNewDir = (nim_comp::CMenuElementUI*)menu->FindControl(L"menu_new_dir");
+		menuNewDir->AttachClick(nbase::Bind(&EditorTreeProject::OnMenuNewDir, this, std::placeholders::_1, item->GetPath()));
 	}
 	return true;
 }
@@ -112,20 +113,48 @@ bool EditorTreeProject::OnMenuDel(ui::EventArgs* args, bool isDir, const std::ws
 	return true;
 }
 
-bool EditorTreeProject::OnMenuAddFile(ui::EventArgs* args, const std::wstring& folder)
+bool EditorTreeProject::OnMenuNewDir(ui::EventArgs* args, const std::wstring& folder)
 {
-	nim_comp::CFileDialogEx* fileDlg = new nim_comp::CFileDialogEx;
-	fileDlg->SetParentWnd(GetWindow()->GetHWND());
-	nim_comp::CFileDialogEx::FileDialogCallback2 callback2 = nbase::Bind(&EditorTreeProject::OnAddFile, this, std::placeholders::_1, std::placeholders::_2);
-	fileDlg->AyncShowOpenFileDlg(callback2);
+	EditorInputForm* form = nim_comp::WindowsManager::GetInstance()->SingletonShow<EditorInputForm>(EditorInputForm::kClassName);
+	form->ToTopMost(true);
+	form->SetCallback(nbase::Bind(&EditorTreeProject::InputCallback, this, std::placeholders::_1, folder));
 	return true;
 }
 
-void EditorTreeProject::OnAddFile(BOOL ret, std::wstring path)
+void EditorTreeProject::InputCallback(const std::wstring& name, const std::wstring& folder)
 {
-	if (!ret) {
+	bool result = true;
+	HANDLE hdnode;
+	WIN32_FIND_DATA wdfnode;
+	std::wstring path = folder + L"*.*";
+	hdnode = FindFirstFile(path.c_str(), &wdfnode);
+	if (INVALID_HANDLE_VALUE == hdnode) {
 		return;
 	}
+	do {
+		if (wdfnode.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+			std::wstring dirName = wdfnode.cFileName;
+			if (dirName == name) {
+				result = false;
+				nim_comp::ShowMsgBox(GetWindow()->GetHWND(), NULL, L"STRID_MENU_TREE_PROJECT_MULTI_NAME", true, L"STRID_HINT", true, L"STRING_OK", true);
+				break;
+			}
+		}
+	} while (FindNextFile(hdnode, &wdfnode));
+	FindClose(hdnode);
+	if (!result) {
+		return;
+	}
+	std::wstring finalFolder = folder + name + L"\\";
+	nbase::CreateDirectory(finalFolder);
+	auto parentItem = _tree->GetDoc()->GetItem(nbase::UTF16ToUTF8(folder));
+	auto item = std::make_shared<DirChunk>();
+	item->SetTreeComponent(_tree);
+	item->name = name;
+	item->path = finalFolder;
+	item->SetItemID(nbase::UTF16ToUTF8(finalFolder));
+	_tree->GetDoc()->AddItem(item, parentItem);
+	_tree->Update(true);
 }
 
 void EditorTreeProject::InitFolder(tinyxml2::XMLElement* element)

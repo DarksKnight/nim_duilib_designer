@@ -36,7 +36,9 @@ void EditorInputForm::InitWindow()
 {
 	_re_input = (ui::RichEdit*)FindControl(L"re_input");
 	_btn_ok = (ui::Button*)FindControl(L"btn_ok");
+	_btn_ok->AttachClick(nbase::Bind(&EditorInputForm::OnClickOK, this, std::placeholders::_1));
 	_btn_cancel = (ui::Button*)FindControl(L"btn_cancel");
+	_btn_cancel->AttachClick(nbase::Bind(&EditorInputForm::OnClickCancel, this, std::placeholders::_1));
 }
 
 LRESULT EditorInputForm::OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
