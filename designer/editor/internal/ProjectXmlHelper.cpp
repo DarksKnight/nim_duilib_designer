@@ -102,6 +102,21 @@ void ProjectXmlHelper::RemoveProject(const std::wstring& path)
 	SaveCache();
 }
 
+void ProjectXmlHelper::RemoveItem(const std::wstring& path)
+{
+	bool result = RemovePathElement(_layout_element, path);
+	if (!result) {
+		result = RemovePathElement(_lang_element, path);
+	}
+	if (!result) {
+		result = RemovePathElement(_resource_element, path);
+	}
+	if (!result) {
+		return;
+	}
+	_doc.SaveFile(nbase::UTF16ToUTF8((*_projects.begin()).path).c_str());
+}
+
 void ProjectXmlHelper::ScanFolder(const std::wstring & folder)
 {
 	HANDLE hdnode;
@@ -156,4 +171,17 @@ void ProjectXmlHelper::SaveCache()
 	cacheValue["projects"] = projectArray;
 	Json::FastWriter writer;
 	nbase::WriteFile(_cache_path, writer.write(cacheValue));
+}
+
+bool ProjectXmlHelper::RemovePathElement(tinyxml2::XMLElement* element, const std::wstring& path)
+{
+	for (tinyxml2::XMLElement* currentElement = element->FirstChildElement(); currentElement; currentElement = currentElement->NextSiblingElement()) {
+		std::wstring temp = nbase::UTF8ToUTF16(currentElement->Attribute("path"));
+		if (temp != path) {
+			continue;
+		}
+		element->DeleteChild(currentElement);
+		return true;
+	}
+	return false;
 }

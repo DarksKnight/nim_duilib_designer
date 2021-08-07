@@ -125,7 +125,7 @@ ui::Control* TreeComponent::FindControlFromPoint(const ui::CPoint& pt)
 		ui::UiRect pos = pThis->GetPos();
 		return ::PtInRect(&pos, *pPoint) ? pThis : NULL;
 		}, &pt_temp, UIFIND_VISIBLE | UIFIND_HITTEST | UIFIND_TOP_FIRST);
-	if (ret != this) 
+	if (ret != this)
 	{
 		return NULL;
 	}

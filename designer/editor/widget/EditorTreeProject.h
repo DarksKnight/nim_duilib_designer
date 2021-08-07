@@ -47,6 +47,8 @@ public:
 	void LoadData();
 private:
 	bool OnItemMenu(ui::EventArgs* args);
+	bool OnMenuOpenDir(ui::EventArgs* args, bool isDir, const std::wstring & path);
+	bool OnMenuDel(ui::EventArgs* args, bool isDir, const std::wstring& path);
 private:
 	void InitFolder(tinyxml2::XMLElement* element);
 private:

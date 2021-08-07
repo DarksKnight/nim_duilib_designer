@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Window>
-  <VListBox class="menu">
-    <MenuElement class="menu_element" name="menu_open_dir" width="100" height="25">
-      <Button width="20" height="20" valign="center" mouse="false"/>
-      <Label class="menu_text" textid="STRID_MENU_TREE_PROJECT_FILE_OPEN_DIR" margin="30,0,0,0"/>
+  <VListBox class="menu" width="auto">
+    <MenuElement class="menu_element" name="menu_open_file" height="25" mousechild="false">
+      <Label class="menu_text" textid="STRID_MENU_TREE_PROJECT_FILE_OPEN"/>
+    </MenuElement>
+    <MenuElement class="menu_element" name="menu_open_dir" width="auto" height="25" mousechild="false">
+      <Label class="menu_text" textid="STRID_MENU_TREE_PROJECT_FILE_OPEN_DIR"/>
+    </MenuElement>
+    <MenuElement class="menu_element" name="menu_del" height="25" mousechild="false">
+      <Label class="menu_text" textid="STRID_MENU_TREE_PROJECT_FILE_DEL"/>
     </MenuElement>
   </VListBox>
 </Window>
