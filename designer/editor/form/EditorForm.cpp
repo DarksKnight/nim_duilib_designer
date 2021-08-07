@@ -47,6 +47,8 @@ void EditorForm::InitWindow()
 	_menu_property_list = (MenuPropertyList*)FindControl(L"menu_property_list");
 	_menu_property_list->SetSelectCallback(nbase::Bind(&EditorForm::OnMenuPropertyListSelect, this, std::placeholders::_1, std::placeholders::_2));
 	_lb_title = (ui::Label*)FindControl(L"lb_title");
+	_btn_close = (ui::Button*)FindControl(L"btn_close");
+	_btn_close->AttachClick(nbase::Bind(&EditorForm::OnClickExit, this, std::placeholders::_1));
 	_toolbar = (EditorToolbar*)FindControl(L"et");
 	_toolbar->SetSaveCallback(nbase::Bind(&EditorForm::SaveFile, this));
 	_toolbar->SetNewFileCallback(nbase::Bind(&EditorForm::OpenCreateForm, this));
@@ -67,12 +69,6 @@ void EditorForm::InitWindow()
 	_controls_list->SetSelectCallback(nbase::Bind(&EditorForm::OnSelect, this ,std::placeholders::_1));
 	_controls_list->SetButtonUpCallback(nbase::Bind(&EditorForm::OnButtonUp, this));
 	nbase::ThreadManager::PostTask(kThreadUI, nbase::Bind(&EditorForm::OnInitForm, this));
-}
-
-LRESULT EditorForm::OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
-{
-	PostQuitMessage(0L);
-	return __super::OnClose(uMsg, wParam, lParam, bHandled);
 }
 
 LRESULT EditorForm::OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
@@ -223,6 +219,12 @@ bool EditorForm::OnClickTab(ui::EventArgs* args)
 	else {
 		_tb_tree->SelectItem(L"etc");
 	}
+	return true;
+}
+
+bool EditorForm::OnClickExit(ui::EventArgs* args)
+{
+	PostQuitMessage(0);
 	return true;
 }
 

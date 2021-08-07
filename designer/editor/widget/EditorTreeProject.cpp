@@ -80,6 +80,10 @@ bool EditorTreeProject::OnItemMenu(ui::EventArgs* args)
 	menuOpenDir->AttachClick(nbase::Bind(&EditorTreeProject::OnMenuOpenDir, this, std::placeholders::_1, isDir, item->GetPath()));
 	nim_comp::CMenuElementUI* menuDel = (nim_comp::CMenuElementUI*)menu->FindControl(L"menu_del");
 	menuDel->AttachClick(nbase::Bind(&EditorTreeProject::OnMenuDel, this, std::placeholders::_1, isDir, item->GetPath()));
+	if (isDir) {
+		nim_comp::CMenuElementUI* menuAddFile = (nim_comp::CMenuElementUI*)menu->FindControl(L"menu_add_file");
+		menuAddFile->AttachClick(nbase::Bind(&EditorTreeProject::OnMenuAddFile, this, std::placeholders::_1, item->GetPath()));
+	}
 	return true;
 }
 
@@ -106,6 +110,22 @@ bool EditorTreeProject::OnMenuDel(ui::EventArgs* args, bool isDir, const std::ws
 	_tree->GetDoc()->RemoveItem(nbase::UTF16ToUTF8(path));
 	_tree->Update(true);
 	return true;
+}
+
+bool EditorTreeProject::OnMenuAddFile(ui::EventArgs* args, const std::wstring& folder)
+{
+	nim_comp::CFileDialogEx* fileDlg = new nim_comp::CFileDialogEx;
+	fileDlg->SetParentWnd(GetWindow()->GetHWND());
+	nim_comp::CFileDialogEx::FileDialogCallback2 callback2 = nbase::Bind(&EditorTreeProject::OnAddFile, this, std::placeholders::_1, std::placeholders::_2);
+	fileDlg->AyncShowOpenFileDlg(callback2);
+	return true;
+}
+
+void EditorTreeProject::OnAddFile(BOOL ret, std::wstring path)
+{
+	if (!ret) {
+		return;
+	}
 }
 
 void EditorTreeProject::InitFolder(tinyxml2::XMLElement* element)

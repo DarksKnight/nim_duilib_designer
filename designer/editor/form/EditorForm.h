@@ -19,7 +19,6 @@ public:
 	virtual std::wstring GetWindowClassName() const override;
 	virtual std::wstring GetWindowId() const override;
 	virtual void InitWindow() override;
-	virtual LRESULT OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	static const LPCTSTR kClassName;
 protected:
 	LRESULT OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled) override;
@@ -27,6 +26,7 @@ protected:
 private:
 	bool Notify(ui::EventArgs* args);
 	bool OnClickTab(ui::EventArgs* args);
+	bool OnClickExit(ui::EventArgs* args);
 private:
 	void OnCreateFormClose(EditorCreateForm::OperationType type);
 	void OnSaveSelectPathCallback(BOOL ret, std::wstring path);
@@ -63,6 +63,7 @@ private:
 	ui::TabBox* _tb_tree;
 	ui::Button* _btn_tree_project;
 	ui::Button* _btn_tree_controls;
+	ui::Button* _btn_close;
 private:
 	ControlData _select_data;
 	bool _saved = false;

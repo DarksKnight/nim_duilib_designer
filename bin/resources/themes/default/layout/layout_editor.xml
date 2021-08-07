@@ -11,7 +11,7 @@
           <Button class="btn_wnd_max" name="maxbtn"/>
           <Button class="btn_wnd_restore" name="restorebtn" visible="false"/>
         </Box>
-        <Button class="btn_wnd_close" name="closebtn" margin="4,6,8,0"/>
+        <Button class="btn_wnd_close" name="btn_close" margin="4,6,8,0"/>
       </HBox>
       <EditorToolbar name="et" height="30" enabled="false"/>
       <HBox>

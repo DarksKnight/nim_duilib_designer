@@ -49,6 +49,9 @@ private:
 	bool OnItemMenu(ui::EventArgs* args);
 	bool OnMenuOpenDir(ui::EventArgs* args, bool isDir, const std::wstring & path);
 	bool OnMenuDel(ui::EventArgs* args, bool isDir, const std::wstring& path);
+	bool OnMenuAddFile(ui::EventArgs* args, const std::wstring& folder);
+private:
+	void OnAddFile(BOOL ret, std::wstring path);
 private:
 	void InitFolder(tinyxml2::XMLElement* element);
 	void DeleteDirectory(const std::wstring& folder);

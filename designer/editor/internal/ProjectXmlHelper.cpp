@@ -91,6 +91,11 @@ bool ProjectXmlHelper::ReadNd(const std::wstring& path)
 	return true;
 }
 
+bool ProjectXmlHelper::AddItem(const std::wstring& path)
+{
+	return true;
+}
+
 void ProjectXmlHelper::RemoveProject(const std::wstring& path)
 {
 	for (auto it = _projects.begin(); it != _projects.end(); ++it) {
