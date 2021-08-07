@@ -9,6 +9,9 @@ void DirChunkUI::OnFill()
 	if (!data) {
 		return;
 	}
+	std::wstring suffix = L"";
+	nbase::FilePathExtension(data->path, suffix);
+	_is_dir = suffix.empty();
 	ui::Label* lbDesc = (ui::Label*)FindSubControl(L"lb_desc");
 	lbDesc->SetText(data->name);
 }
@@ -16,7 +19,7 @@ void DirChunkUI::OnFill()
 bool DirChunkUI::OnDoubleClick(ui::EventArgs* args)
 {
 	auto&& data = std::dynamic_pointer_cast<DirData>(doc_item_);
-	_selected_path = data->path;
+	_path = data->path;
 	GetWindow()->SendNotify(this, ui::kEventNotify, TREE_PROJECT_SELECTED);
 	return true;
 }
@@ -30,6 +33,7 @@ EditorTreeProject::EditorTreeProject()
 		_box_tree_project->Add(_tree);
 		_tree->SetVerScrollUnitPixels(120);
 		_tree->SetHorScrollUnitPixels(120);
+		_tree->AttachBubbledEvent(ui::kEventMouseRightButtonDown, nbase::Bind(&EditorTreeProject::OnItemMenu, this, std::placeholders::_1));
 		_tree->SetWindow(GetWindow(), this, false);
 		_tree->RegisterStyleUI("DirChunkUI", [this]() {
 			DirChunkUI* item = new DirChunkUI;
@@ -110,6 +114,7 @@ void EditorTreeProject::InitFolder(tinyxml2::XMLElement* element)
 
 bool EditorTreeProject::OnItemMenu(ui::EventArgs* args)
 {
-	int a = 0;
+	DirChunkUI* item = (DirChunkUI*)args->pSender;
+	bool isDir = item->IsDir();
 	return true;
 }

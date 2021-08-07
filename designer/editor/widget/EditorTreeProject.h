@@ -23,15 +23,19 @@ public:
 	int GetHeight() {
 		return 20;
 	}
-	std::wstring GetSelectedPath() {
-		return _selected_path;
+	std::wstring GetPath() {
+		return _path;
+	}
+	bool IsDir() {
+		return _is_dir;
 	}
 public:
 	virtual void OnFill() override;
 private:
 	bool OnDoubleClick(ui::EventArgs* args);
 private:
-	std::wstring _selected_path = L"";
+	std::wstring _path = L"";
+	bool _is_dir = false;
 };
 
 class EditorTreeProject : public ui::Box
