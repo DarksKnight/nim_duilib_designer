@@ -7,6 +7,12 @@
     <MenuElement class="menu_element" name="menu_new_file" height="25" mousechild="false">
       <Label class="menu_text" textid="STRID_MENU_TREE_PROJECT_DIR_NEW_FILE"/>
     </MenuElement>
+    <MenuElement class="menu_element" name="menu_add_dir" height="25" mousechild="false">
+      <Label class="menu_text" textid="STRID_MENU_TREE_PROJECT_DIR_Add"/>
+    </MenuElement>
+    <MenuElement class="menu_element" name="menu_scan" height="25" mousechild="false">
+      <Label class="menu_text" textid="STRID_MENU_TREE_PROJECT_DIR_SCAN"/>
+    </MenuElement>
     <MenuElement class="menu_element" name="menu_open_dir" width="auto" height="25" mousechild="false">
       <Label class="menu_text" textid="STRID_MENU_TREE_PROJECT_FILE_OPEN_DIR"/>
     </MenuElement>

@@ -85,6 +85,10 @@ bool EditorTreeProject::OnItemMenu(ui::EventArgs* args)
 	if (isDir) {
 		nim_comp::CMenuElementUI* menuNewDir = (nim_comp::CMenuElementUI*)menu->FindControl(L"menu_new_dir");
 		menuNewDir->AttachClick(nbase::Bind(&EditorTreeProject::OnMenuNewDir, this, std::placeholders::_1, item->GetPath()));
+		nim_comp::CMenuElementUI* menuAddDir = (nim_comp::CMenuElementUI*)menu->FindControl(L"menu_add_dir");
+		menuAddDir->AttachClick(nbase::Bind(&EditorTreeProject::OnMenuAddDir, this, std::placeholders::_1, item->GetPath()));
+		nim_comp::CMenuElementUI* menuScan = (nim_comp::CMenuElementUI*)menu->FindControl(L"menu_scan");
+		menuScan->AttachClick(nbase::Bind(&EditorTreeProject::OnMenuScan, this, std::placeholders::_1, item->GetPath()));
 	}
 	return true;
 }
@@ -119,6 +123,20 @@ bool EditorTreeProject::OnMenuNewDir(ui::EventArgs* args, const std::wstring& fo
 	EditorInputForm* form = nim_comp::WindowsManager::GetInstance()->SingletonShow<EditorInputForm>(EditorInputForm::kClassName);
 	form->ToTopMost(true);
 	form->SetCallback(nbase::Bind(&EditorTreeProject::OnNewDir, this, std::placeholders::_1, folder));
+	return true;
+}
+
+bool EditorTreeProject::OnMenuAddDir(ui::EventArgs* args, const std::wstring& folder)
+{
+	nim_comp::CFileDialogEx* fileDlg = new nim_comp::CFileDialogEx;
+	fileDlg->SetParentWnd(GetWindow()->GetHWND());
+	nim_comp::CFileDialogEx::FileDialogCallback2 callback2 = nbase::Bind(&EditorTreeProject::OnAddDir, this, std::placeholders::_1, std::placeholders::_2, folder);
+	fileDlg->AsyncShowSelectFolderDlg(callback2);
+	return true;
+}
+
+bool EditorTreeProject::OnMenuScan(ui::EventArgs* args, const std::wstring& folder)
+{
 	return true;
 }
 
@@ -157,6 +175,18 @@ void EditorTreeProject::OnNewDir(const std::wstring& name, const std::wstring& f
 	item->SetItemID(nbase::UTF16ToUTF8(finalFolder));
 	_tree->GetDoc()->AddItem(item, parentItem);
 	_tree->Update(true);
+}
+
+void EditorTreeProject::OnAddDir(BOOL ret, std::wstring path, const std::wstring& folder)
+{
+	if (!ret) {
+		return;
+	}
+	std::wstring rootPath = ProjectXmlHelper::GetInstance()->GetRootPath();
+	if (std::strcmp(nbase::UTF16ToUTF8(path).c_str(), nbase::UTF16ToUTF8(rootPath).c_str()) != 0) {
+		return;
+	}
+	auto item = _tree->GetDoc()->GetItem(nbase::UTF16ToUTF8(folder));
 }
 
 void EditorTreeProject::InitFolder(tinyxml2::XMLElement* element)

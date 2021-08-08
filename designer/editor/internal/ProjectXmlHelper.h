@@ -20,7 +20,7 @@ public:
 public:
 	bool CreateNd(const std::wstring& path);
 	bool ReadNd(const std::wstring& path);
-	bool AddDir(const std::wstring & dir);
+	void AddDir(const std::wstring & dir);
 	void RemoveProject(const std::wstring & path);
 	void RemoveItem(const std::wstring& path);
 public:
@@ -49,6 +49,7 @@ private:
 	void ScanFolder(const std::wstring& folder);
 	void SaveCache();
 	bool RemovePathElement(tinyxml2::XMLElement* element, const std::wstring & path);
+	bool CheckDupPath(tinyxml2::XMLElement* element, const std::wstring & path);
 private:
 	const std::wstring _suffix = L".nd";
 	tinyxml2::XMLDocument _doc;
