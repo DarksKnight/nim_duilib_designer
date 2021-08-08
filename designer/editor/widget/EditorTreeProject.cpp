@@ -55,6 +55,7 @@ void EditorTreeProject::LoadData()
 		InitFolder(ProjectXmlHelper::GetInstance()->GetLangElement());
 		InitFolder(ProjectXmlHelper::GetInstance()->GetResourcesElement());
 		InitFolder(ProjectXmlHelper::GetInstance()->GetLayoutElement());
+		InitFolder(ProjectXmlHelper::GetInstance()->GetDirElement());
 		nbase::ThreadManager::PostTask(ThreadId::kThreadUI, ToWeakCallback([=]() {
 			_tree->Update(true);
 			}));
@@ -195,10 +196,13 @@ void EditorTreeProject::InitFolder(tinyxml2::XMLElement* element)
 			if (folderPath == rootPath) {
 				continue;
 			}
-			auto item = std::make_shared<DirChunk>();
-			item->SetTreeComponent(_tree);
 			std::wstring fn = L"";
 			nbase::FilePathApartFileName(path, fn);
+			if (fn.empty()) {
+				continue;
+			}
+			auto item = std::make_shared<DirChunk>();
+			item->SetTreeComponent(_tree);
 			item->name = fn;
 			item->path = path;
 			item->SetItemID(nbase::UTF16ToUTF8(path));

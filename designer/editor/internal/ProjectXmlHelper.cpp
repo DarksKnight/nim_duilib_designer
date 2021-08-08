@@ -46,6 +46,8 @@ bool ProjectXmlHelper::CreateNd(const std::wstring& path)
 	projectElement->InsertEndChild(_resource_element);
 	_layout_element = _doc.NewElement("Layout");
 	projectElement->InsertEndChild(_layout_element);
+	_dir_element = _doc.NewElement("Dir");
+	projectElement->InsertEndChild(_dir_element);
 	ScanFolder(folder);
 	tinyxml2::XMLError result = _doc.SaveFile(nbase::UTF16ToUTF8(path).c_str());
 	if (result == tinyxml2::XML_SUCCESS) {
@@ -81,6 +83,9 @@ bool ProjectXmlHelper::ReadNd(const std::wstring& path)
 		}
 		else if (value == "Layout") {
 			_layout_element = currentElement;
+		}
+		else if (value == "Dir") {
+			_dir_element = currentElement;
 		}
 	}
 	RemoveProject(path);
@@ -131,15 +136,18 @@ void ProjectXmlHelper::ScanFolder(const std::wstring & folder)
 	if (INVALID_HANDLE_VALUE == hdnode) {
 		return;
 	}
+	bool isDirEmpty = true;
 	do {
 		std::wstring fileName = wdfnode.cFileName;
 		if (wdfnode.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
 			if (!strcmp(".", nbase::UTF16ToUTF8(fileName).c_str()) || !strcmp("..", nbase::UTF16ToUTF8(fileName).c_str())) {
 				continue;
 			}
+			isDirEmpty = false;
 			ScanFolder(folder + fileName + L"\\");
 		}
 		else {
+			isDirEmpty = false;
 			tinyxml2::XMLElement* element = _doc.NewElement("Item");
 			element->SetAttribute("path", nbase::UTF16ToUTF8(folder + fileName).c_str());
 			std::wstring suffix = L"";
@@ -161,6 +169,11 @@ void ProjectXmlHelper::ScanFolder(const std::wstring & folder)
 		}
 	} while (FindNextFile(hdnode, &wdfnode));
 	FindClose(hdnode);
+	if (isDirEmpty) {
+		tinyxml2::XMLElement* element = _doc.NewElement("Item");
+		element->SetAttribute("path", nbase::UTF16ToUTF8(folder).c_str());
+		_dir_element->InsertEndChild(element);
+	}
 }
 
 void ProjectXmlHelper::SaveCache()
