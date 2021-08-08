@@ -20,7 +20,7 @@ public:
 public:
 	bool CreateNd(const std::wstring& path);
 	bool ReadNd(const std::wstring& path);
-	bool AddItem(const std::wstring & path);
+	bool AddDir(const std::wstring & dir);
 	void RemoveProject(const std::wstring & path);
 	void RemoveItem(const std::wstring& path);
 public:

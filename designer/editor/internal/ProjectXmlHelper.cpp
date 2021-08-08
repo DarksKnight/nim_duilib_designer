@@ -96,8 +96,12 @@ bool ProjectXmlHelper::ReadNd(const std::wstring& path)
 	return true;
 }
 
-bool ProjectXmlHelper::AddItem(const std::wstring& path)
+bool ProjectXmlHelper::AddDir(const std::wstring& dir)
 {
+	tinyxml2::XMLElement* element = _doc.NewElement("Item");
+	element->SetAttribute("path", nbase::UTF16ToUTF8(dir).c_str());
+	_dir_element->InsertEndChild(element);
+	_doc.SaveFile(nbase::UTF16ToUTF8((*_projects.begin()).path).c_str());
 	return true;
 }
 
@@ -120,6 +124,9 @@ void ProjectXmlHelper::RemoveItem(const std::wstring& path)
 	}
 	if (!result) {
 		result = RemovePathElement(_resource_element, path);
+	}
+	if (!result) {
+		result = RemovePathElement(_dir_element, path);
 	}
 	if (!result) {
 		return;

@@ -118,11 +118,11 @@ bool EditorTreeProject::OnMenuNewDir(ui::EventArgs* args, const std::wstring& fo
 {
 	EditorInputForm* form = nim_comp::WindowsManager::GetInstance()->SingletonShow<EditorInputForm>(EditorInputForm::kClassName);
 	form->ToTopMost(true);
-	form->SetCallback(nbase::Bind(&EditorTreeProject::InputCallback, this, std::placeholders::_1, folder));
+	form->SetCallback(nbase::Bind(&EditorTreeProject::OnNewDir, this, std::placeholders::_1, folder));
 	return true;
 }
 
-void EditorTreeProject::InputCallback(const std::wstring& name, const std::wstring& folder)
+void EditorTreeProject::OnNewDir(const std::wstring& name, const std::wstring& folder)
 {
 	bool result = true;
 	HANDLE hdnode;
@@ -148,6 +148,7 @@ void EditorTreeProject::InputCallback(const std::wstring& name, const std::wstri
 	}
 	std::wstring finalFolder = folder + name + L"\\";
 	nbase::CreateDirectory(finalFolder);
+	ProjectXmlHelper::GetInstance()->AddDir(finalFolder);
 	auto parentItem = _tree->GetDoc()->GetItem(nbase::UTF16ToUTF8(folder));
 	auto item = std::make_shared<DirChunk>();
 	item->SetTreeComponent(_tree);
@@ -223,18 +224,21 @@ void EditorTreeProject::DeleteDirectory(const std::wstring & folder)
 	}
 	do {
 		std::wstring fileName = wdfnode.cFileName;
+		std::wstring deletePath = L"";
 		if (wdfnode.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
 			if (!strcmp(".", nbase::UTF16ToUTF8(fileName).c_str()) || !strcmp("..", nbase::UTF16ToUTF8(fileName).c_str())) {
 				continue;
 			}
-			DeleteDirectory(folder + fileName + L"\\");
+			deletePath = folder + fileName + L"\\";
+			DeleteDirectory(deletePath);
 		}
 		else {
-			std::wstring path = folder + fileName;
-			nbase::DeleteFileW(path);
-			ProjectXmlHelper::GetInstance()->RemoveItem(path);
+			deletePath = folder + fileName;
+			nbase::DeleteFile(deletePath);
 		}
+		ProjectXmlHelper::GetInstance()->RemoveItem(deletePath);
 	} while (FindNextFile(hdnode, &wdfnode));
 	FindClose(hdnode);
 	RemoveDirectory(folder.c_str());
+	ProjectXmlHelper::GetInstance()->RemoveItem(folder);
 }

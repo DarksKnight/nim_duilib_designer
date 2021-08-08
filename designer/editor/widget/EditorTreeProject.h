@@ -51,7 +51,7 @@ private:
 	bool OnMenuDel(ui::EventArgs* args, bool isDir, const std::wstring& path);
 	bool OnMenuNewDir(ui::EventArgs* args, const std::wstring& folder);
 private:
-	void InputCallback(const std::wstring& name, const std::wstring & folder);
+	void OnNewDir(const std::wstring& name, const std::wstring & folder);
 private:
 	void InitFolder(tinyxml2::XMLElement* element);
 	void DeleteDirectory(const std::wstring& folder);
