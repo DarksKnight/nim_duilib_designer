@@ -23,6 +23,7 @@ public:
 	void AddDir(const std::wstring & dir);
 	void RemoveProject(const std::wstring & path);
 	void RemoveItem(const std::wstring& path);
+	void ScanFolder(const std::wstring & folder, std::vector<std::wstring> & paths);
 public:
 	std::list<ProjectInfo> GetProjects() {
 		return _projects;
@@ -45,8 +46,11 @@ public:
 	tinyxml2::XMLElement* GetDirElement() {
 		return _dir_element;
 	}
+	void Save() {
+		_doc.SaveFile(nbase::UTF16ToUTF8((*_projects.begin()).path).c_str());
+	}
 private:
-	void ScanFolder(const std::wstring& folder);
+	void InternalScanFolder(const std::wstring& folder);
 	void SaveCache();
 	bool RemovePathElement(tinyxml2::XMLElement* element, const std::wstring & path);
 	bool CheckDupPath(tinyxml2::XMLElement* element, const std::wstring & path);

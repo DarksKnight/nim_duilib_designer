@@ -48,7 +48,7 @@ bool ProjectXmlHelper::CreateNd(const std::wstring& path)
 	projectElement->InsertEndChild(_layout_element);
 	_dir_element = _doc.NewElement("Dir");
 	projectElement->InsertEndChild(_dir_element);
-	ScanFolder(folder);
+	InternalScanFolder(folder);
 	tinyxml2::XMLError result = _doc.SaveFile(nbase::UTF16ToUTF8(path).c_str());
 	if (result == tinyxml2::XML_SUCCESS) {
 		std::wstring name = L"";
@@ -136,7 +136,7 @@ void ProjectXmlHelper::RemoveItem(const std::wstring& path)
 	_doc.SaveFile(nbase::UTF16ToUTF8((*_projects.begin()).path).c_str());
 }
 
-void ProjectXmlHelper::ScanFolder(const std::wstring & folder)
+void ProjectXmlHelper::ScanFolder(const std::wstring& folder, std::vector<std::wstring>& paths)
 {
 	HANDLE hdnode;
 	WIN32_FIND_DATA wdfnode;
@@ -153,7 +153,51 @@ void ProjectXmlHelper::ScanFolder(const std::wstring & folder)
 				continue;
 			}
 			isDirEmpty = false;
-			ScanFolder(folder + fileName + L"\\");
+			ScanFolder(folder + fileName + L"\\", paths);
+		}
+		else {
+			isDirEmpty = false;
+			std::wstring path = folder + fileName;
+			paths.push_back(path);
+			tinyxml2::XMLElement* element = _doc.NewElement("Item");
+			element->SetAttribute("path", nbase::UTF16ToUTF8(path).c_str());
+			std::wstring suffix = L"";
+			nbase::FilePathExtension(fileName, suffix);
+			if (suffix == L".xml") {
+				_layout_element->InsertEndChild(element);
+			}
+			else {
+				_resource_element->InsertEndChild(element);
+			}
+		}
+	} while (FindNextFile(hdnode, &wdfnode));
+	FindClose(hdnode);
+	if (isDirEmpty) {
+		tinyxml2::XMLElement* element = _doc.NewElement("Item");
+		element->SetAttribute("path", nbase::UTF16ToUTF8(folder).c_str());
+		_dir_element->InsertEndChild(element);
+		paths.push_back(folder);
+	}
+}
+
+void ProjectXmlHelper::InternalScanFolder(const std::wstring & folder)
+{
+	HANDLE hdnode;
+	WIN32_FIND_DATA wdfnode;
+	std::wstring path = folder + L"*.*";
+	hdnode = FindFirstFile(path.c_str(), &wdfnode);
+	if (INVALID_HANDLE_VALUE == hdnode) {
+		return;
+	}
+	bool isDirEmpty = true;
+	do {
+		std::wstring fileName = wdfnode.cFileName;
+		if (wdfnode.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+			if (!strcmp(".", nbase::UTF16ToUTF8(fileName).c_str()) || !strcmp("..", nbase::UTF16ToUTF8(fileName).c_str())) {
+				continue;
+			}
+			isDirEmpty = false;
+			InternalScanFolder(folder + fileName + L"\\");
 		}
 		else {
 			isDirEmpty = false;
