@@ -21,7 +21,9 @@ void DirChunkUI::OnFill()
 bool DirChunkUI::OnDoubleClick(ui::EventArgs* args)
 {
 	auto&& data = std::dynamic_pointer_cast<DirData>(doc_item_);
-	GetWindow()->SendNotify(this, ui::kEventNotify, TREE_PROJECT_SELECTED);
+	if (!_is_dir) {
+		GetWindow()->SendNotify(this, ui::kEventNotify, TREE_PROJECT_SELECTED_FILE);
+	}
 	return true;
 }
 

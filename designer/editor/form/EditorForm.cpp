@@ -194,7 +194,7 @@ bool EditorForm::Notify(ui::EventArgs* args)
 		}
 		break;
 	}
-	case CustomEventType::TREE_PROJECT_SELECTED:
+	case CustomEventType::TREE_PROJECT_SELECTED_FILE:
 	{
 		DirChunkUI* item = (DirChunkUI*)args->pSender;
 		DoOpenFile(item->GetPath());
@@ -342,10 +342,11 @@ void EditorForm::OnParseFinish()
 void EditorForm::NewFileInputCallback(const std::wstring& fn, const std::wstring& templetePath, const std::wstring& createFolder)
 {
 	_last_save_path = createFolder + fn + L".xml";
+	if (nbase::FilePathIsExist(_last_save_path, false)) {
+		nim_comp::ShowMsgBox(GetHWND(), NULL, L"STRID_CREATE_NEW_FILE_ERROR_DUP", true, L"STRID_HINT", true, L"STRING_OK", true);
+		return;
+	}
 	XmlHelper::GetInstance()->SetSavedXmlPath(_last_save_path);
-	_toolbar->SetEnabled(true);
-	_controls_list->SetVisible(true);
-	_box_property->SetVisible(true);
 	std::wstring fileName;
 	nbase::FilePathApartFileName(_last_save_path, fileName);
 	_title = ui::MutiLanSupport::GetInstance()->GetStringViaID(L"STRID_EDITORFORM_TITLE") + L" - " + fileName;
