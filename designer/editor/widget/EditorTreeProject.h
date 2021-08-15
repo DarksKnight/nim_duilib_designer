@@ -2,7 +2,7 @@
 #include "../extern_ctrl/treectrl/treeitem_uistyle.h"
 #include "../extern_ctrl/treectrl/treeview.h"
 
-class DirChunk : virtual public TreeItem<DirData>
+class PathChunk : virtual public TreeItem<DirData>
 {
 public:
 	std::string OnGetIUIStyleName() const {
@@ -45,6 +45,7 @@ public:
 	~EditorTreeProject();
 public:
 	void LoadData();
+	void AddLyaoutNode(const std::wstring & folder, const std::wstring & path);
 public:
 	std::wstring GetFlag() {
 		return _flag;

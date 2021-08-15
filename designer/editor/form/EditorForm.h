@@ -35,7 +35,7 @@ private:
 	void OnInitForm();
 	void OnSelect(const ControlData& data);
 	void OnButtonUp();
-	void SaveFile();
+	bool SaveFile();
 	void DoNewFile(const std::wstring& flag, const std::wstring & folder);
 	void DoOpenFile(const std::wstring& path);
 	void OpenImportForm();

@@ -264,24 +264,25 @@ void EditorForm::OnButtonUp()
 	UiChanged();
 }
 
-void EditorForm::SaveFile()
+bool EditorForm::SaveFile()
 {
 	if (_saved) {
-		return;
+		return true;
 	}
 	if (_last_save_path.empty()) {
 		nim_comp::ShowMsgBox(GetHWND(), NULL, L"STRID_UNSAVE_ERROR_NOT_FOUND_FILE", true, L"STRID_HINT", true, L"STRING_OK", true);
-		return;
+		return false;
 	}
 	if (!XmlHelper::GetInstance()->ConvertXml(_editor_area, _last_save_path)) {
 		nim_comp::ShowMsgBox(GetHWND(), nim_comp::MsgboxCallback(), L"STRID_UNSAVE_ERROR_NOT_FOUND_FILE", true, L"STRID_HINT");
-		return;
+		return false;
 	}
 	std::wstring fileName;
 	nbase::FilePathApartFileName(_last_save_path, fileName);
 	_title = ui::MutiLanSupport::GetInstance()->GetStringViaID(L"STRID_EDITORFORM_TITLE") + L" - " + fileName;
 	_lb_title->SetText(_title);
 	_saved = true;
+	return true;
 }
 
 void EditorForm::DoNewFile(const std::wstring& flag, const std::wstring& folder)
@@ -357,8 +358,12 @@ void EditorForm::NewFileInputCallback(const std::wstring& fn, const std::wstring
 	_box_editor_area->Add(_editor_area);
 	if (!XmlHelper::GetInstance()->ParseXml(_editor_area, templetePath, nbase::Bind(&EditorForm::OnParseControl, this, std::placeholders::_1), nbase::Bind(&EditorForm::OnParseFinish, this))) {
 		nim_comp::ShowMsgBox(GetHWND(), NULL, L"STRID_CREATE_ERROR", true, L"STRID_HINT", true, L"STRING_OK", true);
+		return;
 	}
-	SaveFile();
+	if (!SaveFile()) {
+		return;
+	}
+	_editor_tree_project->AddLyaoutNode(createFolder, _last_save_path);
 }
 
 void EditorForm::OpenImportForm()

@@ -24,6 +24,7 @@ public:
 	void RemoveProject(const std::wstring & path);
 	void RemoveItem(const std::wstring& path);
 	void ScanFolder(const std::wstring & folder, std::vector<std::wstring> & paths);
+	void AddLayoutElement(const std::wstring & path);
 public:
 	std::list<ProjectInfo> GetProjects() {
 		return _projects;

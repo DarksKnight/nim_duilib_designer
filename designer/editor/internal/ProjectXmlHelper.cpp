@@ -182,6 +182,13 @@ void ProjectXmlHelper::ScanFolder(const std::wstring& folder, std::vector<std::w
 	}
 }
 
+void ProjectXmlHelper::AddLayoutElement(const std::wstring& path)
+{
+	tinyxml2::XMLElement* element = _doc.NewElement("Item");
+	element->SetAttribute("path", nbase::UTF16ToUTF8(path).c_str());
+	_layout_element->InsertEndChild(element);
+}
+
 void ProjectXmlHelper::InternalScanFolder(const std::wstring & folder)
 {
 	HANDLE hdnode;
