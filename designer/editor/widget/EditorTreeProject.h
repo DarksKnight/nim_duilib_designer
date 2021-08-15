@@ -58,6 +58,7 @@ private:
 private:
 	void InitFolder(tinyxml2::XMLElement* element);
 	void DeleteDirectory(const std::wstring& folder);
+	void ScanFolder(std::wstring selectPath, const std::wstring & parentFolder);
 private:
 	ui::Box* _box_tree_project;
 	TreeComponent* _tree;

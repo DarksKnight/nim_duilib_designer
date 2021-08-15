@@ -137,6 +137,8 @@ bool EditorTreeProject::OnMenuAddDir(ui::EventArgs* args, const std::wstring& fo
 
 bool EditorTreeProject::OnMenuScan(ui::EventArgs* args, const std::wstring& folder)
 {
+	std::wstring selectPath = folder.substr(0, folder.length() - 1);
+	ScanFolder(selectPath, folder);
 	return true;
 }
 
@@ -185,65 +187,7 @@ void EditorTreeProject::OnAddDir(BOOL ret, std::wstring selectPath, const std::w
 	if (selectPath.substr(0, folder.length()) != folder) {
 		return;
 	}
-	std::wstring dirName = L"";
-	nbase::FilePathApartFileName(selectPath, dirName);
-	selectPath += L"\\";
-	auto doc = _tree->GetDoc();
-	auto findSelectItem = doc->GetItem(nbase::UTF16ToUTF8(selectPath));
-	if (findSelectItem) {
-		return;
-	}
-	std::vector<std::wstring> paths;
-	ProjectXmlHelper::GetInstance()->ScanFolder(selectPath, paths);
-	auto parentItem = doc->GetItem(nbase::UTF16ToUTF8(folder));
-	auto rootItem = std::make_shared<DirChunk>();
-	rootItem->SetTreeComponent(_tree);
-	rootItem->name = dirName;
-	rootItem->path = selectPath;
-	rootItem->SetItemID(nbase::UTF16ToUTF8(selectPath));
-	rootItem->GetUI()->Collapse();
-	doc->AddItem(rootItem, parentItem);
-	for (int i = 0; i < paths.size(); i++) {
-		std::wstring folderPath = L"";
-		nbase::FilePathApartDirectory(paths[i], folderPath);
-		std::list<std::wstring> folderList = ui::StringHelper::Split(folderPath.substr(selectPath.length()), L"\\");
-		std::wstring prePath = selectPath;
-		for (auto it = folderList.begin(); it != folderList.end(); ++it) {
-			auto findItem = doc->GetItem(nbase::UTF16ToUTF8(prePath + *it + L"\\"));
-			if (findItem) {
-				prePath += *it + L"\\";
-				continue;
-			}
-			auto item = std::make_shared<DirChunk>();
-			item->SetTreeComponent(_tree);
-			item->name = *it;
-			item->path = prePath + *it + L"\\";
-			item->SetItemID(nbase::UTF16ToUTF8(prePath + *it + L"\\"));
-			item->GetUI()->Collapse();
-			auto parentItem = doc->GetItem(nbase::UTF16ToUTF8(prePath));
-			if (parentItem) {
-				doc->AddItem(item, parentItem);
-			}
-			else {
-				doc->AddItem(item);
-			}
-			prePath += *it + L"\\";
-		}
-		std::wstring fn = L"";
-		nbase::FilePathApartFileName(paths[i], fn);
-		if (fn.empty()) {
-			continue;
-		}
-		auto item = std::make_shared<DirChunk>();
-		item->SetTreeComponent(_tree);
-		item->name = fn;
-		item->path = paths[i];
-		item->SetItemID(nbase::UTF16ToUTF8(paths[i]));
-		auto parentItem = doc->GetItem(nbase::UTF16ToUTF8(folderPath));
-		doc->AddItem(item, parentItem);
-	}
-	_tree->Update(true);
-	ProjectXmlHelper::GetInstance()->Save();
+	ScanFolder(selectPath, folder);
 }
 
 void EditorTreeProject::InitFolder(tinyxml2::XMLElement* element)
@@ -328,4 +272,66 @@ void EditorTreeProject::DeleteDirectory(const std::wstring & folder)
 	FindClose(hdnode);
 	RemoveDirectory(folder.c_str());
 	ProjectXmlHelper::GetInstance()->RemoveItem(folder);
+}
+
+void EditorTreeProject::ScanFolder(std::wstring selectPath, const std::wstring& parentFolder)
+{
+	std::wstring dirName = L"";
+	nbase::FilePathApartFileName(selectPath, dirName);
+	selectPath += L"\\";
+	auto doc = _tree->GetDoc();
+	std::vector<std::wstring> paths;
+	ProjectXmlHelper::GetInstance()->ScanFolder(selectPath, paths);
+	auto findSelectItem = doc->GetItem(nbase::UTF16ToUTF8(selectPath));
+	if (!findSelectItem) {
+		auto parentItem = doc->GetItem(nbase::UTF16ToUTF8(parentFolder));
+		auto rootItem = std::make_shared<DirChunk>();
+		rootItem->SetTreeComponent(_tree);
+		rootItem->name = dirName;
+		rootItem->path = selectPath;
+		rootItem->SetItemID(nbase::UTF16ToUTF8(selectPath));
+		rootItem->GetUI()->Collapse();
+		doc->AddItem(rootItem, parentItem);
+	}
+	for (int i = 0; i < paths.size(); i++) {
+		std::wstring folderPath = L"";
+		nbase::FilePathApartDirectory(paths[i], folderPath);
+		std::list<std::wstring> folderList = ui::StringHelper::Split(folderPath.substr(selectPath.length()), L"\\");
+		std::wstring prePath = selectPath;
+		for (auto it = folderList.begin(); it != folderList.end(); ++it) {
+			auto findItem = doc->GetItem(nbase::UTF16ToUTF8(prePath + *it + L"\\"));
+			if (findItem) {
+				prePath += *it + L"\\";
+				continue;
+			}
+			auto item = std::make_shared<DirChunk>();
+			item->SetTreeComponent(_tree);
+			item->name = *it;
+			item->path = prePath + *it + L"\\";
+			item->SetItemID(nbase::UTF16ToUTF8(prePath + *it + L"\\"));
+			item->GetUI()->Collapse();
+			auto parentItem = doc->GetItem(nbase::UTF16ToUTF8(prePath));
+			if (parentItem) {
+				doc->AddItem(item, parentItem);
+			}
+			else {
+				doc->AddItem(item);
+			}
+			prePath += *it + L"\\";
+		}
+		std::wstring fn = L"";
+		nbase::FilePathApartFileName(paths[i], fn);
+		if (fn.empty()) {
+			continue;
+		}
+		auto item = std::make_shared<DirChunk>();
+		item->SetTreeComponent(_tree);
+		item->name = fn;
+		item->path = paths[i];
+		item->SetItemID(nbase::UTF16ToUTF8(paths[i]));
+		auto parentItem = doc->GetItem(nbase::UTF16ToUTF8(folderPath));
+		doc->AddItem(item, parentItem);
+	}
+	_tree->Update(true);
+	ProjectXmlHelper::GetInstance()->Save();
 }

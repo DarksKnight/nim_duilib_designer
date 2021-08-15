@@ -158,21 +158,23 @@ void ProjectXmlHelper::ScanFolder(const std::wstring& folder, std::vector<std::w
 		else {
 			isDirEmpty = false;
 			std::wstring path = folder + fileName;
-			paths.push_back(path);
-			tinyxml2::XMLElement* element = _doc.NewElement("Item");
-			element->SetAttribute("path", nbase::UTF16ToUTF8(path).c_str());
-			std::wstring suffix = L"";
-			nbase::FilePathExtension(fileName, suffix);
-			if (suffix == L".xml") {
-				_layout_element->InsertEndChild(element);
-			}
-			else {
-				_resource_element->InsertEndChild(element);
+			if (!CheckDupPath(_layout_element, path) && !CheckDupPath(_resource_element, path)) {
+				tinyxml2::XMLElement* element = _doc.NewElement("Item");
+				element->SetAttribute("path", nbase::UTF16ToUTF8(path).c_str());
+				std::wstring suffix = L"";
+				nbase::FilePathExtension(fileName, suffix);
+				if (suffix == L".xml") {
+					_layout_element->InsertEndChild(element);
+				}
+				else {
+					_resource_element->InsertEndChild(element);
+				}
+				paths.push_back(path);
 			}
 		}
 	} while (FindNextFile(hdnode, &wdfnode));
 	FindClose(hdnode);
-	if (isDirEmpty) {
+	if (isDirEmpty && !CheckDupPath(_dir_element, folder)) {
 		tinyxml2::XMLElement* element = _doc.NewElement("Item");
 		element->SetAttribute("path", nbase::UTF16ToUTF8(folder).c_str());
 		_dir_element->InsertEndChild(element);
