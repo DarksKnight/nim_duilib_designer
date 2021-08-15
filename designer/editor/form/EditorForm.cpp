@@ -7,8 +7,9 @@
 #include "../internal/CopyHelper.h"
 #include "../internal/SettingsHelper.h"
 #include "../internal/GlobalXmlHelper.h"
-#include "EditorImportForm.h"
 #include "../internal/ProjectXmlHelper.h"
+#include "EditorImportForm.h"
+#include "EditorInputForm.h"
 
 const LPCTSTR EditorForm::kClassName = L"EditorForm";
 
@@ -51,8 +52,6 @@ void EditorForm::InitWindow()
 	_btn_close->AttachClick(nbase::Bind(&EditorForm::OnClickExit, this, std::placeholders::_1));
 	_toolbar = (EditorToolbar*)FindControl(L"et");
 	_toolbar->SetSaveCallback(nbase::Bind(&EditorForm::SaveFile, this));
-	_toolbar->SetNewFileCallback(nbase::Bind(&EditorForm::OpenCreateForm, this));
-	_toolbar->SetOpenFileCallback(nbase::Bind(&EditorForm::OnOpenFile, this));
 	_box_container = (ui::Box*)FindControl(L"box_container");
 	_box_property = (ui::Box*)FindControl(L"box_property");
 	_controls_list = (EditorControlsList*)FindControl(L"ecl");
@@ -131,10 +130,7 @@ void EditorForm::OnInitForm()
 	int width = GetPos().GetWidth();
 	_controls_list->SetFixedWidth(width / 7);
 	_box_property->SetFixedWidth(width / 6);
-	std::wstring value = SettingsHelper::GetInstance()->Get(CONFIG_TAG_CREATE, CONFIG_KEY_CREATE_SHOW, L"1");
-	if (value == L"1") {
-		OpenImportForm();
-	}
+	OpenImportForm();
 }
 
 bool EditorForm::Notify(ui::EventArgs* args)
@@ -202,6 +198,12 @@ bool EditorForm::Notify(ui::EventArgs* args)
 	{
 		DirChunkUI* item = (DirChunkUI*)args->pSender;
 		DoOpenFile(item->GetPath());
+		break;
+	}
+	case CustomEventType::TREE_PROJECT_CREATE_FILE:
+	{
+		EditorTreeProject* treeProject = (EditorTreeProject*)args->pSender;
+		DoNewFile(treeProject->GetFlag(), treeProject->GetCreateFolder());
 		break;
 	}
 	default:
@@ -282,38 +284,24 @@ void EditorForm::SaveFile()
 	_saved = true;
 }
 
-void EditorForm::DoNewFile(const std::wstring& flag)
+void EditorForm::DoNewFile(const std::wstring& flag, const std::wstring& folder)
 {
-	_templete_path = ui::GlobalManager::GetResourcePath() + L"templete\\templete_" + flag + L".xml";
-	if (!nbase::FilePathIsExist(_templete_path, false)) {
+	std::wstring templetePath = ui::GlobalManager::GetResourcePath() + L"templete\\templete_" + flag + L".xml";
+	if (!nbase::FilePathIsExist(templetePath, false)) {
 		nim_comp::ShowMsgBox(GetHWND(), NULL, L"STRID_CREATE_ERROR", true, L"STRID_HINT", true, L"STRING_OK", true);
 		return;
 	}
-	nim_comp::CFileDialogEx* fileDlg = new nim_comp::CFileDialogEx;
-	std::map<LPCTSTR, LPCTSTR> filters;
-	filters[L"File Format(*.xml)"] = L"*.xml";
-	fileDlg->SetFilter(filters);
-	fileDlg->SetFileName(L"new");
-	fileDlg->SetDefExt(L".xml");
-	fileDlg->SetParentWnd(GetHWND());
-	nim_comp::CFileDialogEx::FileDialogCallback2 callback2 = nbase::Bind(&EditorForm::OnSaveSelectPathCallback, this, std::placeholders::_1, std::placeholders::_2);
-	fileDlg->AyncShowSaveFileDlg(callback2);
-}
-
-void EditorForm::OnOpenFile()
-{
-	if (!_saved && _box_editor_area->GetCount() > 0) {
-		nim_comp::ShowMsgBox(GetHWND(), NULL, L"STRID_UNSAVE_TIP", true, L"STRID_HINT", true, L"STRING_OK", true);
-		return;
+	EditorInputForm* form = (EditorInputForm*)(nim_comp::WindowsManager::GetInstance()->GetWindow(EditorInputForm::kClassName, EditorInputForm::kClassName));
+	if (form) {
+		form->ActiveWindow();
 	}
-	nim_comp::CFileDialogEx* fileDlg = new nim_comp::CFileDialogEx;
-	std::map<LPCTSTR, LPCTSTR> filters;
-	filters[L"File Format(*.xml)"] = L"*.xml";
-	fileDlg->SetFilter(filters);
-	fileDlg->SetDefExt(L".xml");
-	fileDlg->SetParentWnd(GetHWND());
-	nim_comp::CFileDialogEx::FileDialogCallback2 callback2 = nbase::Bind(&EditorForm::OnOpenSelectPathCallback, this, std::placeholders::_1, std::placeholders::_2);
-	fileDlg->AyncShowOpenFileDlg(callback2);
+	else {
+		form = new EditorInputForm();
+		form->SetCallback(nbase::Bind(&EditorForm::NewFileInputCallback, this, std::placeholders::_1, templetePath, folder));
+		form->Create(GetHWND(), EditorInputForm::kClassName, WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX, 0);
+		form->CenterWindow();
+		form->ShowWindow();
+	}
 }
 
 void EditorForm::DoOpenFile(const std::wstring& path)
@@ -328,48 +316,11 @@ void EditorForm::DoOpenFile(const std::wstring& path)
 	_editor_area = new EditorArea;
 	_box_editor_area->Add(_editor_area);
 	ControlHelper::GetInstance()->SetContainerBox(_editor_area);
-	XmlHelper::GetInstance()-> ParseXml(_editor_area, path, nbase::Bind(&EditorForm::OnParseControl, this, std::placeholders::_1), nbase::Bind(&EditorForm::OnParseFinish, this));
+	XmlHelper::GetInstance()->ParseXml(_editor_area, path, nbase::Bind(&EditorForm::OnParseControl, this, std::placeholders::_1), nbase::Bind(&EditorForm::OnParseFinish, this));
 	std::wstring fileName = L"";
 	nbase::FilePathApartFileName(path, fileName);
 	_title = ui::MutiLanSupport::GetInstance()->GetStringViaID(L"STRID_EDITORFORM_TITLE") + L" - " + fileName;
 	_lb_title->SetText(_title);
-}
-
-void EditorForm::OnCreateFormClose(EditorCreateForm::OperationType type)
-{
-	_toolbar->SetEnabled(true);
-}
-
-void EditorForm::OnSaveSelectPathCallback(BOOL ret, std::wstring path)
-{
-	if (!ret) {
-		return;
-	}
-	_last_save_path = path;
-	XmlHelper::GetInstance()->SetSavedXmlPath(_last_save_path);
-	_toolbar->SetEnabled(true);
-	_controls_list->SetVisible(true);
-	_box_property->SetVisible(true);
-	std::wstring fileName;
-	nbase::FilePathApartFileName(_last_save_path, fileName);
-	_title = ui::MutiLanSupport::GetInstance()->GetStringViaID(L"STRID_EDITORFORM_TITLE") + L" - " + fileName;
-	_lb_title->SetText(_title);
-	nbase::WriteFile(_last_save_path, "");
-	_box_editor_area->RemoveAll();
-	_editor_area = new EditorArea;
-	_box_editor_area->Add(_editor_area);
-	if (!XmlHelper::GetInstance()->ParseXml(_editor_area, _templete_path, nbase::Bind(&EditorForm::OnParseControl, this, std::placeholders::_1), nbase::Bind(&EditorForm::OnParseFinish, this))) {
-		nim_comp::ShowMsgBox(GetHWND(), NULL, L"STRID_CREATE_ERROR", true, L"STRID_HINT", true, L"STRING_OK", true);
-	}
-	SaveFile();
-}
-
-void EditorForm::OnOpenSelectPathCallback(BOOL ret, std::wstring path)
-{
-	if (!ret || path.empty()) {
-		return;
-	}
-	DoOpenFile(path);
 }
 
 void EditorForm::OnParseControl(AreaControlDelegate* delegate)
@@ -388,6 +339,27 @@ void EditorForm::OnParseFinish()
 	_editor_tree_controls->Update();
 }
 
+void EditorForm::NewFileInputCallback(const std::wstring& fn, const std::wstring& templetePath, const std::wstring& createFolder)
+{
+	_last_save_path = createFolder + fn + L".xml";
+	XmlHelper::GetInstance()->SetSavedXmlPath(_last_save_path);
+	_toolbar->SetEnabled(true);
+	_controls_list->SetVisible(true);
+	_box_property->SetVisible(true);
+	std::wstring fileName;
+	nbase::FilePathApartFileName(_last_save_path, fileName);
+	_title = ui::MutiLanSupport::GetInstance()->GetStringViaID(L"STRID_EDITORFORM_TITLE") + L" - " + fileName;
+	_lb_title->SetText(_title);
+	nbase::WriteFile(_last_save_path, "");
+	_box_editor_area->RemoveAll();
+	_editor_area = new EditorArea;
+	_box_editor_area->Add(_editor_area);
+	if (!XmlHelper::GetInstance()->ParseXml(_editor_area, templetePath, nbase::Bind(&EditorForm::OnParseControl, this, std::placeholders::_1), nbase::Bind(&EditorForm::OnParseFinish, this))) {
+		nim_comp::ShowMsgBox(GetHWND(), NULL, L"STRID_CREATE_ERROR", true, L"STRID_HINT", true, L"STRING_OK", true);
+	}
+	SaveFile();
+}
+
 void EditorForm::OpenImportForm()
 {
 	EditorImportForm* form = (EditorImportForm*)(nim_comp::WindowsManager::GetInstance()->GetWindow(EditorImportForm::kClassName, EditorImportForm::kClassName));
@@ -396,30 +368,9 @@ void EditorForm::OpenImportForm()
 	}
 	else {
 		form = new EditorImportForm();
-		form->Create(GetHWND(), EditorCreateForm::kClassName, WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX, 0);
+		form->Create(GetHWND(), EditorImportForm::kClassName, WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX, 0);
 		form->SetSelectCallback(nbase::Bind(&EditorForm::ReadNd, this, std::placeholders::_1));
 		form->CenterWindow();
-		form->ShowWindow();
-	}
-}
-
-void EditorForm::OpenCreateForm()
-{
-	if (!_saved && _box_editor_area->GetCount() > 0) {
-		nim_comp::ShowMsgBox(GetHWND(), NULL, L"STRID_UNSAVE_TIP", true, L"STRID_HINT", true, L"STRING_OK", true);
-		return;
-	}
-	EditorCreateForm* form = (EditorCreateForm*)(nim_comp::WindowsManager::GetInstance()->GetWindow(EditorCreateForm::kClassName, EditorCreateForm::kClassName));
-	if (form) {
-		form->ActiveWindow();
-	}
-	else {
-		form = new EditorCreateForm();
-		form->Create(GetHWND(), EditorCreateForm::kClassName, WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX, 0);
-		form->CenterWindow();
-		form->SetNewFileCallback(nbase::Bind(&EditorForm::DoNewFile, this, std::placeholders::_1));
-		form->SetOpenFileCallback(nbase::Bind(&EditorForm::DoOpenFile, this, std::placeholders::_1));
-		form->SetCloseCallback(nbase::Bind(&EditorForm::OnCreateFormClose, this, std::placeholders::_1));
 		form->ShowWindow();
 	}
 }

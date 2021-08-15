@@ -45,16 +45,25 @@ public:
 	~EditorTreeProject();
 public:
 	void LoadData();
+public:
+	std::wstring GetFlag() {
+		return _flag;
+	}
+	std::wstring GetCreateFolder() {
+		return _create_folder;
+	}
 private:
 	bool OnItemMenu(ui::EventArgs* args);
 	bool OnMenuOpenDir(ui::EventArgs* args, bool isDir, const std::wstring & path);
 	bool OnMenuDel(ui::EventArgs* args, bool isDir, const std::wstring& path);
 	bool OnMenuNewDir(ui::EventArgs* args, const std::wstring& folder);
+	bool OnMenuNewFile(ui::EventArgs* args, const std::wstring & folder);
 	bool OnMenuAddDir(ui::EventArgs* args, const std::wstring & folder);
 	bool OnMenuScan(ui::EventArgs* args, const std::wstring & folder);
 private:
 	void OnNewDir(const std::wstring& name, const std::wstring & folder);
 	void OnAddDir(BOOL ret, std::wstring selectPath, const std::wstring & folder);
+	void CreateNewFile(const std::wstring& flag, const std::wstring & createFolder);
 private:
 	void InitFolder(tinyxml2::XMLElement* element);
 	void DeleteDirectory(const std::wstring& folder);
@@ -62,4 +71,7 @@ private:
 private:
 	ui::Box* _box_tree_project;
 	TreeComponent* _tree;
+private:
+	std::wstring _flag = L"";
+	std::wstring _create_folder = L"";
 };

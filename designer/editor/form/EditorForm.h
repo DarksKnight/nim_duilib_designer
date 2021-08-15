@@ -28,21 +28,17 @@ private:
 	bool OnClickTab(ui::EventArgs* args);
 	bool OnClickExit(ui::EventArgs* args);
 private:
-	void OnCreateFormClose(EditorCreateForm::OperationType type);
-	void OnSaveSelectPathCallback(BOOL ret, std::wstring path);
-	void OnOpenSelectPathCallback(BOOL ret, std::wstring path);
 	void OnParseControl(AreaControlDelegate* delegate);
 	void OnParseFinish();
+	void NewFileInputCallback(const std::wstring & fn, const std::wstring & templetePath, const std::wstring & createFolder);
 private:
 	void OnInitForm();
 	void OnSelect(const ControlData& data);
 	void OnButtonUp();
 	void SaveFile();
-	void DoNewFile(const std::wstring & flag);
-	void OnOpenFile();
+	void DoNewFile(const std::wstring& flag, const std::wstring & folder);
 	void DoOpenFile(const std::wstring& path);
 	void OpenImportForm();
-	void OpenCreateForm();
 	void UiChanged();
 	void ShowControlPropery();
 	void OnMenuPropertyListSelect(const std::wstring & key, const std::wstring & value);
@@ -69,5 +65,4 @@ private:
 	bool _saved = false;
 	std::wstring _last_save_path = L"";
 	std::wstring _title = L"";
-	std::wstring _templete_path = L"";
 };

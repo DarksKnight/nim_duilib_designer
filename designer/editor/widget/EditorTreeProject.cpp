@@ -3,6 +3,7 @@
 #include "../internal/ProjectXmlHelper.h"
 #include <shellapi.h>
 #include "../form/EditorInputForm.h"
+#include "../form/EditorCreateForm.h"
 
 void DirChunkUI::OnFill()
 {
@@ -85,6 +86,8 @@ bool EditorTreeProject::OnItemMenu(ui::EventArgs* args)
 	if (isDir) {
 		nim_comp::CMenuElementUI* menuNewDir = (nim_comp::CMenuElementUI*)menu->FindControl(L"menu_new_dir");
 		menuNewDir->AttachClick(nbase::Bind(&EditorTreeProject::OnMenuNewDir, this, std::placeholders::_1, item->GetPath()));
+		nim_comp::CMenuElementUI* menuNewFile = (nim_comp::CMenuElementUI*)menu->FindControl(L"menu_new_file");
+		menuNewFile->AttachClick(nbase::Bind(&EditorTreeProject::OnMenuNewFile, this, std::placeholders::_1, item->GetPath()));
 		nim_comp::CMenuElementUI* menuAddDir = (nim_comp::CMenuElementUI*)menu->FindControl(L"menu_add_dir");
 		menuAddDir->AttachClick(nbase::Bind(&EditorTreeProject::OnMenuAddDir, this, std::placeholders::_1, item->GetPath()));
 		nim_comp::CMenuElementUI* menuScan = (nim_comp::CMenuElementUI*)menu->FindControl(L"menu_scan");
@@ -123,6 +126,22 @@ bool EditorTreeProject::OnMenuNewDir(ui::EventArgs* args, const std::wstring& fo
 	EditorInputForm* form = nim_comp::WindowsManager::GetInstance()->SingletonShow<EditorInputForm>(EditorInputForm::kClassName);
 	form->ToTopMost(true);
 	form->SetCallback(nbase::Bind(&EditorTreeProject::OnNewDir, this, std::placeholders::_1, folder));
+	return true;
+}
+
+bool EditorTreeProject::OnMenuNewFile(ui::EventArgs* args, const std::wstring& folder)
+{
+	EditorCreateForm* form = (EditorCreateForm*)(nim_comp::WindowsManager::GetInstance()->GetWindow(EditorCreateForm::kClassName, EditorCreateForm::kClassName));
+	if (form) {
+		form->ActiveWindow();
+	}
+	else {
+		form = new EditorCreateForm();
+		form->Create(GetWindow()->GetHWND(), EditorCreateForm::kClassName, WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX, 0);
+		form->CenterWindow();
+		form->SetNewFileCallback(nbase::Bind(&EditorTreeProject::CreateNewFile, this, std::placeholders::_1, folder));
+		form->ShowWindow();
+	}
 	return true;
 }
 
@@ -188,6 +207,13 @@ void EditorTreeProject::OnAddDir(BOOL ret, std::wstring selectPath, const std::w
 		return;
 	}
 	ScanFolder(selectPath, folder);
+}
+
+void EditorTreeProject::CreateNewFile(const std::wstring& flag, const std::wstring& createFolder)
+{
+	_flag = flag;
+	_create_folder = createFolder;
+	GetWindow()->SendNotify(this, ui::kEventNotify, TREE_PROJECT_CREATE_FILE);
 }
 
 void EditorTreeProject::InitFolder(tinyxml2::XMLElement* element)

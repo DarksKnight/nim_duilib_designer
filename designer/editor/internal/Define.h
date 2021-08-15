@@ -4,10 +4,6 @@
 
 #define XML_HEADER "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 
-#define CONFIG_TAG_CREATE L"CreateForm"
-#define CONFIG_KEY_CREATE_SHOW L"Show"
-#define CONFIG_KEY_GLOBAL_XML L"GlobalXmlPath"
-
 #define ATTRIBUTE_MEMBER_FUNC(argType, name, arg)\
 	public:\
 	void Set##name(const argType& v) {\
@@ -49,7 +45,8 @@ enum CustomEventType
 	PROPERTY_ITEM_CLASS_TEXT_CHANGE,
 	PROPERTY_ITEM_FONT_TEXT_CHANGE,
 	HIDE_PROPERTY_LIST,
-	TREE_PROJECT_SELECTED
+	TREE_PROJECT_SELECTED,
+	TREE_PROJECT_CREATE_FILE
 };
 
 struct CreateDataInfo

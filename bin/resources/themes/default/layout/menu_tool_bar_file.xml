@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Window>
   <VListBox class="menu">
-    <MenuElement class="menu_element" name="menu_new_file" width="100" height="25">
-      <Button width="20" height="20" valign="center" mouse="false"/>
-      <Label class="menu_text" textid="STRID_MENU_NEW_FILE" margin="30,0,0,0"/>
-    </MenuElement>
-    <MenuElement class="menu_element" name="menu_open_file" width="100" height="25">
-      <Button width="20" height="20" valign="center" mouse="false"/>
-      <Label class="menu_text" textid="STRID_MENU_OPEN_FILE" margin="30,0,0,0"/>
-    </MenuElement>
     <MenuElement class="menu_element" name="menu_save_file" width="100" height="25">
       <Button width="20" height="20" valign="center" mouse="false"/>
       <Label class="menu_text" textid="STRID_MENU_SAVE_FILE" margin="30,0,0,0"/>

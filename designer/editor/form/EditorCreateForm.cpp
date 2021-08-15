@@ -43,9 +43,6 @@ std::wstring EditorCreateForm::GetWindowId() const
 void EditorCreateForm::InitWindow()
 {
 	_box_preview = (ui::Box*)FindControl(L"box_preview");
-	_cb_settings_show = (ui::CheckBox*)FindControl(L"cb_settings_show");
-	_cb_settings_show->AttachSelect(nbase::Bind(&EditorCreateForm::OnSelectSettings, this, std::placeholders::_1));
-	_cb_settings_show->AttachUnSelect(nbase::Bind(&EditorCreateForm::OnSelectSettings, this, std::placeholders::_1));
 	_list_create_type = (ui::ListBox*)FindControl(L"list_create_type");
 	for (auto it = _create_data_infos.begin(); it != _create_data_infos.end(); ++it) {
 		CreateDataItem* item = new CreateDataItem(*it);
@@ -55,26 +52,8 @@ void EditorCreateForm::InitWindow()
 	_list_create_type->SelectItem(0);
 	_btn_new_file = (ui::Button*)FindControl(L"btn_new_file"); 
 	_btn_new_file->AttachClick(nbase::Bind(&EditorCreateForm::OnNewFileClick, this, std::placeholders::_1));
-	_btn_open_file = (ui::Button*)FindControl(L"btn_open_file");
-	_btn_open_file->AttachClick(nbase::Bind(&EditorCreateForm::OnOpenFileClick, this, std::placeholders::_1));
 	_btn_cancel = (ui::Button*)FindControl(L"btn_cancel");
 	_btn_cancel->AttachClick(nbase::Bind(&EditorCreateForm::OnCancelClick, this, std::placeholders::_1));
-	std::wstring value = SettingsHelper::GetInstance()->Get(CONFIG_TAG_CREATE, CONFIG_KEY_CREATE_SHOW, L"1");
-	_cb_settings_show->Selected(value == L"1");
-}
-
-LRESULT EditorCreateForm::OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
-{
-	if (_operation_type == OperationType::NEW_FILE && _new_file_callback) {
-		_new_file_callback(_create_flag);
-	}
-	else if (_operation_type == OperationType::OPEN_FILE && _open_file_callback && !_path.empty()) {
-		_open_file_callback(_path);
-	}
-	if (_close_callback) {
-		_close_callback(_operation_type);
-	}
-	return __super::OnClose(uMsg, wParam, lParam, bHandled);
 }
 
 LRESULT EditorCreateForm::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -96,21 +75,10 @@ bool EditorCreateForm::OnCreateTypeSelect(ui::EventArgs* args)
 
 bool EditorCreateForm::OnNewFileClick(ui::EventArgs* args)
 {
-	_operation_type = OperationType::NEW_FILE;
+	if (_new_file_callback) {
+		_new_file_callback(_create_flag);
+	}
 	Close();
-	return true;
-}
-
-bool EditorCreateForm::OnOpenFileClick(ui::EventArgs* args)
-{
-	nim_comp::CFileDialogEx* fileDlg = new nim_comp::CFileDialogEx;
-	std::map<LPCTSTR, LPCTSTR> filters;
-	filters[L"File Format(*.xml)"] = L"*.xml";
-	fileDlg->SetFilter(filters);
-	fileDlg->SetDefExt(L".xml");
-	fileDlg->SetParentWnd(GetHWND());
-	nim_comp::CFileDialogEx::FileDialogCallback2 callback2 = nbase::Bind(&EditorCreateForm::OnSelectPathCallback, this, std::placeholders::_1, std::placeholders::_2);
-	fileDlg->AyncShowOpenFileDlg(callback2);
 	return true;
 }
 
@@ -118,24 +86,6 @@ bool EditorCreateForm::OnCancelClick(ui::EventArgs* args)
 {
 	Close();
 	return true;
-}
-
-bool EditorCreateForm::OnSelectSettings(ui::EventArgs * args)
-{
-	if (_cb_settings_show->IsSelected()) {
-		SettingsHelper::GetInstance()->Set(CONFIG_TAG_CREATE, CONFIG_KEY_CREATE_SHOW, L"1");
-	}
-	else {
-		SettingsHelper::GetInstance()->Set(CONFIG_TAG_CREATE, CONFIG_KEY_CREATE_SHOW, L"0");
-	}
-	return true;
-}
-
-void EditorCreateForm::OnSelectPathCallback(BOOL ret, std::wstring path)
-{
-	_operation_type = OperationType::OPEN_FILE;
-	_path = path;
-	Close();
 }
 
 bool EditorCreateForm::ParseXmlPreview(ui::Box* box, const std::wstring& path)

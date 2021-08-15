@@ -6,17 +6,6 @@
 
 GlobalXmlHelper::GlobalXmlHelper()
 {
-	_global_xml_path = SettingsHelper::GetInstance()->Get(CONFIG_TAG_CREATE, CONFIG_KEY_GLOBAL_XML);
-	if (!nbase::FilePathIsExist(_global_xml_path, false)) {
-		_global_xml_path = L"";
-		return;
-	}
-	if (_global_xml_path.empty()) {
-		return;
-	}
-	if (!SetGlobalXmlPath(_global_xml_path)) {
-		_global_xml_path = L"";
-	}
 }
 
 
@@ -32,7 +21,6 @@ bool GlobalXmlHelper::SetGlobalXmlPath(const std::wstring& path)
 		return false;
 	}
 	_global_xml_path = path;
-	SettingsHelper::GetInstance()->Set(CONFIG_TAG_CREATE, CONFIG_KEY_GLOBAL_XML, _global_xml_path);
 	_backup_global_xml_path = GlobalData::APPDATA_LOCAL + L"backup_global.xml";
 	tinyxml2::XMLDocument doc;
 	tinyxml2::XMLError result = doc.LoadFile(nbase::UTF16ToUTF8(nbase::win32::GetCurrentModuleDirectory() + L"resources\\themes\\default\\global.xml").c_str());

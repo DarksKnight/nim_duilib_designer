@@ -15,10 +15,8 @@
         </HBox>
         <Control height="1" bkcolor="dark_gray" margin="5,10,5,0"/>
         <Box bkcolor="white">
-          <CheckBox class="checkbox_font14" name="cb_settings_show" textid="STRID_EDITOR_CREATE_SETTINGS_TITLE" valign="center" margin="10,0,0,0"/>
           <HBox width="auto" height="auto" halign="right" valign="center" margin="0,0,10,0">
             <Button class="btn_global_blue_80x30" name="btn_new_file" textid="STRING_OK"/>
-            <Button class="btn_global_blue_80x30" name="btn_open_file" textid="STRID_EDITOR_CREATE_OPEN_FILE" margin="5,0,0,0"/>
             <Button class="btn_global_white_80x30" name="btn_cancel" textid="STRING_CANCEL" margin="5,0,0,0"/>
           </HBox>
         </Box>
