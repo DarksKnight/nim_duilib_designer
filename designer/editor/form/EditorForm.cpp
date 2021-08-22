@@ -246,6 +246,9 @@ void EditorForm::OnButtonUp()
 {
 	_box_drag_pre->RemoveAll();
 	_box_drag_pre->SetVisible(false);
+	if (!_editor_area) {
+		return;
+	}
 	POINT pt = { 0 };
 	::GetCursorPos(&pt);
 	::ScreenToClient(m_hWnd, &pt);
