@@ -1,0 +1,38 @@
+问题一：
+666： 1010011010 1001 1010 0000 0101
+888： 1101111000 1111 1000 0000 0110
+
+问题二：
+int[] array = new int[]{0x268cb43, 0x7ff, 0x2b7b, 0x123a, 0xf6, 0x282};
+        for (int i = 0; i < array.length; i++) {
+            int num = array[i];
+            String binary = Integer.toBinaryString(num);
+            if (binary.endsWith("1")) {
+                num = ~num;
+                binary = String.valueOf(num);
+                binary = binary.substring(1);
+                num = Integer.parseInt(binary);
+                binary = Integer.toBinaryString(num >> 1);
+                System.out.println("-" + Integer.parseInt(binary, 2));
+            } else {
+                binary = Integer.toBinaryString(num >> 1);
+                System.out.println(Integer.parseInt(binary, 2));
+            }
+        }
+        
+ 
+依次遍历数组中的每一个位置，并实时维护 最远可以到达的位置。
+在遍历的过程中，如果 最远可以到达的位置 大于等于数组中的最后一个位置，那就说明最后一个位置可达，我们就可以直接返回 True 作为答案。反之，如果在遍历结束后，最后一个位置仍然不可达，我们就返回 False 作为答案
+        
+public static boolean canJump(int[] nums) {
+        int n = nums.length;
+        int rightmost = 0;
+        for (int i = 0; i < n; ++i) {
+            if (i <= rightmost) {
+                rightmost = Math.max(rightmost, i + nums[i]);
+                if (rightmost >= n - 1) {
+                    return true;
+                }
+            }
+        }
+        return false;
